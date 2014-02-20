@@ -1,0 +1,3 @@
+useDynLib(swarmR)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
