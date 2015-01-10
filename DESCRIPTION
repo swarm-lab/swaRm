@@ -1,11 +1,11 @@
 Package: swarmR
 Type: Package
 Title: What the package does (short line)
-Version: 1.0
-Date: 2014-02-20
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
+Version: 0.1
+Date: 2015-01-10
+Author: Simon Garnier
+Maintainer: Simon Garnier <garnier@njit.edu>
 Description: More about what it does (maybe more than one line)
-License: What Licence is it under ?
-Imports: Rcpp (>= 0.11.0)
+License: GPL v2
+Imports: Rcpp (>= 0.11.0), dplyr (>= 0.4.0), data.table (>= 1.9.4)
 LinkingTo: Rcpp
