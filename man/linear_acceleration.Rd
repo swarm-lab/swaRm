@@ -6,9 +6,37 @@
 \usage{
 linear_acceleration(s)
 }
+\arguments{
+\item{s}{Vector of speeds}
+}
+\value{
+This function returns a vector with the same length as s
+corresponding to the instantaneous linear acceleration.
+}
 \description{
-Given a series of instantaneous linear speeds as computed by \link[swarmR]{linear_speed},
-this function returns the instantaneous linear acceleration as the difference
-between successive instantaneous linear speeds.
+Given a series of instantaneous linear speeds as computed by
+\code{\link{linear_speed}}, this function returns the instantaneous linear
+acceleration as the difference between successive instantaneous linear speeds.
+}
+\examples{
+# Generate and plot a random smooth trajectory
+x <- filter(cumsum(rnorm(1001)), rep(1 / 10, 10))
+y <- filter(cumsum(rnorm(1001)), rep(1 / 10, 10))
+t <- 0:1000
+plot(y ~ x, type = "l", asp = 1)
+
+# Compute and plot linear speed
+s <- linear_speed(x, y, t)
+plot(s ~ t, type = "l")
+
+# Compute and plot linear acceleration
+a <- linear_acceleration(s)
+plot(s ~ t)
+}
+\author{
+Simon Garnier: \email{garnier@njit.edu}, \link[https://twitter.com/sjmgarnier]{@sjmgarnier}
+}
+\seealso{
+\code{\link{linear_speed}}
 }
 

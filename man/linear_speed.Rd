@@ -6,9 +6,38 @@
 \usage{
 linear_speed(x, y, t)
 }
+\arguments{
+\item{x}{Vector of x coordinates}
+
+\item{y}{Vector of y coordinates}
+
+\item{t}{Vector of time stamps}
+}
+\value{
+This function returns a vector with the same length as x, y and t
+corresponding to the instantaneous linear speed along the [x, y, t].
+trajectory.
+}
 \description{
 Given a series of spatio-temporal 2D coordinates, this function returns the
 instantaneous linear speed as the distance between successive positions
 divided by the time between these successive positions.
+}
+\examples{
+# Generate and plot a random smooth trajectory
+x <- filter(cumsum(rnorm(1001)), rep(1 / 10, 10))
+y <- filter(cumsum(rnorm(1001)), rep(1 / 10, 10))
+t <- 0:1000
+plot(y ~ x, type = "l", asp = 1)
+
+# Compute and plot linear speed
+s <- linear_speed(x, y, t)
+plot(s ~ t, type = "l")
+}
+\author{
+Simon Garnier: \email{garnier@njit.edu}, \link[https://twitter.com/sjmgarnier]{@sjmgarnier}
+}
+\seealso{
+\code{\link{linear_acceleration}}
 }
 
