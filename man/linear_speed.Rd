@@ -15,8 +15,7 @@ linear_speed(x, y, t)
 }
 \value{
 This function returns a vector with the same length as x, y and t
-corresponding to the instantaneous linear speed along the [x, y, t].
-trajectory.
+corresponding to the instantaneous linear speed along a [x, y, t] trajectory.
 }
 \description{
 Given a series of spatio-temporal 2D coordinates, this function returns the

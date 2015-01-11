@@ -9,8 +9,7 @@
 #' @param t Vector of time stamps
 #' 
 #' @return This function returns a vector with the same length as x, y and t
-#' corresponding to the instantaneous linear speed along the [x, y, t].
-#' trajectory.
+#' corresponding to the instantaneous linear speed along a [x, y, t] trajectory.
 #' 
 #' @author Simon Garnier: \email{garnier@@njit.edu}, \link[https://twitter.com/sjmgarnier]{@@sjmgarnier}
 #' 
@@ -46,7 +45,7 @@ linear_speed <- function(x, y, t) {
 #' @param s Vector of speeds
 #' 
 #' @return This function returns a vector with the same length as s 
-#' corresponding to the instantaneous linear acceleration.
+#' corresponding to the instantaneous linear acceleration at each time step.
 #' 
 #' @author Simon Garnier: \email{garnier@@njit.edu}, \link[https://twitter.com/sjmgarnier]{@@sjmgarnier}
 #' 

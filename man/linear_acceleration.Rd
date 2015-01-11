@@ -11,7 +11,7 @@ linear_acceleration(s)
 }
 \value{
 This function returns a vector with the same length as s
-corresponding to the instantaneous linear acceleration.
+corresponding to the instantaneous linear acceleration at each time step.
 }
 \description{
 Given a series of instantaneous linear speeds as computed by
