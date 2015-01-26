@@ -27,7 +27,6 @@
 #' 
 #' @export
 #'
-
 pol_order <- function(h) {
   if (sum(!is.na(h)) > 1) {
     u <- matrix(c(cos(h), sin(h)), ncol = 2)
