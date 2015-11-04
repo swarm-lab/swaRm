@@ -1,11 +1,16 @@
-Package: swarmR
+Package: swaRm
 Type: Package
-Title: What the package does (short line)
+Title: What the Package Does (Title Case)
 Version: 0.1
-Date: 2015-01-10
+Date: 2015-11-01
 Author: Simon Garnier
 Maintainer: Simon Garnier <garnier@njit.edu>
 Description: More about what it does (maybe more than one line)
 License: GPL v2
-Imports: Rcpp (>= 0.11.0), dplyr (>= 0.4.0), data.table (>= 1.9.4)
-LinkingTo: Rcpp
+LazyData: TRUE
+Imports:
+    data.table,
+    geosphere,
+    lubridate,
+    zoo
+RoxygenNote: 5.0.0

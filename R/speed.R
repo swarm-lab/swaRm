@@ -1,81 +1,119 @@
-#' Compute instantaneous linear speed
-#'
-#' Given a series of spatio-temporal 2D coordinates, this function returns the 
-#' instantaneous linear speed as the distance between successive positions 
-#' divided by the time between these successive positions. 
+#' @title Linear distances along a trajectory
 #' 
-#' @param x Vector of x coordinates 
-#' @param y Vector of y coordinates
-#' @param t Vector of time stamps
+#' @description Given a set of cartesian coordinates representing an object's 
+#'  trajectory, this function computes the linear distances between each pair of 
+#'  successive locations along the trajectory.
+#'  
+#' @param x A vector of x (or longitude) coordinates corresponding to a single 
+#'  animal trajectory. 
 #' 
-#' @return This function returns a vector with the same length as x, y and t
-#' corresponding to the instantaneous linear speed along a [x, y, t] trajectory.
+#' @param y A vector of y (or latitude) coordinates corresponding to a single 
+#'  animal trajectory.
+#'  
+#' @param geo A logical value indicating whether the locations are defined by 
+#'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE.
+#'  
+#' @return A vector of the same length as x and y corresponding to the linear 
+#'  distances between each pair of successive locations along the trajectory.
 #' 
-#' @author Simon Garnier: \email{garnier@@njit.edu}, \link[https://twitter.com/sjmgarnier]{@@sjmgarnier}
+#' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{linear_acceleration}}
+#' @seealso \code{\link{linSpeed}}, \code{\link{linAcc}}
 #' 
 #' @examples
-#' # Generate and plot a random smooth trajectory
-#' x <- filter(cumsum(rnorm(1001)), rep(1 / 10, 10))
-#' y <- filter(cumsum(rnorm(1001)), rep(1 / 10, 10))
-#' t <- 0:1000
-#' plot(y ~ x, type = "l", asp = 1)
-#' 
-#' # Compute and plot linear speed
-#' s <- linear_speed(x, y, t)
-#' plot(s ~ t, type = "l")
+#' # TODO
 #' 
 #' @export
-#'
-linear_speed <- function(x, y, t) {
-  dt <- diff(t)
-  dp <- sqrt(diff(x)^2 + diff(y)^2)
-  c(NA, dp / dt)
+linDist <- function(x, y, geo = FALSE) {
+  if (!is.vector(x) || !is.vector(y) || length(x) != length(y)) {
+    stop("x and y must be vectors of identical length.")
+  }
+  
+  if (geo) {
+    l <- length(x)
+    m1 <- cbind(x[1:(l - 1)], y[1:(l - 1)])
+    m2 <- cbind(x[2:l], y[2:l])
+    c(0, geosphere::distGeo(m1, m2))  
+  } else {
+    c(0, sqrt(diff(x) ^ 2 + diff(y) ^ 2))
+  }
 }
 
 
-
-#' Compute instantaneous linear acceleration
-#'
-#' Given a series of instantaneous linear speeds as computed by 
-#' \code{\link{linear_speed}}, this function returns the instantaneous linear 
-#' acceleration as the difference between successive instantaneous linear speeds. 
-#'
-#' @param s Vector of speeds
+#' @title Linear speeds along a trajectory
 #' 
-#' @return This function returns a vector with the same length as s 
-#' corresponding to the instantaneous linear acceleration at each time step.
+#' @description Given a set of cartesian coordinates representing an object's 
+#'  trajectory, this function computes the linear speeds between each pair of 
+#'  successive locations along the trajectory.
+#'  
+#' @param x A vector of x (or longitude) coordinates corresponding to a single 
+#'  animal trajectory. 
 #' 
-#' @author Simon Garnier: \email{garnier@@njit.edu}, \link[https://twitter.com/sjmgarnier]{@@sjmgarnier}
+#' @param y A vector of y (or latitude) coordinates corresponding to a single 
+#'  animal trajectory.
+#'  
+#' @param t A vector of timestamps corresponding to a single animal trajectory.
+#'  
+#' @param geo A logical value indicating whether the locations are defined by 
+#'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE.
+#'  
+#' @return A vector of the same length as x and y corresponding to the linear 
+#'  speeds between each pair of successive locations along the trajectory.
 #' 
-#' @seealso \code{\link{linear_speed}}
+#' @author Simon Garnier, \email{garnier@@njit.edu}
+#' 
+#' @seealso \code{\link{linSpeed}}, \code{\link{linAcc}}
 #' 
 #' @examples
-#' # Generate and plot a random smooth trajectory
-#' x <- filter(cumsum(rnorm(1001)), rep(1 / 10, 10))
-#' y <- filter(cumsum(rnorm(1001)), rep(1 / 10, 10))
-#' t <- 0:1000
-#' plot(y ~ x, type = "l", asp = 1)
-#' 
-#' # Compute and plot linear speed
-#' s <- linear_speed(x, y, t)
-#' plot(s ~ t, type = "l")
-#' 
-#' # Compute and plot linear acceleration
-#' a <- linear_acceleration(s)
-#' plot(s ~ t)
+#' # TODO
 #' 
 #' @export
-#'
-linear_acceleration <- function(s) {
+linSpeed <- function(x, y, t, geo = FALSE) {
+  if (!is.vector(x) || !is.vector(y) || !lubridate::is.POSIXct(t) || 
+      !all.equal(length(x), length(y), length(t))) {
+    stop("x, y and t must be vectors of identical length.")
+  }
+  
+  dt <- diff(t)
+  dp <- linDist(x, y, geo = geo)
+  c(NA, dp[2:length(dp)] / as.numeric(dt, units = "secs"))
+}
+
+
+#' @title Linear accelerations along a trajectory
+#' 
+#' @description Given a set of cartesian coordinates representing an object's 
+#'  trajectory, this function computes the linear accelerations between each pair 
+#'  of successive locations along the trajectory.
+#'  
+#' @param x A vector of x (or longitude) coordinates corresponding to a single 
+#'  animal trajectory. 
+#' 
+#' @param y A vector of y (or latitude) coordinates corresponding to a single 
+#'  animal trajectory.
+#'  
+#' @param t A vector of timestamps corresponding to a single animal trajectory.
+#'  
+#' @param geo A logical value indicating whether the locations are defined by 
+#'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE.
+#'  
+#' @return A vector of the same length as x and y corresponding to the linear 
+#'  accelerations between each pair of successive locations along the trajectory.
+#' 
+#' @author Simon Garnier, \email{garnier@@njit.edu}
+#' 
+#' @seealso \code{\link{linSpeed}}, \code{\link{linAcc}}
+#' 
+#' @examples
+#' # TODO
+#' 
+#' @export
+linAcc <- function(x, y, t, geo = FALSE) {
+  if (!is.vector(x) || !is.vector(y) || !lubridate::is.POSIXct(t) || 
+      !all.equal(length(x), length(y), length(t))) {
+    stop("x, y and t must be vectors of identical length.")
+  }
+  
+  s <- linSpeed(x, y, t, geo = geo)
   c(NA, diff(s))
 }
-
-
-
-
-
-
-
-
