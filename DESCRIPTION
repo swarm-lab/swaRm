@@ -1,8 +1,8 @@
 Package: swaRm
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1
-Date: 2015-11-01
+Title: A Package For Processing Collective Movement Data
+Version: 0.2
+Date: 2015-11-04
 Author: Simon Garnier
 Maintainer: Simon Garnier <garnier@njit.edu>
 Description: More about what it does (maybe more than one line)
