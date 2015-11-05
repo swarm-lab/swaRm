@@ -63,21 +63,23 @@ makeTraj <- function(x, y, id = NULL, date = NULL, time = NULL, tz = "UTC",
   
   if (geo) {
     traj <- data.table::data.table(id = factor(ifelse(is.null(id), 0, id)),
-                                   lon = x, lat = y)
+                                   lon = x, lat = y, time = NA)
   } else {
     traj <- data.table::data.table(id = factor(ifelse(is.null(id), 0, id)),
-                                   x = x, y = y)
+                                   x = x, y = y, time = NA)
   }
   
   if (is.null(date) && is.null(time) && is.null(fps)) {
-    traj[, time := ISOdate(1970, 1, 1, tz = tz) + 1:nrow(traj)]
+    traj$time <- ISOdate(1970, 1, 1, tz = tz) + 1:nrow(traj)
   } else if (is.null(date) && is.null(time)) {
-    traj[, time := ISOdate(1970, 1, 1, tz = tz) + 1:nrow(traj) / fps]
+    traj$time <- ISOdate(1970, 1, 1, tz = tz) + 1:nrow(traj) / fps
   } else if (is.null(date)) {
-    traj[, time := lubridate::ymd_hms(paste("1970-01-01", time), tz = tz)]
+    traj$time <- lubridate::ymd_hms(paste("1970-01-01", time), tz = tz)
   } else {
-    traj[, time := lubridate::ymd_hms(paste(date, time), tz = tz)]
+    traj$time <- lubridate::ymd_hms(paste(date, time), tz = tz)
   }
+  
+  traj
 }
 
 
