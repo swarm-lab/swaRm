@@ -13,4 +13,6 @@ Imports:
     geosphere,
     lubridate,
     zoo
-RoxygenNote: 5.0.0
+Suggests:
+    dplyr
+RoxygenNote: 5.0.1

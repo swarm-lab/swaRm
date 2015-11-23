@@ -1,5 +1,6 @@
 # History files
 .Rhistory
+.RData
 
 # Example code in package build process
 *-Ex.R
@@ -7,3 +8,5 @@
 swarmR.so
 RcppExports.o.SyncTemp
 Untitled.R
+vignettes/rsconnect
+vignettes/swaRm-vignette_cache

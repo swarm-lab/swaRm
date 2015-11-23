@@ -27,13 +27,17 @@ centroid <- function(x, y, geo = FALSE) {
   
   if (geo) {
     if (length(x) > 1) {
-      geosphere::geomean(cbind(x, y))
+      centrd <- data.table::as.data.table(geosphere::geomean(cbind(x, y)))
+      names(centrd) <- c("lon", "lat")
     } else {
-      c(x, y)
+      centrd <- data.table::data.table(lon = x, lat = y)
     }
   } else {
-    c(mean(x, na.rm = TRUE), mean(y, na.rm = TRUE))
+    centrd <- data.table::data.table(x = mean(x, na.rm = TRUE), 
+                                     y = mean(y, na.rm = TRUE))
   }
+  
+  centrd
 }
 
 #' @title Distance to the centroid of a set of coordinates
@@ -62,13 +66,13 @@ dist2centroid <- function(x, y, geo = FALSE) {
     stop("x and y must be vector of identical length.")
   }
   
-  cntrd <- centroid(x, y, geo = geo)
+  centrd <- as.matrix(centroid(x, y, geo = geo))
   
   if (geo) {
-    m1 <- matrix(cntrd, nrow = length(x), ncol = 2, byrow = TRUE)
+    m1 <- matrix(centrd, nrow = length(x), ncol = 2, byrow = TRUE)
     m2 <- cbind(x, y)
     geosphere::distGeo(m1, m2)
   } else {
-    sqrt((x - cntrd[1]) ^ 2 + (y - cntrd[2]) ^ 2)
+    sqrt((x - centrd[1]) ^ 2 + (y - centrd[2]) ^ 2)
   }
 }

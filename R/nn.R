@@ -49,6 +49,8 @@ pdist <- function(x, y, geo = FALSE) {
 #' 
 #' @param y A vector of y (or latitude) coordinates.
 #' 
+#' @param id A vector corresponding to the unique identities of each track.
+#' 
 #' @param geo A logical value indicating whether the locations are defined by 
 #'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE. 
 #'  
@@ -63,9 +65,9 @@ pdist <- function(x, y, geo = FALSE) {
 #' # TODO
 #' 
 #' @export
-nn <- function(x, y, geo = FALSE) {
-  if ((length(x) != length(y)) | !is.numeric(x) | !is.numeric(y)) {
-    stop("x and y should be numeric vectors of the same length.")
+nn <- function(x, y, id, geo = FALSE) {
+  if (!all.equal(length(x), length(y), length(id)) | !is.numeric(x) | !is.numeric(y)) {
+    stop("x, y and id should be vectors of the same length.")
   }
   
   d <- pdist(x, y, geo = geo)
@@ -73,14 +75,15 @@ nn <- function(x, y, geo = FALSE) {
   d[is.na(x) | is.na(y), ] <- NA
   d[, is.na(x) | is.na(y)] <- NA
   
-  apply(d, 2, 
-        function(x) {
-          if (sum(is.na(x)) != length(x)) {
-            which(x == min(x, na.rm = TRUE))[1]
-          } else {
-            NA
-          }
-        })
+  idx <- apply(d, 2, 
+               function(x) {
+                 if (sum(is.na(x)) != length(x)) {
+                   which(x == min(x, na.rm = TRUE))[1]
+                 } else {
+                   NA
+                 }
+               })
+  id[idx]
 }
 
 

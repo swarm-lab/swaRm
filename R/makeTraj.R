@@ -24,6 +24,15 @@
 #'  the first timestamp defaults to 0 hours, 0 minutes, 1 second. The following 
 #'  timestamps are either in increment of 1 second or 1 second / fps. 
 #'  
+#' @param date.format A character string with 3 letters ('y' for year, 'm' for 
+#'  month, and 'd' for day) indicating the format of the date (e.g., 'ymd' for 
+#'  year-month-day, 'dmy' for day-month-year, etc).
+#'  
+#' @param time.format A character string with 2 or 3 letters ('h' for hour, 'm' 
+#'  for minute, and 's' for second) indicating the format of the time (e.g., 
+#'  'hms' for hour-minute-second, 'hm' for hour-minute, and 'ms' for 
+#'  minute-second).
+#'  
 #' @param tz A character string identifying the timezone of the timestamps of 
 #'  the trajectory. Default: "UTC". 
 #' 
@@ -51,7 +60,8 @@
 #' # TODO
 #' 
 #' @export
-makeTraj <- function(x, y, id = NULL, date = NULL, time = NULL, tz = "UTC", 
+makeTraj <- function(x, y, id = NULL, date = NULL, time = NULL, 
+                     date.format = "ymd", time.format = "hms", tz = "UTC", 
                      fps = NULL, geo = FALSE) {
   if (!is.vector(x) || !is.vector(y) || length(x) != length(y)) {
     stop("x and y must be vector of identical length.")
@@ -74,9 +84,11 @@ makeTraj <- function(x, y, id = NULL, date = NULL, time = NULL, tz = "UTC",
   } else if (is.null(date) && is.null(time)) {
     traj$time <- ISOdate(1970, 1, 1, tz = tz) + 1:nrow(traj) / fps
   } else if (is.null(date)) {
-    traj$time <- lubridate::ymd_hms(paste("1970-01-01", time), tz = tz)
+    fn <- get(paste0("ymd_", time.format), asNamespace("lubridate"))
+    traj$time <- do.call(fn, list(paste("1970-01-01", time), tz = tz))
   } else {
-    traj$time <- lubridate::ymd_hms(paste(date, time), tz = tz)
+    fn <- get(paste0(date.format, "_", time.format), asNamespace("lubridate"))
+    traj$time <- do.call(fn, list(paste(date, time), tz = tz))
   }
   
   traj

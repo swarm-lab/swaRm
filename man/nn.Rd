@@ -4,12 +4,14 @@
 \alias{nn}
 \title{Nearest neihgbor}
 \usage{
-nn(x, y, geo = FALSE)
+nn(x, y, id, geo = FALSE)
 }
 \arguments{
 \item{x}{A vector of x (or longitude) coordinates.}
 
 \item{y}{A vector of y (or latitude) coordinates.}
+
+\item{id}{A vector corresponding to the unique identities of each track.}
 
 \item{geo}{A logical value indicating whether the locations are defined by 
 geographic coordinates (pairs of longitude/latitude values). Default: FALSE.}

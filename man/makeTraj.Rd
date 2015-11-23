@@ -4,8 +4,8 @@
 \alias{makeTraj}
 \title{Build a trajectory table}
 \usage{
-makeTraj(x, y, id = NULL, date = NULL, time = NULL, tz = "UTC",
-  fps = NULL, geo = FALSE)
+makeTraj(x, y, id = NULL, date = NULL, time = NULL, date.format = "ymd",
+  time.format = "hms", tz = "UTC", fps = NULL, geo = FALSE)
 }
 \arguments{
 \item{x}{A vector of x (or longitude) coordinates corresponding to a single 
@@ -26,6 +26,15 @@ default to January 1st, 1970.}
 each location of the trajectory, in hours-minutes-seconds format. If not set,
 the first timestamp defaults to 0 hours, 0 minutes, 1 second. The following 
 timestamps are either in increment of 1 second or 1 second / fps.}
+
+\item{date.format}{A character string with 3 letters ('y' for year, 'm' for 
+month, and 'd' for day) indicating the format of the date (e.g., 'ymd' for 
+year-month-day, 'dmy' for day-month-year, etc).}
+
+\item{time.format}{A character string with 2 or 3 letters ('h' for hour, 'm' 
+for minute, and 's' for second) indicating the format of the time (e.g., 
+'hms' for hour-minute-second, 'hm' for hour-minute, and 'ms' for 
+minute-second).}
 
 \item{tz}{A character string identifying the timezone of the timestamps of 
 the trajectory. Default: "UTC".}
