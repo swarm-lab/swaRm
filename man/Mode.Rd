@@ -4,7 +4,7 @@
 \alias{Mode}
 \title{Compute the mode(s) of a discrete distribution}
 \usage{
-Mode(x)
+Mode(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{A vector or matrix of discrete values.}

@@ -12,8 +12,86 @@
 #' # TODO
 #' 
 #' @export
-Mode <- function(x) {
+Mode <- function(x, na.rm = TRUE) {
+  if (na.rm) {
+    x <- x[!is.na(x)]
+  }
   ux <- unique(x)
   tab <- tabulate(match(x, ux))
   ux[tab == max(tab)]
 }
+
+
+#' @title Check validity of trajectory table 
+#' 
+#' @description Test whether a variable contains a trajectory table as produced 
+#'  by the \code{\link{makeTraj}} function.
+#' 
+#' @param traj A variable to test. 
+#' 
+#' @author Simon Garnier, \email{garnier@@njit.edu}
+#' 
+#' @examples
+#' # TODO
+.isTraj <- function(traj) {
+  str1 <- c("id", "x", "y", "time")
+  str2 <- c("id", "lon", "lat", "time")
+  
+  all(str1 %in% names(traj)) | all(str2 %in% names(traj)) 
+}
+
+
+#' @title Check if trajectory table is using geographic coordinates
+#' 
+#' @description Trajectory tables produced by the \code{\link{makeTraj}} 
+#'  function can use a cartesian (x, y) or a geographic (latitude, longitude) 
+#'  coordinate system. This function helps determine which is being used in a 
+#'  particular table. 
+#' 
+#' @param traj A trajectory data table as produced by the \code{\link{makeTraj}}
+#'  function.
+#' 
+#' @author Simon Garnier, \email{garnier@@njit.edu}
+#' 
+#' @examples
+#' # TODO
+.isGeo <- function(traj) {
+  if (!(.isTraj(traj))) {
+    stop("traj should be a trajectory data table as produced by the makeTraj function.")
+  }
+  
+  all(c("lon", "lat") %in% names(traj))
+}
+
+
+#' @title Update error description in trajectory tables
+#' 
+#' @description This is an internal utility function to update the description
+#'  of errors in trajectory tables detected by the automated error detections 
+#'  and correction functions of the package. 
+#' 
+#' @param error A character vector of error descriptions.
+#' 
+#' @param update A character string of the same length as \code{error} of the 
+#'  error descriptions to be appended to the current error descriptions. 
+#' 
+#' @author Simon Garnier, \email{garnier@@njit.edu}
+#' 
+#' @examples
+#' # TODO
+.updateError <- function(error, update) {
+  idxOK <- error == "OK"
+  error[idxOK] <- update[idxOK]
+  error[!idxOK] <- paste(error[!idxOK], update[!idxOK], sep = "+")
+  error
+}
+
+
+
+
+
+
+
+
+
+

@@ -70,6 +70,7 @@ Given a set of cartesian coordinates representing an object's trajectory,
 Simon Garnier, \email{garnier@njit.edu}
 }
 \seealso{
-\code{\link{fillTraj}}, \code{\link{fixTraj}}
+\code{\link{fixTIMEDUP}}, \code{\link{fixTIMESEQ}}, \code{\link{fixTIMENA}},
+ \code{\link{fixLOCSEQ}}, \code{\link{fixLOCNA}}, \code{\link{fixMISSING}}
 }
 

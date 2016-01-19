@@ -78,6 +78,7 @@ a standard trajectory data table that will be usable by all the function in the
 library(swaRm)
 traj01 <- makeTraj(x = dat01$lon, y = dat01$lat, id = "01", 
                    date = dat01$date, time = dat01$time, 
+                   date.format = "ymd", time.format = "hms",
                    geo = TRUE)  # Set 'geo' to FALSE if working with cartesian
                                 # (i.e. non geographic) coordinates
 traj01

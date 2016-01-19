@@ -1,7 +1,7 @@
 Package: swaRm
 Type: Package
 Title: A Package For Processing Collective Movement Data
-Version: 0.2
+Version: 0.2.1
 Date: 2015-11-04
 Author: Simon Garnier
 Maintainer: Simon Garnier <garnier@njit.edu>
@@ -12,7 +12,8 @@ Imports:
     data.table,
     geosphere,
     lubridate,
-    zoo
+    zoo,
+    segmented
 Suggests:
     dplyr
 RoxygenNote: 5.0.1
