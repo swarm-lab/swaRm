@@ -296,6 +296,9 @@ fixTIMENA <- function(traj, spline = FALSE) {
 #' 
 #' @param traj A trajectory data table as produced by the \code{\link{makeTraj}}
 #'  function.
+#'  
+#' @param s The discrmination threshold of the outlier detection algorithm. 
+#'  Higher values correspond to less outliers.  
 #'
 #' @param spline If \code{spline} is \code{TRUE}, inconsistent locations are 
 #'  estimated using spline interpolation. If \code{FALSE} (the default), a linear 
@@ -322,7 +325,7 @@ fixTIMENA <- function(traj, spline = FALSE) {
 #' # TODO
 #' 
 #' @export
-fixLOCSEQ <- function(traj, spline = FALSE) {
+fixLOCSEQ <- function(traj, s = 6, spline = FALSE) {
   if (!(.isTraj(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
@@ -330,20 +333,26 @@ fixLOCSEQ <- function(traj, spline = FALSE) {
   geo <- .isGeo(traj)
   
   if (geo) {
-    m1 <- segmented::segmented.lm(lm(lon ~ time, data = traj), seg.Z = ~time)
-    m2 <- segmented::segmented.lm(lm(lat ~ time, data = traj), seg.Z = ~time)
+    m1 <- loess(lon ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
+    r <- abs(residuals(m1))
+    m1 <- loess(lon ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
+    m2 <- loess(lat ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
+    r <- abs(residuals(m2))
+    m2 <- loess(lat ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
   } else {
-    m1 <- segmented::segmented.lm(lm(x ~ time, data = traj), seg.Z = ~time)
-    m2 <- segmented::segmented.lm(lm(y ~ time, data = traj), seg.Z = ~time)
+    m1 <- loess(x ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
+    r <- abs(residuals(m1))
+    m1 <- loess(x ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
+    m2 <- loess(y ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
+    r <- abs(residuals(m2))
+    m2 <- loess(y ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
   }
   
   r1 <- sqrt(abs(m1$residuals))
   r2 <- sqrt(abs(m2$residuals))
-  pos1 <- as.numeric(names(r1))
-  pos2 <- as.numeric(names(r2))
-  out1 <- r1 > median(r1) + 3 * IQR(r1)
-  out2 <- r2 > median(r2) + 3 * IQR(r2)
-  idxSEQ <- unique(c(pos1[out1], pos2[out2]))
+  out1 <- r1 > median(r1) + s * IQR(r1)
+  out2 <- r2 > median(r2) + s * IQR(r2)
+  idxSEQ <- unique(c(which(out1), which(out2)))
 
   traj$error[idxSEQ] <- .updateError(traj$error[idxSEQ], rep("locSEQ", length(idxSEQ)))
   

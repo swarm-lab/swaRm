@@ -4,11 +4,14 @@
 \alias{fixLOCSEQ}
 \title{Correct inconsistent locations in a trajectory table}
 \usage{
-fixLOCSEQ(traj, spline = FALSE)
+fixLOCSEQ(traj, s = 6, spline = FALSE)
 }
 \arguments{
 \item{traj}{A trajectory data table as produced by the \code{\link{makeTraj}}
 function.}
+
+\item{s}{The discrmination threshold of the outlier detection algorithm. 
+Higher values correspond to less outliers.}
 
 \item{spline}{If \code{spline} is \code{TRUE}, inconsistent locations are 
 estimated using spline interpolation. If \code{FALSE} (the default), a linear 
