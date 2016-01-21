@@ -8,8 +8,11 @@
 #' 
 #' @param y A vector of y (or latitude) coordinates.
 #' 
-#' @return A logical vector of the same length as x and y. TRUE indicates that 
-#' the corresponding point is part of the convex hull of the set. 
+#' @return A numerical vector of the same length as x and y. 0 indicates that 
+#'  the corresponding point is not part of the convex hull of the set. Values
+#'  > 0 indicates that the corresponding point is part of the convex hull, and 
+#'  each value corresponds to the order of the point along the convex hull 
+#'  polygon.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
@@ -30,8 +33,8 @@ isChull <- function(x, y) {
   x[idx] <- mean(x, na.rm = TRUE)
   y[idx] <- mean(y, na.rm = TRUE)
   ch <- chull(x, y)
-  int <- intersect(1:length(x), ch)
+  pos <- 1:length(ch)
   is.chull <- rep(FALSE, length(x))
-  is.chull[int] <- TRUE
+  is.chull[ch] <- pos
   is.chull
 }
