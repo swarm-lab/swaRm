@@ -142,7 +142,7 @@ fixTIMEDUP <- function(traj, step = NULL) {
   if (is.null(step)) {
     d <- diff(traj$time)
     u <- units(d)
-    step <- as.difftime(Mode(d)[1], units = u)
+    step <- as.difftime(.Mode(d)[1], units = u)
   }
   
   idxDUP <- which(duplicated(traj$time) & !is.na(traj$time))
@@ -204,7 +204,7 @@ fixTIMESEQ <- function(traj, step = NULL) {
   if (is.null(step)) {
     d <- diff(traj$time)
     u <- units(d)
-    step <- as.difftime(Mode(d)[1], units = u)
+    step <- as.difftime(.Mode(d)[1], units = u)
   }
   
   m <- MASS::rlm(as.numeric(traj$time) ~ c(1:length(traj$time)))
@@ -530,7 +530,7 @@ fixMISSING <- function(traj, begin = NULL, end = NULL, step = NULL, spline = FAL
   if (is.null(step)) {
     d <- diff(traj$time)
     u <- units(d)
-    step <- as.difftime(Mode(d)[1], units = u)
+    step <- as.difftime(.Mode(d)[1], units = u)
   }
   
   if (is.null(begin)) {

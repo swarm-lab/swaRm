@@ -10,9 +10,7 @@
 #' 
 #' @examples
 #' # TODO
-#' 
-#' @export
-Mode <- function(x, na.rm = TRUE) {
+.Mode <- function(x, na.rm = TRUE) {
   if (na.rm) {
     x <- x[!is.na(x)]
   }
@@ -87,7 +85,11 @@ Mode <- function(x, na.rm = TRUE) {
 }
 
 
-
+.cartesianPerimeter <- function(x, y) {
+  l <- length(x)
+  d <- sqrt((x[1:(l - 1)] - x[2:l]) ^ 2 + (y[1:(l - 1)] - y[2:l]) ^ 2)
+  sum(d)
+}
 
 
 

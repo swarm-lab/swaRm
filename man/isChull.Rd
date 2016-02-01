@@ -12,16 +12,15 @@ isChull(x, y)
 \item{y}{A vector of y (or latitude) coordinates.}
 }
 \value{
-A numerical vector of the same length as x and y. 0 indicates that 
- the corresponding point is not part of the convex hull of the set. Values
- > 0 indicates that the corresponding point is part of the convex hull, and 
- each value corresponds to the order of the point along the convex hull 
- polygon.
+A numerical vector of the same length as \code{x} and \code{y}. 
+ \code{0} indicates that the corresponding point is not part of the convex 
+ hull of the set. Values \code{>0} indicates that the corresponding point is 
+ part of the convex hull, and each value corresponds to the order of the 
+ point along the convex hull polygon.
 }
 \description{
-Given a set of cartesian coordinates representing, this function 
- determines which of these points belongs to the convex hull (or envelope) of 
- the set.
+Given a set of cartesian coordinates, this function determines 
+ which points belongs to the convex hull (or envelope) of the set.
 }
 \examples{
 # TODO
