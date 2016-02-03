@@ -19,7 +19,7 @@
 #' # TODO
 #' 
 #' @export
-isChull <- function(x, y) {
+isChull <- memoise::memoise(function(x, y) {
   if ((length(x) != length(y)) | !is.numeric(x) | !is.numeric(y)) {
     stop("x and y should be numeric vectors of the same length.")
   }
@@ -36,7 +36,7 @@ isChull <- function(x, y) {
   is.chull <- rep(FALSE, length(x))
   is.chull[ch] <- pos
   is.chull
-}
+})
 
 
 #' @title Surface area of the convex hull of a set of points
@@ -120,7 +120,5 @@ chullPerimeter <- function(x, y, geo=FALSE) {
     .cartesianPerimeter(xx, yy)
   }
 }
-
-
 
 

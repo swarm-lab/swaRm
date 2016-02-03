@@ -8,11 +8,12 @@ Maintainer: Simon Garnier <garnier@njit.edu>
 Description: More about what it does (maybe more than one line)
 License: GPL v2
 LazyData: TRUE
-Imports:
+Imports: 
     data.table,
     geosphere,
     lubridate,
-    zoo
-Suggests:
+    zoo,
+    memoise
+Suggests: 
     dplyr
 RoxygenNote: 5.0.1

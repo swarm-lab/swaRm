@@ -92,8 +92,29 @@
 }
 
 
-
-
-
-
+.ellipse <- memoise::memoise(function(x, y, level = 0.95) {
+  n <- length(x)
+  M <- cbind(x, y)
+  
+  tmp <- MASS::cov.trob(M)
+  
+  eig <- eigen(tmp$cov)
+  eigval <- eig$values
+  eigvec <- eig$vectors
+  eigidx <- order(eigval)
+  
+  qfval <- qf(level, 2, n - 1)
+  
+  if (eigidx[1] == 1) {
+    a = sqrt(2 * eigval[2] * qfval)
+    b = sqrt(2 * eigval[1] * qfval)
+  } else {
+    a = sqrt(2 * eigval[1] * qfval);
+    b = sqrt(2 * eigval[2] * qfval);
+  }
+  
+  alpha <- atan(eigvec[2, 1] / eigvec[2, 2])
+  
+  list(xC = tmp$center[1], yC = tmp$center[2], alpha = alpha, a = a, b = b)
+})
 
