@@ -85,6 +85,19 @@
 }
 
 
+#' @title Computes the perimeter of a polygon in cartesian space
+#' 
+#' @description Given a set of cartesian coordinates representing a polygon, 
+#'  this function computes the perimeter of the polygon
+#' 
+#' @param x A vector of x coordinates. 
+#' 
+#' @param y A vector of y coordinates.
+#' 
+#' @author Simon Garnier, \email{garnier@@njit.edu}
+#' 
+#' @examples
+#' # TODO
 .cartesianPerimeter <- function(x, y) {
   l <- length(x)
   d <- sqrt((x[1:(l - 1)] - x[2:l]) ^ 2 + (y[1:(l - 1)] - y[2:l]) ^ 2)
@@ -92,6 +105,21 @@
 }
 
 
+#' @title Computes confidence ellipse of a bivariate set of points
+#' 
+#' @description This function computes the confidence ellipse of a set of 
+#'  bivariate coordinates. 
+#' 
+#' @param x A vector of x coordinates. 
+#' 
+#' @param y A vector of y coordinates.
+#' 
+#' @param level The confidence level of the ellipse. 
+#' 
+#' @author Simon Garnier, \email{garnier@@njit.edu}
+#' 
+#' @examples
+#' # TODO
 .ellipse <- memoise::memoise(function(x, y, level = 0.95) {
   n <- length(x)
   M <- cbind(x, y)
