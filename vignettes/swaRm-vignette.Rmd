@@ -62,8 +62,8 @@ First, we will load in memory the first of these example data files.
 
 ```{r}
 filePath <- system.file("extdata/01.csv", package = "swaRm")
-dat01 <- read.csv(filePath)
-head(dat01)
+dat <- read.csv(filePath)
+head(dat)
 ```
 
 This file contains GPS data, with a date, a timestamp, and longitude-latitude 
@@ -76,11 +76,75 @@ a standard trajectory data table that will be usable by all the function in the
 
 ```{r}
 library(swaRm)
-traj01 <- makeTraj(x = dat01$lon, y = dat01$lat, id = "01", 
-                   date = dat01$date, time = dat01$time, 
-                   date.format = "ymd", time.format = "hms",
-                   geo = TRUE)  # Set 'geo' to FALSE if working with cartesian
-                                # (i.e. non geographic) coordinates
+traj <- makeTraj(x = dat$lon, y = dat$lat, id = "01", 
+                 date = dat$date, time = dat$time, 
+                 date.format = "ymd", time.format = "hms",
+                 geo = TRUE)  # Set 'geo' to FALSE if working with cartesian
+                              # (i.e. non geographic) coordinates
+traj
+```
+
+[Back to top]("#")
+
+---
+
+# Dealing with errors and missing observations
+
+Errors and missing observations are common problems with tracking data, for 
+instance when working in areas with poor GPS satellite covering. `swaRm` 
+provides a set of convenience functions to automatically detect and correct some
+of the most common types of errors. These functions will add an extra "error" 
+column to the trajectory table that will indicate what type of error (if any) 
+was detected and corrected for each time point.
+
+These functions are meant to assist the user during the processing of his/her 
+tracking data. However, as every automated method, they are not 100% reliable 
+and a manual inspection of the data is recommended to ensure that all errors 
+were correctly detected and corrected appropriately. It is also recommended that
+you keep the original tracking data untouched in order to facilitate the 
+comparison between the data sets before and after the correction is applied. 
+Note as well that the order in which you apply these different corrections will 
+have an impact on the final state of your data.
+
+## Missing observations
+
+```{r}
+traj01 <- fixMISSING(traj) 
+traj01
+```
+
+## Duplicated timestamps
+
+```{r}
+traj01 <- fixTIMEDUP(traj01) 
+traj01
+```
+
+## Inconsistent timestamps
+
+```{r}
+traj01 <- fixTIMESEQ(traj01) 
+traj01
+```
+
+## NA timestamps
+
+```{r}
+traj01 <- fixTIMENA(traj01) 
+traj01
+```
+
+## Inconsistent locations
+
+```{r}
+traj01 <- fixLOCSEQ(traj01) 
+traj01
+```
+
+## NA locations
+
+```{r}
+traj01 <- fixLOCNA(traj01) 
 traj01
 ```
 
@@ -88,24 +152,22 @@ traj01
 
 ---
 
-# Dealing with missing observations
-
-Missing observations are frequent in tracking data, especially when using GPS 
-that can lose track of satellites frequently. `swaRm` provides convenience 
-functions to deal with missing observations by first detecting them, and then
-replacing them with interpolated observations (either linearly or using splines).
-
-For instance in the imported data, we are missing a few seconds at the beginning
-of the file. We can complete the trajectory as follows. 
+# Representing a geolocalized trajectory table using ggplot2 and ggmap
 
 ```{r}
-traj01 <- completeTraj(traj01, geo = TRUE)
-traj01
+library(ggplot2)
+library(ggmap)
 
-traj01 <- fixTraj(traj01, geo = TRUE) # Use 'spline = TRUE' to interpolate the 
-                                      # missing observations with a spline function
-                                      # instead of a linear one. 
-traj01
+myLocation <- c(lon = mean(range(traj01$lon)), lat = mean(range(traj01$lat)))
+myMap <- get_map(location = myLocation, source = "google", 
+                 maptype = "satellite", zoom = 17, scale = 2)
+
+ggmap(myMap) + 
+  geom_path(data = traj01, aes(x = lon, y = lat, color = id), size = 1) +
+  xlab("Longitude") + ylab("Latitude") +
+  xlim(min(traj01$lon), max(traj01$lon)) + 
+  ylim(min(traj01$lat), max(traj01$lat)) + 
+  guides(color = FALSE)
 ```
 
 [Back to top]("#")
@@ -117,43 +179,52 @@ traj01
 ## Linear distances between successive steps
 
 ```{r}
-traj01[, linDist := linDist(x = lon, y = lat, geo = TRUE)]
-traj01[, cumDist := cumsum(linDist)]
+library(dplyr) # I will use dplyr from this point foward to facilitate the 
+               # manipulation of the trajectory table
+
+traj01 <- mutate(traj01, 
+                 linDist = linDist(x = lon, y = lat, geo = TRUE),
+                 cumDist = cumsum(linDist))
 traj01
 ```
 
 ## Linear speeds between successive steps
 
 ```{r}
-traj01[, linSpeed := linSpeed(x = lon, y = lat, t = time, geo = TRUE)]
+traj01 <- mutate(traj01, 
+                 linSpeed = linSpeed(x = lon, y = lat, t = time, geo = TRUE))
 traj01
 ```
 
 ## Linear accelerations between successive steps
 
 ```{r}
-traj01[, linAcc := linAcc(x = lon, y = lat, t = time, geo = TRUE)]
+traj01 <- mutate(traj01,
+                 linAcc = linAcc(x = lon, y = lat, t = time, geo = TRUE))
 traj01
 ```
 
 ## Headings between successive steps
 
 ```{r}
-traj01[, heading := heading(x = lon, y = lat, geo = TRUE)]
+traj01 <- mutate(traj01,
+                 heading = heading(x = lon, y = lat, geo = TRUE))
 traj01
 ```
 
 ## Angular speeds between successive steps
 
 ```{r}
-traj01[, angSpeed := angSpeed(x = lon, y = lat, t = time, geo = TRUE)]
+traj01 <- mutate(traj01,
+                 angSpeed = angSpeed(x = lon, y = lat, t = time, geo = TRUE))
 traj01
 ```
 
 ## Angular accelerations between successive steps
 
 ```{r}
-traj01[, angAcc := angAcc(x = lon, y = lat, t = time, geo = TRUE)]
+traj01 <- mutate(traj01,
+                 angAcc = angAcc(x = lon, y = lat, t = time, geo = TRUE))
 traj01
 ```
 
@@ -163,14 +234,7 @@ traj01
 
 # Working with multiple trajectories
 
-In order to simplify the manipulation of multiple trajectories, we will use the 
-`dplyr` package from now on. 
-
-```{r, message=FALSE}
-library(dplyr)
-```
-
-## Load files in memory and compute all basic trajectory parameters
+## Load multiple files in memory and compute all basic trajectory parameters
 
 ```{r}
 filePaths <- dir(system.file("extdata", package = "swaRm"), full.names = TRUE)
@@ -179,8 +243,8 @@ trajs <- lapply(filePaths, function(path) {
   dat <- read.csv(path) 
   makeTraj(x = dat$lon, y = dat$lat, date = dat$date, time = dat$time,
            id = gsub(".*/|.csv.*", "\\1", path), geo = TRUE) %>%
-    completeTraj(geo = TRUE) %>%
-    fixTraj(geo = TRUE) %>%
+    fixTIMEDUP() %>% fixMISSING() %>% fixTIMESEQ() %>% 
+    fixTIMENA() %>% fixLOCSEQ() %>% fixLOCNA() %>%
     mutate(linDist = linDist(lon, lat, geo = TRUE)) %>%
     mutate(cumDist = cumsum(linDist)) %>%
     mutate(linSpeed = linSpeed(lon, lat, time, geo = TRUE),
@@ -193,15 +257,9 @@ trajs <- lapply(filePaths, function(path) {
 trajs
 ```
 
-## Representing the trajectories 
-
-We will use `ggplot2` and `ggmap` to represent the different trajectories in 
-their geographic context. 
+## Representing the geolocalized trajectories using ggplot2 and ggmap
 
 ```{r, cache=TRUE, message=FALSE}
-library(ggplot2)
-library(ggmap)
-
 myLocation <- c(lon = mean(range(trajs$lon)), lat = mean(range(trajs$lat)))
 myMap <- get_map(location = myLocation, source = "google", 
                  maptype = "satellite", zoom = 17, scale = 2)
@@ -214,7 +272,9 @@ ggmap(myMap) +
   guides(color = FALSE)
 ```
 
-## Calculating the centroid of the trajectories
+## Summarizing group properties
+
+### Calculating the centroid of the trajectories
 
 ```{r, warning=FALSE}
 trajSummary <- group_by(trajs, time) %>%
@@ -228,7 +288,7 @@ ggmap(myMap) +
   ylim(min(trajs$lat), max(trajs$lat))
 ```
 
-## Calculating the distances to the centroid of the trajectories
+### Calculating the distances to the centroid of the trajectories
 
 ```{r}
 trajs <- group_by(trajs, time) %>%
@@ -237,42 +297,60 @@ trajs <- group_by(trajs, time) %>%
 trajSummary <- group_by(trajs, time) %>% 
   summarize(distToCentroid = mean(distToCentroid)) %>%
   merge(trajSummary, by = "time")
+
+ggplot(trajSummary, aes(x = time, y = distToCentroid)) +
+  geom_line() + 
+  xlab("Time") + ylab("Distance to the group's centroid (m)") + 
+  ylim(0, NA)
 ```
 
-## Determining the identity of and distance to the nearest neighbor
+### Determining the identity of and distance to the nearest neighbor
 
 ```{r}
 trajs <- group_by(trajs, time) %>%
   mutate(nearNeighbor = nn(lon, lat, id, geo = TRUE),
          nearNeighborDist = nnd(lon, lat, geo = TRUE))
+
+trajSummary <- group_by(trajs, time) %>% 
+  summarize(nearNeighborDist = mean(nearNeighborDist)) %>%
+  merge(trajSummary, by = "time")
+
+ggplot(trajSummary, aes(x = time, y = nearNeighborDist)) +
+  geom_line() + 
+  xlab("Time") + ylab("Mean distance to nearest neighbor (m)") + 
+  ylim(0, NA)
 ```
 
-## Determining which individuals are on the convex hull of the group
+### Determining which individuals are on the convex hull of the group
 
 ```{r}
 trajs <- group_by(trajs, time) %>%
   mutate(isChull = isChull(lon, lat))
 
-
-# Plot the convex hull for a given timestamp
-tmp <- filter(trajs, time == trajs$time[1]) 
-tmp2 <- filter(tmp, isChull == TRUE) 
+# Plot the convex hull for a randomly chose timestamp
+randTime <- trajs$time[sample(1:nrow(trajs), 1)]
+subTraj <- filter(trajs, time == randTime)
+chullPol <- filter(subTraj, isChull > 0) %>%
+  arrange(isChull)
   
-myLocation <- c(lon = mean(range(tmp$lon)), lat = mean(range(tmp$lat)))
+myLocation <- c(lon = mean(range(subTraj$lon)), lat = mean(range(subTraj$lat)))
 myMap <- get_map(location = myLocation, source = "google", 
                  maptype = "satellite", zoom = 19, scale = 2)
 
 ggmap(myMap) + 
-  geom_point(data = tmp, aes(lon, lat), color = "red") + 
+  geom_polygon(data = chullPol, aes(lon, lat), fill = "red", alpha = 0.25) +
+  geom_point(data = subTraj, aes(lon, lat), size = 3, color = "white") + 
+  geom_point(data = subTraj, aes(lon, lat, color = id), size = 2) + 
   xlab("Longitude") + ylab("Latitude") +
-  xlim(min(tmp$lon), max(tmp$lon)) + 
-  ylim(min(tmp$lat), max(tmp$lat)) + 
+  xlim(min(subTraj$lon), max(subTraj$lon)) + 
+  ylim(min(subTraj$lat), max(subTraj$lat)) + 
   guides(color = FALSE)
 ```
 
 [Back to top]("#")
 
 ---
+
 
 
 

@@ -207,21 +207,23 @@ fixTIMESEQ <- function(traj, step = NULL) {
     step <- as.difftime(.Mode(d)[1], units = u)
   }
   
-  m <- MASS::rlm(as.numeric(traj$time) ~ c(1:length(traj$time)))
+  m <- MASS::rlm(as.numeric(traj$time) ~ c(1:length(traj$time)), maxit = 200)
   r <- sqrt(abs(m$residuals))
   pos <- as.numeric(names(r))
-  out <- (r > median(r) + 1.5 * IQR(r)) | (r < median(r) - 1.5 * IQR(r))
+  out <- (r > median(r) + 3 * IQR(r)) | (r < median(r) - 3 * IQR(r))
   idxSEQ <- pos[out]
   
-  traj$error[idxSEQ] <- .updateError(traj$error[idxSEQ], rep("timeSEQ", length(idxSEQ)))
-  
-  for (i in 1:length(idxSEQ)) {
-    if (idxSEQ[i] != 1) {
-      if (!((traj$time[idxSEQ[i] - 1] + step) %in% traj$time)) {
-        traj$time[idxSEQ[i]] <- traj$time[idxSEQ[i] - 1] + step
-      } else {
-        traj$time[idxSEQ[i]] <- NA
-        traj$error[idxSEQ[i]] <- "OK"
+  if (length(idxSEQ) > 0) {
+    traj$error[idxSEQ] <- .updateError(traj$error[idxSEQ], rep("timeSEQ", length(idxSEQ)))
+    
+    for (i in 1:length(idxSEQ)) {
+      if (idxSEQ[i] != 1) {
+        if (!((traj$time[idxSEQ[i] - 1] + step) %in% traj$time)) {
+          traj$time[idxSEQ[i]] <- traj$time[idxSEQ[i] - 1] + step
+        } else {
+          traj$time[idxSEQ[i]] <- NA
+          traj$error[idxSEQ[i]] <- "OK"
+        }
       }
     }
   }
@@ -330,21 +332,29 @@ fixLOCSEQ <- function(traj, s = 6, spline = FALSE) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
+  if (is.null(traj$error)) {
+    traj$error <- rep("OK", nrow(traj))
+  }
+  
   geo <- .isGeo(traj)
   
   if (geo) {
     m1 <- loess(lon ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
     r <- abs(residuals(m1))
+    r[r == 0] <- min(r[r > 0])
     m1 <- loess(lon ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
     m2 <- loess(lat ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
     r <- abs(residuals(m2))
+    r[r == 0] <- min(r[r > 0])
     m2 <- loess(lat ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
   } else {
     m1 <- loess(x ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
     r <- abs(residuals(m1))
+    r[r == 0] <- min(r[r > 0])
     m1 <- loess(x ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
     m2 <- loess(y ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
     r <- abs(residuals(m2))
+    r[r == 0] <- min(r[r > 0])
     m2 <- loess(y ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
   }
   
@@ -426,6 +436,10 @@ fixLOCSEQ <- function(traj, s = 6, spline = FALSE) {
 fixLOCNA <- function(traj, spline = FALSE) {
   if (!(.isTraj(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
+  }
+  
+  if (is.null(traj$error)) {
+    traj$error <- rep("OK", nrow(traj))
   }
   
   geo <- .isGeo(traj)
@@ -520,6 +534,10 @@ fixMISSING <- function(traj, begin = NULL, end = NULL, step = NULL, spline = FAL
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
+  if (is.null(traj$error)) {
+    traj$error <- rep("OK", nrow(traj))
+  }
+  
   id <- unique(traj$id)
   if (length(id) > 1) {
     stop("traj should have the same id for all observations.")
@@ -544,7 +562,8 @@ fixMISSING <- function(traj, begin = NULL, end = NULL, step = NULL, spline = FAL
   tmp <- data.table::data.table(time = seq(begin, end, step),
                                 id = id)
   traj <- merge(traj, tmp, by = c("id", "time"), all = TRUE)
-  traj$error[is.na(traj$error)] <- "MISSING"
+  idxMISSING <- is.na(traj$error)
+  traj$error[idxMISSING] <- "MISSING"
   
   if (geo) {
     idxNA <- is.na(traj$lon) | is.na(traj$lat)
