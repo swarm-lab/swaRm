@@ -37,7 +37,7 @@ package for processing collective movement data.
 [`drat` repository](https://github.com/swarm-lab/drat) by running the following
 lines in your R terminal: 
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, message=FALSE, warning=FALSE}
 install.packages("drat")  # This line is required if drat is not present 
                           # in your R installation.
 
@@ -60,7 +60,7 @@ for demonstrating its functioning.
 
 First, we will load in memory the first of these example data files. 
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 filePath <- system.file("extdata/01.csv", package = "swaRm")
 dat <- read.csv(filePath)
 head(dat)
@@ -74,14 +74,14 @@ The first step of the analysis process is to transform this imported data into
 a standard trajectory data table that will be usable by all the function in the 
 `swaRm` package. 
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(swaRm)
 traj <- makeTraj(x = dat$lon, y = dat$lat, id = "01", 
                  date = dat$date, time = dat$time, 
                  date.format = "ymd", time.format = "hms",
                  geo = TRUE)  # Set 'geo' to FALSE if working with cartesian
                               # (i.e. non geographic) coordinates
-traj
+print(traj)
 ```
 
 [Back to top]("#")
@@ -108,44 +108,44 @@ have an impact on the final state of your data.
 
 ## Missing observations
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 traj01 <- fixMISSING(traj) 
-traj01
+print(traj01)
 ```
 
 ## Duplicated timestamps
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 traj01 <- fixTIMEDUP(traj01) 
-traj01
+print(traj01)
 ```
 
 ## Inconsistent timestamps
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 traj01 <- fixTIMESEQ(traj01) 
-traj01
+print(traj01)
 ```
 
 ## NA timestamps
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 traj01 <- fixTIMENA(traj01) 
-traj01
+print(traj01)
 ```
 
 ## Inconsistent locations
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 traj01 <- fixLOCSEQ(traj01) 
-traj01
+print(traj01)
 ```
 
 ## NA locations
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 traj01 <- fixLOCNA(traj01) 
-traj01
+print(traj01)
 ```
 
 [Back to top]("#")
@@ -154,7 +154,7 @@ traj01
 
 # Representing a geolocalized trajectory table using ggplot2 and ggmap
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(ggmap)
 
@@ -178,54 +178,54 @@ ggmap(myMap) +
 
 ## Linear distances between successive steps
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(dplyr) # I will use dplyr from this point foward to facilitate the 
                # manipulation of the trajectory table
 
 traj01 <- mutate(traj01, 
                  linDist = linDist(x = lon, y = lat, geo = TRUE),
                  cumDist = cumsum(linDist))
-traj01
+print(traj01)
 ```
 
 ## Linear speeds between successive steps
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 traj01 <- mutate(traj01, 
                  linSpeed = linSpeed(x = lon, y = lat, t = time, geo = TRUE))
-traj01
+print(traj01)
 ```
 
 ## Linear accelerations between successive steps
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 traj01 <- mutate(traj01,
                  linAcc = linAcc(x = lon, y = lat, t = time, geo = TRUE))
-traj01
+print(traj01)
 ```
 
 ## Headings between successive steps
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 traj01 <- mutate(traj01,
                  heading = heading(x = lon, y = lat, geo = TRUE))
-traj01
+print(traj01)
 ```
 
 ## Angular speeds between successive steps
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 traj01 <- mutate(traj01,
                  angSpeed = angSpeed(x = lon, y = lat, t = time, geo = TRUE))
-traj01
+print(traj01)
 ```
 
 ## Angular accelerations between successive steps
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 traj01 <- mutate(traj01,
                  angAcc = angAcc(x = lon, y = lat, t = time, geo = TRUE))
-traj01
+print(traj01)
 ```
 
 [Back to top]("#")
@@ -236,7 +236,7 @@ traj01
 
 ## Load multiple files in memory and compute all basic trajectory parameters
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 filePaths <- dir(system.file("extdata", package = "swaRm"), full.names = TRUE)
 
 trajs <- lapply(filePaths, function(path) {
@@ -254,12 +254,12 @@ trajs <- lapply(filePaths, function(path) {
            angAcc = angAcc(lon, lat, time, geo = TRUE))
 }) %>% data.table::rbindlist()
 
-trajs
+print(trajs)
 ```
 
 ## Representing the geolocalized trajectories using ggplot2 and ggmap
 
-```{r, cache=TRUE, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 myLocation <- c(lon = mean(range(trajs$lon)), lat = mean(range(trajs$lat)))
 myMap <- get_map(location = myLocation, source = "google", 
                  maptype = "satellite", zoom = 17, scale = 2)
@@ -276,7 +276,7 @@ ggmap(myMap) +
 
 ### Calculating the centroid of the trajectories
 
-```{r, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 trajSummary <- group_by(trajs, time) %>%
   do(centroid(lon, lat, geo = TRUE))
 
@@ -290,7 +290,7 @@ ggmap(myMap) +
 
 ### Calculating the distances to the centroid of the trajectories
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 trajs <- group_by(trajs, time) %>%
   mutate(distToCentroid = dist2centroid(lon, lat, geo = TRUE))
 
@@ -306,7 +306,7 @@ ggplot(trajSummary, aes(x = time, y = distToCentroid)) +
 
 ### Determining the identity of and distance to the nearest neighbor
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 trajs <- group_by(trajs, time) %>%
   mutate(nearNeighbor = nn(lon, lat, id, geo = TRUE),
          nearNeighborDist = nnd(lon, lat, geo = TRUE))
@@ -323,7 +323,7 @@ ggplot(trajSummary, aes(x = time, y = nearNeighborDist)) +
 
 ### Determining which individuals are on the convex hull of the group
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 trajs <- group_by(trajs, time) %>%
   mutate(isChull = isChull(lon, lat))
 
@@ -350,11 +350,4 @@ ggmap(myMap) +
 [Back to top]("#")
 
 ---
-
-
-
-
-
-
-
 
