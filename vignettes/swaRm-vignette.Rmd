@@ -321,7 +321,7 @@ ggplot(trajSummary, aes(x = time, y = nearNeighborDist)) +
   ylim(0, NA)
 ```
 
-### Determining which individuals are on the convex hull of the group
+### Determining which individuals are on the group's convex hull
 
 ```{r, message=FALSE, warning=FALSE}
 trajs <- group_by(trajs, time) %>%
@@ -347,6 +347,61 @@ ggmap(myMap) +
   guides(color = FALSE)
 ```
 
+### Measuring the perimeter and surface area of the group's convex hull
+
+```{r, message=FALSE, warning=FALSE}
+trajSummary <- group_by(trajs, time) %>% 
+  summarize(chullPerim = chullPerimeter(lon, lat, geo = TRUE),
+            chullArea = chullArea(lon, lat, geo = TRUE)) %>%
+  merge(trajSummary, by = "time")
+
+ggplot(trajSummary, aes(x = time, y = chullPerim)) +
+  geom_line() + 
+  xlab("Time") + ylab("Perimeter of the group's convex hull (m)") + 
+  ylim(0, NA)
+
+ggplot(trajSummary, aes(x = time, y = chullArea)) +
+  geom_line() + 
+  xlab("Time") + ylab(bquote("Surface area of the group's convex hull (" * m ^ 2 * ")")) + 
+  ylim(0, NA)
+```
+
+### Estimating the group's shape
+
+The group's general shape is estimated by fitting a confidence ellipse on either 
+the cooordinates of all the group members, or only those belonging to the convex
+hull of the group (we will use the first method here). 
+
+From this ellipse, we can extract two shape parameters:
+
+1. Sphericity: this is calculated as the ratio between the short and long axis 
+of the ellipse. A ratio of 1 indicates a perfectly circular ellipse. Lower ratios
+indicate that the ellipse is elongated in a particular direction. 
+
+```{r, message=FALSE, warning=FALSE}
+trajSummary <- group_by(trajs, time) %>% 
+  summarize(sphericity = sphericity(lon, lat)) %>%
+  merge(trajSummary, by = "time")
+
+ggplot(trajSummary, aes(x = time, y = sphericity)) +
+  geom_line() + 
+  xlab("Time") + ylab("Group's sphericity") + 
+  ylim(0, 1)
+```
+
+2. Stretch direction: this is calculated as the angle (in radians) between the 
+major axis of the ellipse and the x-axis. It should always be in [-$\pi/2$,$\pi/2$].
+
+```{r, message=FALSE, warning=FALSE}
+trajSummary <- group_by(trajs, time) %>% 
+  summarize(stretch = stretch(lon, lat)) %>%
+  merge(trajSummary, by = "time")
+
+ggplot(trajSummary, aes(x = time, y = stretch)) +
+  geom_line() + 
+  xlab("Time") + ylab("Group's sphericity") + 
+  ylim(-pi / 2, pi / 2)
+```
 [Back to top]("#")
 
 ---
