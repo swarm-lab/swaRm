@@ -124,7 +124,7 @@
   n <- length(x)
   M <- cbind(x, y)
   
-  tmp <- MASS::cov.trob(M)
+  tmp <- MASS::cov.trob(M, maxit = 200)
   
   eig <- eigen(tmp$cov)
   eigval <- eig$values
