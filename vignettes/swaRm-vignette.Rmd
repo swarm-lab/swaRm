@@ -20,6 +20,11 @@ vignette: |
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+library(DT)
+options(DT.options = list(searching = FALSE, paging = FALSE))
+```
+
 ---
 
 # Introduction
@@ -60,10 +65,14 @@ for demonstrating its functioning.
 
 First, we will load in memory the first of these example data files. 
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 filePath <- system.file("extdata/01.csv", package = "swaRm")
 dat <- read.csv(filePath)
 head(dat)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(dat))
 ```
 
 This file contains GPS data, with a date, a timestamp, and longitude-latitude 
@@ -74,14 +83,19 @@ The first step of the analysis process is to transform this imported data into
 a standard trajectory data table that will be usable by all the function in the 
 `swaRm` package. 
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 library(swaRm)
 traj <- makeTraj(x = dat$lon, y = dat$lat, id = "01", 
                  date = dat$date, time = dat$time, 
                  date.format = "ymd", time.format = "hms",
                  geo = TRUE)  # Set 'geo' to FALSE if working with cartesian
                               # (i.e. non geographic) coordinates
-print(traj)
+
+head(traj)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(traj))
 ```
 
 [Back to top]("#")
@@ -108,44 +122,68 @@ have an impact on the final state of your data.
 
 ## Missing observations
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 traj01 <- fixMISSING(traj) 
-print(traj01)
+head(traj01)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(traj01))
 ```
 
 ## Duplicated timestamps
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 traj01 <- fixTIMEDUP(traj01) 
-print(traj01)
+head(traj01)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(traj01))
 ```
 
 ## Inconsistent timestamps
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 traj01 <- fixTIMESEQ(traj01) 
-print(traj01)
+head(traj01)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(traj01))
 ```
 
 ## NA timestamps
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 traj01 <- fixTIMENA(traj01) 
-print(traj01)
+head(traj01)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(traj01))
 ```
 
 ## Inconsistent locations
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 traj01 <- fixLOCSEQ(traj01) 
-print(traj01)
+head(traj01)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(traj01))
 ```
 
 ## NA locations
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 traj01 <- fixLOCNA(traj01) 
-print(traj01)
+head(traj01)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(traj01))
 ```
 
 [Back to top]("#")
@@ -178,54 +216,78 @@ ggmap(myMap) +
 
 ## Linear distances between successive steps
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 library(dplyr) # I will use dplyr from this point foward to facilitate the 
                # manipulation of the trajectory table
 
 traj01 <- mutate(traj01, 
                  linDist = linDist(x = lon, y = lat, geo = TRUE),
                  cumDist = cumsum(linDist))
-print(traj01)
+head(traj01)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(traj01))
 ```
 
 ## Linear speeds between successive steps
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 traj01 <- mutate(traj01, 
                  linSpeed = linSpeed(x = lon, y = lat, t = time, geo = TRUE))
-print(traj01)
+head(traj01)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(traj01))
 ```
 
 ## Linear accelerations between successive steps
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 traj01 <- mutate(traj01,
                  linAcc = linAcc(x = lon, y = lat, t = time, geo = TRUE))
-print(traj01)
+head(traj01)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(traj01))
 ```
 
 ## Headings between successive steps
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 traj01 <- mutate(traj01,
                  heading = heading(x = lon, y = lat, geo = TRUE))
-print(traj01)
+head(traj01)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(traj01))
 ```
 
 ## Angular speeds between successive steps
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 traj01 <- mutate(traj01,
                  angSpeed = angSpeed(x = lon, y = lat, t = time, geo = TRUE))
-print(traj01)
+head(traj01)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(traj01))
 ```
 
 ## Angular accelerations between successive steps
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 traj01 <- mutate(traj01,
                  angAcc = angAcc(x = lon, y = lat, t = time, geo = TRUE))
-print(traj01)
+head(traj01)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(traj01))
 ```
 
 [Back to top]("#")
@@ -236,7 +298,7 @@ print(traj01)
 
 ## Load multiple files in memory and compute all basic trajectory parameters
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 filePaths <- dir(system.file("extdata", package = "swaRm"), full.names = TRUE)
 
 trajs <- lapply(filePaths, function(path) {
@@ -254,7 +316,11 @@ trajs <- lapply(filePaths, function(path) {
            angAcc = angAcc(lon, lat, time, geo = TRUE))
 }) %>% data.table::rbindlist()
 
-print(trajs)
+head(trajs)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(head(trajs))
 ```
 
 ## Representing the geolocalized trajectories using ggplot2 and ggmap
