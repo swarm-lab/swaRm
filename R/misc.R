@@ -121,6 +121,10 @@
 #' @examples
 #' # TODO
 .ellipse <- memoise::memoise(function(x, y, level = 0.95) {
+  idx <- is.na(x) | is.na(y)
+  x <- x[!idx]
+  y <- y[!idx]
+  
   n <- length(x)
   M <- cbind(x, y)
   
