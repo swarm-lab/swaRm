@@ -80,7 +80,7 @@ nn <- function(x, y, id, geo = FALSE) {
                  if (sum(is.na(x)) != length(x)) {
                    which(x == min(x, na.rm = TRUE))[1]
                  } else {
-                   NA
+                   as.numeric(NA)
                  }
                })
   id[idx]
@@ -126,7 +126,7 @@ nnd <- function(x, y, geo = FALSE) {
           if (sum(is.na(x)) != length(x)) {
             min(x, na.rm = TRUE)
           } else {
-            NA
+            as.numeric(NA)
           }
         })
 }
