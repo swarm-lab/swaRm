@@ -20,8 +20,10 @@
 #' 
 #' @export
 sphericity <- function(x, y) {
-  ell <- .ellipse(x, y)
-  ell$b / ell$a
+  tryCatch({
+    ell <- .ellipse(x, y)
+    ell$b / ell$a}, 
+    error = function(e) as.numeric(NA))
 }
 
 
@@ -45,6 +47,8 @@ sphericity <- function(x, y) {
 #'
 #' @export
 stretch <- function(x, y) {
-  ell <- .ellipse(x, y)
-  ell$alpha
+  tryCatch({
+    ell <- .ellipse(x, y)
+    ell$alpha}, 
+    error = function(e) as.numeric(NA))
 }
