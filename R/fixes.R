@@ -25,8 +25,7 @@
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{makeTraj}}, \code{\link{fixTIMESEQ}}, \code{\link{fixTIMENA}},
-#'  \code{\link{fixLOCSEQ}}, \code{\link{fixLOCNA}}, \code{\link{fixMISSING}}
+#' @seealso \code{\link{makeTraj}}, \code{\link{findTIMEDUP}}
 #' 
 #' @examples
 #' # TODO
@@ -47,7 +46,7 @@ fixTIMEDUP <- function(traj, step = NULL) {
     step <- as.difftime(.Mode(d)[1], units = u)
   }
   
-  idxDUP <- which(duplicated(traj$time) & !is.na(traj$time))
+  idxDUP <- findTIMEDUP(traj)
   
   traj$error[idxDUP] <- .updateError(traj$error[idxDUP], rep("timeDUP", length(idxDUP)))
   
@@ -108,12 +107,8 @@ fixTIMESEQ <- function(traj, step = NULL) {
     u <- units(d)
     step <- as.difftime(.Mode(d)[1], units = u)
   }
-  
-  m <- MASS::rlm(as.numeric(traj$time) ~ c(1:length(traj$time)), maxit = 200)
-  r <- sqrt(abs(m$residuals))
-  pos <- as.numeric(names(r))
-  out <- (r > median(r) + 3 * IQR(r)) | (r < median(r) - 3 * IQR(r))
-  idxSEQ <- pos[out]
+
+  idxSEQ <- findTIMESEQ(traj)
   
   if (length(idxSEQ) > 0) {
     traj$error[idxSEQ] <- .updateError(traj$error[idxSEQ], rep("timeSEQ", length(idxSEQ)))
@@ -160,8 +155,7 @@ fixTIMESEQ <- function(traj, step = NULL) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{makeTraj}}, \code{\link{fixTIMEDUP}}, \code{\link{fixTIMESEQ}},
-#'  \code{\link{fixLOCSEQ}}, \code{\link{fixLOCNA}}, \code{\link{fixMISSING}}
+#' @seealso \code{\link{makeTraj}}, \code{\link{findTIMENA}}
 #' 
 #' @examples
 #' # TODO
@@ -176,7 +170,7 @@ fixTIMENA <- function(traj, spline = FALSE) {
     traj$error <- rep("OK", nrow(traj))
   }
   
-  idxNA <- which(is.na(traj$time))
+  idxNA <- findTIMENA(traj)
   
   traj$error[idxNA] <- .updateError(traj$error[idxNA], rep("timeNA", length(idxNA)))
   
@@ -222,14 +216,13 @@ fixTIMENA <- function(traj, spline = FALSE) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{makeTraj}}, \code{\link{fixTIMEDUP}}, \code{\link{fixTIMESEQ}}, 
-#'  \code{\link{fixTIMENA}}, \code{\link{fixLOCNA}}, \code{\link{fixMISSING}}
+#' @seealso \code{\link{makeTraj}}, \code{\link{findLOCSEQ}}
 #' 
 #' @examples
 #' # TODO
 #' 
 #' @export
-fixLOCSEQ <- function(traj, s = 6, spline = FALSE) {
+fixLOCSEQ <- function(traj, s = 15, spline = FALSE) {
   if (!(.isTraj(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
@@ -238,37 +231,11 @@ fixLOCSEQ <- function(traj, s = 6, spline = FALSE) {
     traj$error <- rep("OK", nrow(traj))
   }
   
-  geo <- .isGeo(traj)
-  
-  if (geo) {
-    m1 <- loess(lon ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
-    r <- abs(residuals(m1))
-    r[r == 0] <- min(r[r > 0])
-    m1 <- loess(lon ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
-    m2 <- loess(lat ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
-    r <- abs(residuals(m2))
-    r[r == 0] <- min(r[r > 0])
-    m2 <- loess(lat ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
-  } else {
-    m1 <- loess(x ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
-    r <- abs(residuals(m1))
-    r[r == 0] <- min(r[r > 0])
-    m1 <- loess(x ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
-    m2 <- loess(y ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
-    r <- abs(residuals(m2))
-    r[r == 0] <- min(r[r > 0])
-    m2 <- loess(y ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
-  }
-  
-  r1 <- sqrt(abs(m1$residuals))
-  r2 <- sqrt(abs(m2$residuals))
-  out1 <- r1 > median(r1) + s * IQR(r1)
-  out2 <- r2 > median(r2) + s * IQR(r2)
-  idxSEQ <- unique(c(which(out1), which(out2)))
+  idxSEQ <- findLOCSEQ(traj, s = s)
   
   traj$error[idxSEQ] <- .updateError(traj$error[idxSEQ], rep("locSEQ", length(idxSEQ)))
   
-  if (geo) {
+  if (.isGeo(traj)) {
     traj$lon[idxSEQ] <- NA
     traj$lat[idxSEQ] <- NA
     
@@ -328,8 +295,7 @@ fixLOCSEQ <- function(traj, s = 6, spline = FALSE) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{makeTraj}}, \code{\link{fixTIMEDUP}}, \code{\link{fixTIMESEQ}}, 
-#'  \code{\link{fixTIMENA}}, \code{\link{fixLOCSEQ}}, \code{\link{fixMISSING}}
+#' @seealso \code{\link{makeTraj}}, \code{\link{findLOCNA}}
 #' 
 #' @examples
 #' # TODO
@@ -344,10 +310,9 @@ fixLOCNA <- function(traj, spline = FALSE) {
     traj$error <- rep("OK", nrow(traj))
   }
   
-  geo <- .isGeo(traj)
+  idxNA <- findLOCNA(traj)
   
-  if (geo) {
-    idxNA <- is.na(traj$lon) | is.na(traj$lat)
+  if (.isGeo(traj)) {
     traj$lon[idxNA] <- NA
     traj$lat[idxNA] <- NA
     
@@ -364,7 +329,6 @@ fixLOCNA <- function(traj, spline = FALSE) {
     traj$lon[idxNA] <- interpLon[idxNA]
     traj$lat[idxNA] <- interpLat[idxNA]
   } else {
-    idxNA <- is.na(traj$x) | is.na(traj$y)
     traj$x[idxNA] <- NA
     traj$y[idxNA] <- NA
     
@@ -424,8 +388,7 @@ fixLOCNA <- function(traj, spline = FALSE) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{makeTraj}}, \code{\link{fixTIMEDUP}}, \code{\link{fixTIMESEQ}}, 
-#' \code{\link{fixTIMENA}}, \code{\link{fixLOCSEQ}}, \code{\link{fixLOCNA}}
+#' @seealso \code{\link{makeTraj}}, \code{\link{findMISSING}}
 #' 
 #' @examples
 #' # TODO
@@ -445,29 +408,12 @@ fixMISSING <- function(traj, begin = NULL, end = NULL, step = NULL, spline = FAL
     stop("traj should have the same id for all observations.")
   }
   
-  geo <- .isGeo(traj)
-  
-  if (is.null(step)) {
-    d <- diff(traj$time)
-    u <- units(d)
-    step <- as.difftime(.Mode(d)[1], units = u)
-  }
-  
-  if (is.null(begin)) {
-    begin <- min(traj$time, na.rm = TRUE)
-  }
-  
-  if (is.null(end)) {
-    end <- max(traj$time, na.rm = TRUE)
-  }
-  
-  tmp <- data.table::data.table(time = seq(begin, end, step),
+  tmp <- data.table::data.table(time = findMISSING(traj, begin = begin, end = end, step = step),
                                 id = id)
   traj <- merge(traj, tmp, by = c("id", "time"), all = TRUE)
-  idxMISSING <- is.na(traj$error)
-  traj$error[idxMISSING] <- "MISSING"
+  traj$error[is.na(traj$error)] <- "MISSING"
   
-  if (geo) {
+  if (.isGeo(traj)) {
     idxNA <- is.na(traj$lon) | is.na(traj$lat)
     traj$lon[idxNA] <- NA
     traj$lat[idxNA] <- NA
