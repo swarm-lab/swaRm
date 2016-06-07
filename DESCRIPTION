@@ -2,11 +2,11 @@ Package: swaRm
 Type: Package
 Title: A Package For Processing Collective Movement Data
 Version: 0.2.1
-Date: 2016-02-01
+Date: 2016-06-07
 Author: Simon Garnier
 Maintainer: Simon Garnier <garnier@njit.edu>
 Description: Function library for processing collective movement data (e.g. fish
-  schools, ungulate herds, baboon troop) collected from GPS trackers or computer 
+  schools, ungulate herds, baboon troops) collected from GPS trackers or computer 
   vision tracking software. 
 License: GPL v2
 LazyData: TRUE
@@ -17,5 +17,7 @@ Imports:
     zoo,
     memoise
 Suggests: 
-    dplyr, DT, ggmap
+    dplyr, 
+    DT, 
+    ggmap
 RoxygenNote: 5.0.1
