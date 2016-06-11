@@ -4,8 +4,9 @@
 \alias{makeTraj}
 \title{Build a trajectory table}
 \usage{
-makeTraj(x, y, id = NULL, date = NULL, time = NULL, date.format = "ymd",
-  time.format = "hms", tz = "UTC", fps = NULL, geo = FALSE)
+makeTraj(x, y, z = NULL, id = NULL, date = NULL, time = NULL,
+  date.format = "ymd", time.format = "hms", tz = "UTC", fps = NULL,
+  geo = FALSE)
 }
 \arguments{
 \item{x}{A vector of x (or longitude) coordinates corresponding to a single 
@@ -13,6 +14,9 @@ animal trajectory.}
 
 \item{y}{A vector of y (or latitude) coordinates corresponding to a single 
 animal trajectory.}
+
+\item{z}{A vector of z (or altitude) coordinates corresponding to a single 
+animal trajectory (default: NULL).}
 
 \item{id}{A unique identifier for the trajectory. It can be a number or a 
 character string. If not set, it defaults to zero.}
@@ -46,15 +50,7 @@ trajectory.}
 geographic coordinates (pairs of longitude/latitude values). Default: FALSE.}
 }
 \value{
-A data table (from the \code{\link[data.table:data.table-package]{data.table}}
- package) with four columns:
- \itemize{
-   \item{"id": }{the unique identifier of the trajectory.}
-   \item{"x" or "lon": }{the x or longitude coordinates of the trajectory.}
-   \item{"y" or "lat": }{the y or latitude coordinates of the trajectory.}
-   \item{"time": }{the full timestamp (date+time) of each location in 
-     \code{\link{POSIXct}} format.}
- }
+A trajectory table (see \code{\link{trackTable}}).
 }
 \description{
 Given a set of cartesian coordinates representing an object's trajectory, 

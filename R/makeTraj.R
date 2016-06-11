@@ -10,6 +10,9 @@
 #' 
 #' @param y A vector of y (or latitude) coordinates corresponding to a single 
 #'  animal trajectory.
+#'  
+#' @param z A vector of z (or altitude) coordinates corresponding to a single 
+#'  animal trajectory (default: NULL). 
 #' 
 #' @param id A unique identifier for the trajectory. It can be a number or a 
 #'  character string. If not set, it defaults to zero. 
@@ -42,15 +45,7 @@
 #' @param geo A logical value indicating whether the locations are defined by 
 #'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE. 
 #' 
-#' @return A data table (from the \code{\link[data.table:data.table-package]{data.table}}
-#'  package) with four columns:
-#'  \itemize{
-#'    \item{"id": }{the unique identifier of the trajectory.}
-#'    \item{"x" or "lon": }{the x or longitude coordinates of the trajectory.}
-#'    \item{"y" or "lat": }{the y or latitude coordinates of the trajectory.}
-#'    \item{"time": }{the full timestamp (date+time) of each location in 
-#'      \code{\link{POSIXct}} format.}
-#'  }
+#' @return A trajectory table (see \code{\link{trackTable}}).
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
@@ -61,38 +56,33 @@
 #' # TODO
 #' 
 #' @export
-makeTraj <- function(x, y, id = NULL, date = NULL, time = NULL, 
+makeTraj <- function(x, y, z = NULL, id = NULL, date = NULL, time = NULL, 
                      date.format = "ymd", time.format = "hms", tz = "UTC", 
                      fps = NULL, geo = FALSE) {
-  if (!is.vector(x) || !is.vector(y) || length(x) != length(y)) {
-    stop("x and y must be vector of identical length.")
-  }
+  if (!is.vector(x) || !is.vector(y) || !is.vector(x) || length(x) != length(y))
+    stop("x, y (and z, if applicable) must be vector of identical length.")
   
-  if (length(time) > 0 && length(x) != length(time)) {
-    stop("time should be a vector of the same length as x and y.")
-  }
+  if (!is.null(z) & ((length(z) != length(x)) || (length(z) != length(y))))
+    stop("x, y (and z, if applicable) must be vector of identical length.")
   
-  if (geo) {
-    traj <- data.table::data.table(id = factor(ifelse(is.null(id), 0, id)),
-                                   lon = x, lat = y, time = NA)
-  } else {
-    traj <- data.table::data.table(id = factor(ifelse(is.null(id), 0, id)),
-                                   x = x, y = y, time = NA)
-  }
+  if (length(time) > 0 && length(x) != length(time))
+    stop("time should be a vector of the same length as x and y (and z, if applicable).")
+  
+  id <- ifelse(is.null(id), 0, id)
   
   if (is.null(date) && is.null(time) && is.null(fps)) {
-    traj$time <- ISOdate(1970, 1, 1, tz = tz) + 1:nrow(traj)
+    time <- ISOdate(1970, 1, 1, tz = tz) + 1:length(x)
   } else if (is.null(date) && is.null(time)) {
-    traj$time <- ISOdate(1970, 1, 1, tz = tz) + 1:nrow(traj) / fps
+    time <- ISOdate(1970, 1, 1, tz = tz) + 1:length(x) / fps
   } else if (is.null(date)) {
     fn <- get(paste0("ymd_", time.format), asNamespace("lubridate"))
-    traj$time <- do.call(fn, list(paste("1970-01-01", time), tz = tz))
+    time <- do.call(fn, list(paste("1970-01-01", time), tz = tz))
   } else {
     fn <- get(paste0(date.format, "_", time.format), asNamespace("lubridate"))
-    traj$time <- do.call(fn, list(paste(date, time), tz = tz))
+    time <- do.call(fn, list(paste(date, time), tz = tz))
   }
   
-  traj
+  trackTable(id = id, t = time, x = x, y = y, z = z, geo = geo)
 }
 
 
