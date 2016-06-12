@@ -1,8 +1,8 @@
 Package: swaRm
 Type: Package
 Title: A Package For Processing Collective Movement Data
-Version: 0.2.2
-Date: 2016-06-07
+Version: 0.2.3
+Date: 2016-06-11
 Author: Simon Garnier
 Maintainer: Simon Garnier <garnier@njit.edu>
 Description: Function library for processing collective movement data (e.g. fish
