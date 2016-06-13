@@ -77,7 +77,7 @@ print.trackTable <- function(x, ..., nrows = 10L) {
   cat("Geographic data: ", tolower(any(class(x) == "geographic")), "\n")
   cat("Dimensions: ", ifelse(tolower(any(class(x) == "2D")), "2D", "3D"), "\n")
   cat("\n")
-  data.table:::print.data.table(x, nrows = nrows)
+  data.table:::print.data.table(x)
   
   invisible(x)
 }
