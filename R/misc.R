@@ -32,10 +32,7 @@
 #' @examples
 #' # TODO
 .isTraj <- function(traj) {
-  str1 <- c("id", "x", "y", "time")
-  str2 <- c("id", "lon", "lat", "time")
-  
-  all(str1 %in% names(traj)) | all(str2 %in% names(traj)) 
+  any(class(traj) == "trackTable") 
 }
 
 
@@ -54,11 +51,7 @@
 #' @examples
 #' # TODO
 .isGeo <- function(traj) {
-  if (!(.isTraj(traj))) {
-    stop("traj should be a trajectory data table as produced by the makeTraj function.")
-  }
-  
-  all(c("lon", "lat") %in% names(traj))
+  any(class(traj) == "geographic") 
 }
 
 
