@@ -21,11 +21,6 @@ vignette: |
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, message=FALSE, warning=FALSE, include=FALSE}
-library(DT)
-options(DT.options = list(searching = FALSE, paging = FALSE))
-```
-
 ---
 
 # Introduction
@@ -66,23 +61,20 @@ for demonstrating its functioning.
 
 First, we will load in memory the first of these example data files. 
 
-```{r, message=FALSE, warning=FALSE, results='hide'}
+```{r, message=FALSE, warning=FALSE}
 filePath <- system.file("extdata/01.csv", package = "swaRm")
 dat <- read.csv(filePath)
 head(dat)
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-DT::datatable(head(dat))
-```
-
-This file contains GPS data, with a date, a timestamp, and longitude-latitude 
-coordinates. Note that the coordinates can also be more classical X-Y cartesian
-coordinates. 
+This file contains GPS data, with a date, a timestamp, and longitude/latitude 
+coordinates. Note that the coordinates can also be X/Y cartesian (or projected) 
+coordinates (e.g. as returned by video tracking software, or if you projected 
+your GPS data on a given reference grid).
 
 The first step of the analysis process is to transform this imported data into 
-a standard trajectory data table that will be usable by all the function in the 
-`swaRm` package. 
+a standardized trajectory data table that will be usable by all the functions in 
+the `swaRm` package. 
 
 ```{r, message=FALSE, warning=FALSE, results='hide'}
 library(swaRm)
@@ -91,13 +83,23 @@ traj <- makeTraj(x = dat$lon, y = dat$lat, id = "01",
                  date.format = "ymd", time.format = "hms",
                  geo = TRUE)  # Set 'geo' to FALSE if working with cartesian
                               # (i.e. non geographic) coordinates
-
-head(traj)
+traj
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-DT::datatable(head(traj))
-```
+Here `makeTraj` returns a table containing `r nrow(traj)` observations (each row
+is an observation) and 4 columns: `id`, `time`, `lon` and `lat` (or `x` and `y` 
+if working with projected data). `id` is a unique identifier chosen by you to 
+distinguish between different trajectories when merging multiple tables together
+(we will see this later in this tutorial). `time` is a standardized timestamp
+constructed from the dates and times we provided the `makeTraj` function. 
+
+Trajectory tables are derived from [`data.table`](https://cran.r-project.org/package=data.table) 
+objects. As such, they retain all the properties of `data.table` objects and can 
+be manipulated in the same ways `data.table` objects can be. This includes the 
+possibility to use the functions from the [`dplyr`](https://cran.r-project.org/package=dplyr) 
+package as we will see later on. `data.table` objects behave like regular 
+`data.frame` objects, but come with additional functionalities and significant 
+gains in processing speed compared to `data.frame` objects. 
 
 [Back to top]("#")
 
@@ -108,9 +110,9 @@ DT::datatable(head(traj))
 Errors and missing observations are common problems with tracking data, for 
 instance when working in areas with poor GPS satellite covering. `swaRm` 
 provides a set of convenience functions to automatically detect and correct some
-of the most common types of errors. These functions will add an extra "error" 
-column to the trajectory table that will indicate what type of error (if any) 
-was detected and corrected for each time point.
+of the most common types of errors. Detection and correction are handled by 
+separate functions to allow users to develop their own correction functions for 
+instance. 
 
 These functions are meant to assist the user during the processing of his/her 
 tracking data. However, as every automated method, they are not 100% reliable 
@@ -123,49 +125,76 @@ have an impact on the final state of your data.
 
 ## Missing observations
 
-```{r, message=FALSE, warning=FALSE, results='hide'}
-traj01 <- fixMISSING(traj) 
-head(traj01)
+Missing observations are probably the most common type of errors in tracking 
+data. They can have a number of origins (e.g. GPS tag losing satellite 
+connection, animal moving out of the camera field of view, read/write errors, 
+etc.). The `findMissing` function is here to help you identify this missing data. 
+Note that this function works better with data that was collected at regular 
+time intervals. It will most likely return weird results if it is not the case. 
+
+```{r, message=FALSE, warning=FALSE}
+missing <- findMissing(traj)
+missing
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-DT::datatable(head(traj01))
+`findMissing` returns a data frame with two columns. The `time` column contains
+timestamps at which the function believes observations are missing. The `type`
+column indicates whether the observation is truly missing (i.e. was never 
+recorded) or if the timestamp of the observation was set to NA during recording
+or during the importation of the data (e.g. because the date or time info were
+not formatted properly). You can then decide what to do about this missing data: 
+ignore it, correct it with your own algorithm, or use the automated `fixMissing` 
+function provided with the `swaRm` package. 
+
+```{r, message=FALSE, warning=FALSE}
+traj01 <- fixMissing(traj) 
+traj01[1:40, ]
 ```
+
+Here the function added two new observations at rows 3 and 4 (indicated by the 
+`MISSING` error tag) and fixed to NA timestamps at rows 26 and 36 (indicated by 
+the `NA` error tag).
+
+Note that all error correction function will add the extra `error` column to the 
+trajectory table in order to indicate which observations were corrected. This 
+can be useful for instance to check that the automated correction did work 
+properly.
 
 ## Duplicated timestamps
 
-```{r, message=FALSE, warning=FALSE, results='hide'}
-traj01 <- fixTIMEDUP(traj01) 
-head(traj01)
+Duplicated timestamps are a less common type of errors. They can be caused by 
+writing errors for instance. The function `findTimeDup` is here to help you 
+identify these potential errors. 
+
+```{r, message=FALSE, warning=FALSE}
+time_dup <- findTimeDup(traj01) 
+time_dup
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-DT::datatable(head(traj01))
+The function `fixTimeDup` will then attempt to automatically correct the 
+duplicated timestamp. If a timestamps is missing where the duplicated timestamp 
+is, the function will replace the duplicated timestamp with the missing one. 
+Otherwise, the duplicated timestamp will be replaced by NA. 
+
+```{r, message=FALSE, warning=FALSE}
+traj01 <- fixTimeDup(traj01)
+traj01[1:20, ]
 ```
 
-## Inconsistent timestamps
+Here the duplicated timestamp corresponds to an already existing observation 
+(hence the `<NA>` created by the `fixTimeDup` function in the `time` column to 
+replace the duplicated timestamp). We will simply remove it here using the 
+`filter` function in the `dplyr` package. 
 
-```{r, message=FALSE, warning=FALSE, results='hide'}
-traj01 <- fixTIMESEQ(traj01) 
-head(traj01)
-```
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-DT::datatable(head(traj01))
-```
-
-## NA timestamps
-
-```{r, message=FALSE, warning=FALSE, results='hide'}
-traj01 <- fixTIMENA(traj01) 
-head(traj01)
-```
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-DT::datatable(head(traj01))
+```{r, message=FALSE, warning=FALSE}
+library(dplyr)
+traj01 <- filter(traj01, -11)
+traj01[1:20, ]
 ```
 
 ## Inconsistent locations
+
+
 
 ```{r, message=FALSE, warning=FALSE, results='hide'}
 traj01 <- fixLOCSEQ(traj01) 
