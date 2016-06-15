@@ -156,13 +156,13 @@ fixTimeDup <- function(traj, step = NULL) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{makeTraj}}, \code{\link{findLOCSEQ}}
+#' @seealso \code{\link{makeTraj}}, \code{\link{findLocErr}}
 #' 
 #' @examples
 #' # TODO
 #' 
 #' @export
-fixLOCSEQ <- function(traj, s = 15, spline = FALSE) {
+fixLocErr <- function(traj, s = 15, spline = FALSE) {
   if (!(.isTraj(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
@@ -171,13 +171,13 @@ fixLOCSEQ <- function(traj, s = 15, spline = FALSE) {
     traj$error <- rep("OK", nrow(traj))
   }
   
-  idxSEQ <- findLOCSEQ(traj, s = s)
+  idx_SEQ <- findLocErr(traj, s = s)
   
-  traj$error[idxSEQ] <- .updateError(traj$error[idxSEQ], rep("locSEQ", length(idxSEQ)))
+  traj$error[idx_SEQ] <- .updateError(traj$error[idx_SEQ], rep("lOCERROR", length(idx_SEQ)))
   
   if (.isGeo(traj)) {
-    traj$lon[idxSEQ] <- NA
-    traj$lat[idxSEQ] <- NA
+    traj$lon[idx_SEQ] <- NA
+    traj$lat[idx_SEQ] <- NA
     
     if (spline) {
       interpLon <- zoo::na.spline(traj$lon, x = traj$time, na.rm = FALSE)
@@ -187,11 +187,11 @@ fixLOCSEQ <- function(traj, s = 15, spline = FALSE) {
       interpLat <- zoo::na.approx(traj$lat, x = traj$time, na.rm = FALSE) 
     }
     
-    traj$lon[idxSEQ] <- interpLon[idxSEQ]
-    traj$lat[idxSEQ] <- interpLat[idxSEQ]
+    traj$lon[idx_SEQ] <- interpLon[idx_SEQ]
+    traj$lat[idx_SEQ] <- interpLat[idx_SEQ]
   } else {
-    traj$x[idxSEQ] <- NA
-    traj$y[idxSEQ] <- NA
+    traj$x[idx_SEQ] <- NA
+    traj$y[idx_SEQ] <- NA
     
     if (spline) {
       interpX <- zoo::na.spline(traj$x, x = traj$time, na.rm = FALSE)
@@ -201,8 +201,8 @@ fixLOCSEQ <- function(traj, s = 15, spline = FALSE) {
       interpY <- zoo::na.approx(traj$y, x = traj$time, na.rm = FALSE)
     }
     
-    traj$x[idxSEQ] <- interpX[idxSEQ]
-    traj$y[idxSEQ] <- interpY[idxSEQ]
+    traj$x[idx_SEQ] <- interpX[idx_SEQ]
+    traj$y[idx_SEQ] <- interpY[idx_SEQ]
   }
   
   traj
