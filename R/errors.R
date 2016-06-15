@@ -47,7 +47,7 @@ findMissing <- function(traj, begin = NULL, end = NULL, step = NULL) {
   if (is.null(step)) {
     d <- diff(traj$time)
     u <- units(d)
-    step <- as.difftime(swaRm:::.Mode(d)[1], units = u)
+    step <- as.difftime(.Mode(d)[1], units = u)
   }
   
   if (is.null(begin)) {
@@ -63,20 +63,26 @@ findMissing <- function(traj, begin = NULL, end = NULL, step = NULL) {
   my_seq <- my_seq[!(duplicated(my_seq) & !is.na(my_seq))]
   
   m1 <- match(full_seq, my_seq)
-  missing <- data.frame(time = full_seq[which(is.na(m1))], type = NA)
+  idx <- which(is.na(m1))
   
-  for (i in 1:nrow(missing)) {
-    idx <- which(full_seq == missing$time[i])
+  if (length(idx) > 0) {
+    missing <- data.frame(time = full_seq[which(is.na(m1))], type = NA)
     
-    if (is.na(my_seq[idx])) {
-      missing$type[i] <- "NA"
-    } else {
-      my_seq <- c(my_seq[1:(idx - 1)], missing$time[i], my_seq[idx:length(my_seq)])
-      missing$type[i] <- "MISSING"
+    for (i in 1:nrow(missing)) {
+      idx <- which(full_seq == missing$time[i])
+      
+      if (is.na(my_seq[idx])) {
+        missing$type[i] <- "NA"
+      } else {
+        my_seq <- c(my_seq[1:(idx - 1)], missing$time[i], my_seq[idx:length(my_seq)])
+        missing$type[i] <- "MISSING"
+      }
     }
+    
+    missing
+  } else {
+    idx
   }
-  
-  missing
 }
 
 

@@ -48,28 +48,30 @@ fixMissing <- function(traj, begin = NULL, end = NULL, step = NULL, spline = FAL
     stop("traj should have the same id for all observations.")
   }
   
-  cl <- class(traj)
-  
   missing <- findMissing(traj, begin = begin, end = end, step = step)
   
-  for (i in 1:nrow(missing)) {
-    idx <- which((traj$time + 1) == missing$time[i]) + 1
+  if (length(missing) > 0) {
+    cl <- class(traj)
     
-    if (missing$type[i] == "MISSING") {
-      tmp <- traj[1, ]
-      tmp$time <- missing$time[i]
-      tmp$lon <- NA
-      tmp$lat <- NA
-      tmp$error <- .updateError(tmp$error, "MISSING")
-      traj <- rbind(traj[1:(idx - 1), ], tmp, traj[idx:nrow(traj), ])
-    } else {
-      traj$time[idx] <- missing$time[i]
-      traj$error[idx] <- .updateError(traj$error[idx], "NA")
+    for (i in 1:nrow(missing)) {
+      idx <- which((traj$time + 1) == missing$time[i]) + 1
+      
+      if (missing$type[i] == "MISSING") {
+        tmp <- traj[1, ]
+        tmp$time <- missing$time[i]
+        tmp$lon <- NA
+        tmp$lat <- NA
+        tmp$error <- .updateError(tmp$error, "MISSING")
+        traj <- rbind(traj[1:(idx - 1), ], tmp, traj[idx:nrow(traj), ])
+      } else {
+        traj$time[idx] <- missing$time[i]
+        traj$error[idx] <- .updateError(traj$error[idx], "NA")
+      }
     }
+    
+    class(traj) <- cl
   }
-  
-  class(traj) <- cl
-  
+ 
   traj
 }
 
