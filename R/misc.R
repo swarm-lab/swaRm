@@ -31,7 +31,9 @@
 #' 
 #' @examples
 #' # TODO
-.isTraj <- function(traj) {
+#' 
+#' @export
+isTraj <- function(traj) {
   any(class(traj) == "trackTable") 
 }
 
@@ -50,7 +52,9 @@
 #' 
 #' @examples
 #' # TODO
-.isGeo <- function(traj) {
+#' 
+#' @export
+isGeo <- function(traj) {
   any(class(traj) == "geographic") 
 }
 

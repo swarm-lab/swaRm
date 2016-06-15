@@ -35,7 +35,7 @@
 #' 
 #' @export
 findMissing <- function(traj, begin = NULL, end = NULL, step = NULL) {
-  if (!(.isTraj(traj))) {
+  if (!(isTraj(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
@@ -104,7 +104,7 @@ findMissing <- function(traj, begin = NULL, end = NULL, step = NULL) {
 #' 
 #' @export
 findTimeDup <- function(traj) {
-  if (!(.isTraj(traj))) {
+  if (!(isTraj(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
@@ -135,11 +135,11 @@ findTimeDup <- function(traj) {
 #' 
 #' @export
 findLocErr <- function(traj, s = 15) {
-  if (!(.isTraj(traj))) {
+  if (!(isTraj(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
-  if (.isGeo(traj)) {
+  if (isGeo(traj)) {
     nas1 <- is.na(traj$lon) | is.na(traj$time)
     m1 <- loess(lon ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
     r <- rep(NA, nrow(traj))
@@ -192,21 +192,21 @@ findLocErr <- function(traj, s = 15) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{makeTraj}}, \code{\link{fixLOCNA}}
+#' @seealso \code{\link{makeTraj}}, \code{\link{fixLocNA}}
 #' 
 #' @examples
 #' # TODO
 #' 
 #' @export
-findLOCNA <- function(traj) {
-  if (!(.isTraj(traj))) {
+findLocNA <- function(traj) {
+  if (!(isTraj(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
-  if (.isGeo(traj)) 
-    is.na(traj$lon) | is.na(traj$lat)
+  if (isGeo(traj)) 
+    which(is.na(traj$lon) | is.na(traj$lat))
   else 
-    is.na(traj$x) | is.na(traj$y)
+    which(is.na(traj$x) | is.na(traj$y))
 } 
 
 

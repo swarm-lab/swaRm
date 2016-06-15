@@ -18,17 +18,9 @@ estimated using spline interpolation. If \code{FALSE} (the default), a linear
 interpolation is used instead.}
 }
 \value{
-A data table (from the \code{\link[data.table:data.table-package]{data.table}}
- package) with five columns:
- \itemize{
-   \item{"id": }{the unique identifier of the trajectory.}
-   \item{"x" or "lon": }{the x or longitude coordinates of the trajectory.}
-   \item{"y" or "lat": }{the y or latitude coordinates of the trajectory.}
-   \item{"time": }{the full timestamp (date+time) of each location in 
-     \code{\link{POSIXct}} format.}
-   \item{"error": }{the type of error detected and corrected (when possible) 
-     by the function.}
- }
+A trajectory data table as produced by the \code{\link{makeTraj}}
+ function. If not present, an "error" column will be added that indicates 
+ which observations were corrected.
 }
 \description{
 This function attempts to automatically detect and correct 

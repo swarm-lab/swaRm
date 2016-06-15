@@ -35,7 +35,7 @@
 #' 
 #' @export
 fixMissing <- function(traj, begin = NULL, end = NULL, step = NULL, spline = FALSE) {
-  if (!(.isTraj(traj))) {
+  if (!(isTraj(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
@@ -100,7 +100,7 @@ fixMissing <- function(traj, begin = NULL, end = NULL, step = NULL, spline = FAL
 #' 
 #' @export
 fixTimeDup <- function(traj, step = NULL) {
-  if (!(.isTraj(traj))) {
+  if (!(isTraj(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
@@ -142,17 +142,9 @@ fixTimeDup <- function(traj, step = NULL) {
 #'  estimated using spline interpolation. If \code{FALSE} (the default), a linear 
 #'  interpolation is used instead.
 #' 
-#' @return A data table (from the \code{\link[data.table:data.table-package]{data.table}}
-#'  package) with five columns:
-#'  \itemize{
-#'    \item{"id": }{the unique identifier of the trajectory.}
-#'    \item{"x" or "lon": }{the x or longitude coordinates of the trajectory.}
-#'    \item{"y" or "lat": }{the y or latitude coordinates of the trajectory.}
-#'    \item{"time": }{the full timestamp (date+time) of each location in 
-#'      \code{\link{POSIXct}} format.}
-#'    \item{"error": }{the type of error detected and corrected (when possible) 
-#'      by the function.}
-#'  }
+#' @return A trajectory data table as produced by the \code{\link{makeTraj}}
+#'  function. If not present, an "error" column will be added that indicates 
+#'  which observations were corrected.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
@@ -163,7 +155,7 @@ fixTimeDup <- function(traj, step = NULL) {
 #' 
 #' @export
 fixLocErr <- function(traj, s = 15, spline = FALSE) {
-  if (!(.isTraj(traj))) {
+  if (!(isTraj(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
@@ -175,7 +167,7 @@ fixLocErr <- function(traj, s = 15, spline = FALSE) {
   
   traj$error[idx_SEQ] <- .updateError(traj$error[idx_SEQ], rep("lOCERROR", length(idx_SEQ)))
   
-  if (.isGeo(traj)) {
+  if (isGeo(traj)) {
     traj$lon[idx_SEQ] <- NA
     traj$lat[idx_SEQ] <- NA
     
@@ -221,28 +213,20 @@ fixLocErr <- function(traj, s = 15, spline = FALSE) {
 #'  using spline interpolation. If \code{FALSE} (the default), a linear 
 #'  interpolation is used instead.
 #' 
-#' @return A data table (from the \code{\link[data.table:data.table-package]{data.table}}
-#'  package) with five columns:
-#'  \itemize{
-#'    \item{"id": }{the unique identifier of the trajectory.}
-#'    \item{"x" or "lon": }{the x or longitude coordinates of the trajectory.}
-#'    \item{"y" or "lat": }{the y or latitude coordinates of the trajectory.}
-#'    \item{"time": }{the full timestamp (date+time) of each location in 
-#'      \code{\link{POSIXct}} format.}
-#'    \item{"error": }{the type of error detected and corrected (when possible) 
-#'      by the function.}
-#'  }
+#' @return A trajectory data table as produced by the \code{\link{makeTraj}}
+#'  function. If not present, an "error" column will be added that indicates 
+#'  which observations were corrected.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{makeTraj}}, \code{\link{findLOCNA}}
+#' @seealso \code{\link{makeTraj}}, \code{\link{findLocNA}}
 #' 
 #' @examples
 #' # TODO
 #' 
 #' @export
-fixLOCNA <- function(traj, spline = FALSE) {
-  if (!(.isTraj(traj))) {
+fixLocNA <- function(traj, spline = FALSE) {
+  if (!(isTraj(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
@@ -250,13 +234,13 @@ fixLOCNA <- function(traj, spline = FALSE) {
     traj$error <- rep("OK", nrow(traj))
   }
   
-  idxNA <- findLOCNA(traj)
+  idxNA <- findLocNA(traj)
   
-  if (.isGeo(traj)) {
+  if (isGeo(traj)) {
     traj$lon[idxNA] <- NA
     traj$lat[idxNA] <- NA
     
-    traj$error[idxNA] <- .updateError(traj$error[idxNA], rep("locNA", length(idxNA)))
+    traj$error[idxNA] <- .updateError(traj$error[idxNA], rep("lOCNA", length(idxNA)))
     
     if (spline) {
       interpLon <- zoo::na.spline(traj$lon, x = traj$time, na.rm = FALSE)
@@ -272,7 +256,7 @@ fixLOCNA <- function(traj, spline = FALSE) {
     traj$x[idxNA] <- NA
     traj$y[idxNA] <- NA
     
-    traj$error[idxNA] <- .updateError(traj$error[idxNA], rep("locNA", length(idxNA)))
+    traj$error[idxNA] <- .updateError(traj$error[idxNA], rep("lOCNA", length(idxNA)))
     
     if (spline) {
       interpX <- zoo::na.spline(traj$x, x = traj$time, na.rm = FALSE)
