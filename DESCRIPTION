@@ -10,8 +10,9 @@ Description: Function library for processing collective movement data (e.g. fish
   vision tracking software. 
 License: GPL v2
 LazyData: TRUE
+Depends:
+    R6Frame
 Imports: 
-    R6Frame,
     dplyr,
     geosphere,
     lubridate,
