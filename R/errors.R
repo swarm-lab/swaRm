@@ -45,28 +45,28 @@ findMissing <- function(traj, begin = NULL, end = NULL, step = NULL) {
   }
   
   if (is.null(step)) {
-    d <- diff(traj$time)
+    d <- diff(traj[["time"]])
     u <- units(d)
     step <- as.difftime(.Mode(d)[1], units = u)
   }
   
   if (is.null(begin)) {
-    begin <- min(traj$time, na.rm = TRUE)
+    begin <- min(traj[["time"]], na.rm = TRUE)
   }
   
   if (is.null(end)) {
-    end <- max(traj$time, na.rm = TRUE)
+    end <- max(traj[["time"]], na.rm = TRUE)
   }
   
   full_seq <- seq(begin, end, step)
-  my_seq <- traj$time
+  my_seq <- traj[["time"]]
   my_seq <- my_seq[!(duplicated(my_seq) & !is.na(my_seq))]
   
   m1 <- match(full_seq, my_seq)
   idx <- which(is.na(m1))
   
   if (length(idx) > 0) {
-    missing <- data.frame(time = full_seq[which(is.na(m1))], type = NA)
+    missing <- data.frame(time = full_seq[idx], type = NA)
     
     for (i in 1:nrow(missing)) {
       idx <- which(full_seq == missing$time[i])
@@ -114,7 +114,7 @@ findTimeDup <- function(traj) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
-  which(duplicated(traj$time) & !is.na(traj$time))
+  which(duplicated(traj[["time"]]) & !is.na(traj[["time"]]))
 }
 
 
@@ -146,33 +146,33 @@ findLocErr <- function(traj, s = 15) {
   }
   
   if (isGeo(traj)) {
-    nas1 <- is.na(traj$lon) | is.na(traj$time)
-    m1 <- loess(lon ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
+    nas1 <- is.na(traj[["lon"]]) | is.na(traj[["time"]])
+    m1 <- loess(lon ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2)
     r <- rep(NA, nrow(traj))
     r[!nas1] <- abs(residuals(m1))
     r[r == 0] <- min(r[r > 0])
-    m1 <- loess(lon ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
+    m1 <- loess(lon ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2, weights = 1 / r)
     
-    nas2 <- is.na(traj$lat) | is.na(traj$time)
-    m2 <- loess(lat ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
+    nas2 <- is.na(traj[["lat"]]) | is.na(traj[["time"]])
+    m2 <- loess(lat ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2)
     r <- rep(NA, nrow(traj))
     r[!nas2] <- abs(residuals(m2))
     r[r == 0] <- min(r[r > 0])
-    m2 <- loess(lat ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
+    m2 <- loess(lat ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2, weights = 1 / r)
   } else {
-    nas1 <- is.na(traj$x) | is.na(traj$time)
-    m1 <- loess(x ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
+    nas1 <- is.na(traj[["x"]]) | is.na(traj[["time"]])
+    m1 <- loess(x ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2)
     r <- rep(NA, nrow(traj))
     r[!nas1] <- abs(residuals(m1))
     r[r == 0] <- min(r[r > 0])
-    m1 <- loess(x ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
+    m1 <- loess(x ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2, weights = 1 / r)
     
-    nas2 <- is.na(traj$y) | is.na(traj$time)
-    m2 <- loess(y ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
+    nas2 <- is.na(traj[["y"]]) | is.na(traj[["time"]])
+    m2 <- loess(y ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2)
     r <- rep(NA, nrow(traj))
     r[!nas2] <- abs(residuals(m2))
     r[r == 0] <- min(r[r > 0])
-    m2 <- loess(y ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
+    m2 <- loess(y ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2, weights = 1 / r)
   }
   
   r1 <- sqrt(abs(m1$residuals))
@@ -210,9 +210,9 @@ findLocNA <- function(traj) {
   }
   
   if (isGeo(traj)) 
-    which(is.na(traj$lon) | is.na(traj$lat))
+    which(is.na(traj[["lon"]]) | is.na(traj[["lat"]]))
   else 
-    which(is.na(traj$x) | is.na(traj$y))
+    which(is.na(traj[["x"]]) | is.na(traj[["y"]]))
 } 
 
 

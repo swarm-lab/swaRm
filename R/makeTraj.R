@@ -82,7 +82,21 @@ makeTraj <- function(x, y, z = NULL, id = NULL, date = NULL, time = NULL,
     time <- do.call(fn, list(paste(date, time), tz = tz))
   }
   
-  trackTable(id = id, t = time, x = x, y = y, z = z, geo = geo)
+  if (geo) {
+    if (is.null(z))
+      .trackTable(id = id, time = time, lon = x, lat = y,
+                  geo = geo, type = "2D")
+    else
+      .trackTable(id = id, time = time, lon = x, lat = y, alt = z,
+                  geo = geo, type = "3D")
+  } else {
+    if (is.null(z))
+      .trackTable(id = id, time = time, x = x, y = y,
+                  geo = geo, type = "2D") 
+    else
+      .trackTable(id = id, time = time, x = x, y = y, z = z,
+                  geo = geo, type = "3D")
+  }
 }
 
 

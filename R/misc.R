@@ -55,7 +55,7 @@ isTraj <- function(traj) {
 #' 
 #' @export
 isGeo <- function(traj) {
-  any(class(traj) == "geographic") 
+  traj$getGeo() 
 }
 
 

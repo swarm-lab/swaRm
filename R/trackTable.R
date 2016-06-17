@@ -1,86 +1,92 @@
-#' @title Track table class
-#' 
-#' @description A track table is a regular \code{\link[data.table:data.table-package]{data.table}}
-#'  enhanced to be used by the functions in \code{\link[swaRm:swaRm-package]{swaRm}}.
-#'  It is a standardized way to store geographic or projected, single or group, 
-#'  2D or 3D trajectories. 
-#' 
-#' @param id A vector of identifiers. Each identifier should correspond to the 
-#'  coordinates of a single trajectory. Identifiers can be numbers or character
-#'  strings. 
-#' 
-#' @param t A vector of standardized date-time values. 
-#' 
-#' @param x A vector of x (or longitude) coordinates. 
-#' 
-#' @param y A vector of y (or latitude) coordinates.
-#' 
-#' @param z A vector of z (or altitude) coordinates.
-#' 
-#' @param geo A logical value indicating whether the locations are defined by 
-#'  geographic coordinates (longitude/latitude/altitude values) or projected 
-#'  coordinates (x/y/z values in meters). Default: FALSE. 
-#' 
-#' @return A trajectory table with 4 or 5 columns:
-#'  \itemize{
-#'    \item{"id": }{the unique identifier of the trajectory.}
-#'    \item{"time": }{the full timestamp (date+time) of each location in 
-#'      \code{\link{POSIXct}} format.}
-#'    \item{"x" or "lon": }{the x or longitude coordinates of the trajectories.}
-#'    \item{"y" or "lat": }{the y or latitude coordinates of the trajectories.}
-#'    \item{"z" or "alt": }{the z or altitude coordinates of the trajectories.}
-#'  }
-#' 
-#' @author Simon Garnier, \email{garnier@@njit.edu}
-#' 
-#' @seealso \code{\link{makeTraj}}
-#' 
-#' @examples
-#' # TODO
-#' 
 #' @export
-trackTable <- function(id, t, x, y, z = NULL, geo = FALSE) {
-  if (geo) {
-    if (is.null(z)) {
-      DT <- data.table::data.table(id = factor(id), time = t, lon = x, lat = y)
-      class(DT) <- append("2D", class(DT))
-      class(DT) <- append("geographic", class(DT))
-      class(DT) <- append("trackTable", class(DT))
-    } else {
-      DT <- data.table::data.table(id = factor(id), time = t, lon = x, lat = y, alt = z)
-      class(DT) <- append("3D", class(DT))
-      class(DT) <- append("geographic", class(DT))
-      class(DT) <- append("trackTable", class(DT))
-    }
-  } else {
-    if (is.null(z)) {
-      DT <- data.table::data.table(id = factor(id), time = t, x = x, y = y)
-      class(DT) <- append("2D", class(DT))
-      class(DT) <- append("projected", class(DT))
-      class(DT) <- append("trackTable", class(DT))
-    } else {
-      DT <- data.table::data.table(id = factor(id), time = t, x = x, y = y, z = z)
-      class(DT) <- append("3D", class(DT))
-      class(DT) <- append("projected", class(DT))
-      class(DT) <- append("trackTable", class(DT))
-    }
-  }
+trackTable <- R6::R6Class(
+  classname = "trackTable",
+  inherit = R6Frame::R6Frame,
   
-  return(DT)
+  private = list(.geo = NULL, .type = NULL),
+  
+  public = list(
+    setGeo = function(val) {
+      if (!is.logical(val))
+        stop("val must be a logical value.")
+      
+      .geo <<- val
+    }, 
+    
+    getGeo = function() .geo,
+    
+    setType = function(val) {
+      if (!(val %in% c("2D", "3D")))
+        stop("val must be either 2D or 3D.")
+      
+      .type <<- val
+    },
+    
+    getType = function() .type,
+    
+    print = function(...) {
+      cat("Trajectory table [", nrow(self$data), " observations]\n", sep = "")
+      cat("Number of tracks: ", length(unique(self$data$id)), "\n")
+      cat("Geographic data: ", self$getGeo(), "\n")
+      cat("Dimensions: ", self$getType(), "\n")
+      cat("\n")
+      print(self$data)
+      
+      invisible(self)
+    }
+  )
+)
+
+#' @export
+.trackTable <- function(..., geo = FALSE, type = "2D", keep.rownames = FALSE, 
+                        check.names = FALSE, key = NULL) {
+  # dots <- names(list(...))
+  # for (i in dots) {
+  #   fn <- eval(parse(
+  #     text = paste0("function(val = NULL) {
+  #                       if (is.null(val))
+  #                         self$data$", i, "
+  #                       else 
+  #                         self$data$", i, " <- val}")))
+  #   trackTable$set("active", i, fn)
+  # }
+  
+  tt <- trackTable$new(
+    data.table::data.table(..., keep.rownames = keep.rownames, 
+                           check.names = check.names, key = key)
+  )
+  tt$setGeo(geo)
+  tt$setType(type)
+  tt
 }
 
 
 #' @export
-print.trackTable <- function(x, ..., nrows = 10L) {
-  cat("Trajectory table [", nrow(x), " observations]\n", sep = "")
-  cat("Number of tracks: ", length(unique(x$id)), "\n")
-  cat("Geographic data: ", tolower(any(class(x) == "geographic")), "\n")
-  cat("Dimensions: ", ifelse(tolower(any(class(x) == "2D")), "2D", "3D"), "\n")
-  cat("\n")
-  data.table:::print.data.table(x)
+rbindtt <- function(l) {
+  if (!all(sapply(l, isTraj)))
+    stop("All elements in the list must be trajectory tables as produced by the makeTraj function.")
   
-  invisible(x)
+  if ((length(unique(sapply(l, isGeo))) > 1) | (length(unique(sapply(l, function(x) x$getType()))) > 1))
+    stop("All trajectories in the list must be of the same type.")
+
+  tt <- trackTable$new(data.table::rbindlist(lapply(l, function(x) x$data)))
+  tt$setGeo(l[[1]]$getGeo())
+  tt$setType(l[[1]]$getType())
+  tt
+} 
+
+
+#' @export
+do_.R6Frame <- function(x, ...) {
+  x$do(dplyr::do_, lazyeval::all_dots(...), env = parent.frame())
 }
+
+
+#' @export
+merge.R6Frame <- function(x, ...) {
+  x$do_merge(merge, list(...), env = parent.frame())
+}
+
 
 
 
