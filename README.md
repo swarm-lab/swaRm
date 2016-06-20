@@ -35,4 +35,7 @@ A vignette presenting the installation process and general functioning of the
 package can be found at the following address: 
 [http://rpubs.com/sjmgarnier/swaRm](http://rpubs.com/sjmgarnier/swaRm).
 
+All suggestions and bug reports should be submitted 
+[here](https://github.com/swarm-lab/swaRm/issues). Thanks!
+
 ---
