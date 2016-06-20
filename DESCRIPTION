@@ -8,11 +8,15 @@ Maintainer: Simon Garnier <garnier@njit.edu>
 Description: Function library for processing collective movement data (e.g. fish
   schools, ungulate herds, baboon troops) collected from GPS trackers or computer 
   vision tracking software. 
-License: GPL v2
+License: GPL-2
 LazyData: TRUE
 Depends:
     R6Frame
 Imports: 
+    stats,
+    data.table,
+    lazyeval,
+    splancs,
     dplyr,
     geosphere,
     lubridate,

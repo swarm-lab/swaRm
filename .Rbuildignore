@@ -1,2 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+vignettes/rsconnect
+bak
+chull_animation.R 
+test1.mp4
+test2.mp4
+LICENSE

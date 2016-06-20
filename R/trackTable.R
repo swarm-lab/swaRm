@@ -37,7 +37,7 @@ trackTable <- R6::R6Class(
   )
 )
 
-#' @export
+
 .trackTable <- function(..., geo = FALSE, type = "2D", keep.rownames = FALSE, 
                         check.names = FALSE, key = NULL) {
   # dots <- names(list(...))

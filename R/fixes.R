@@ -66,7 +66,7 @@ fixMissing <- function(traj, begin = NULL, end = NULL, step = NULL, spline = FAL
           tmp[["y"]] <- NA
         }
         
-        tmp[["error"]] <- swaRm:::.updateError(tmp[["error"]], "MISSING")
+        tmp[["error"]] <- .updateError(tmp[["error"]], "MISSING")
         traj$data <- rbind(traj$data[1:(idx - 1), ], tmp$data, traj$data[idx:nrow(traj), ])
       } else {
         traj[["time"]][idx] <- missing$time[i]
