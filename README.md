@@ -1,3 +1,6 @@
+**Please submit all suggestions and bug reports 
+[here](https://github.com/swarm-lab/swaRm/issues). Thanks!**
+
 <img src="inst/img/logo.png" width="20%">
 
 ---
