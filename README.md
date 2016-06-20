@@ -19,13 +19,13 @@ Until `swaRm` is submitted to [CRAN](https://cran.r-project.org/), the easiest
 way to install and keep the package up-to-date is by using its associated 
 [`drat`](http://eddelbuettel.github.io/drat/DratFAQ.html) repository as follows:
 
-`
+```r
 install.packages("drat")  # This line is required if drat is not present 
                           # in your R installation.
 
 drat::addRepo("swarm-lab")
 install.packages("swaRm")
-`
+```
 
 ---
 
