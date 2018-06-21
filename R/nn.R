@@ -22,7 +22,7 @@
 #' # TODO
 #' 
 #' @export
-pdist <- memoise::memoise(function(x, y, geo = FALSE) {
+pdist <- function(x, y, geo = FALSE) {
   if (!is.vector(x) || !is.vector(y) || length(x) != length(y)) {
     stop("x and y must be vector of identical length.")
   }
@@ -36,7 +36,7 @@ pdist <- memoise::memoise(function(x, y, geo = FALSE) {
   } else {
     as.matrix(dist(cbind(x, y)))
   }
-})
+}
 
 
 #' @title Nearest neihgbor
