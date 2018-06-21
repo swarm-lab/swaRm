@@ -12,4 +12,3 @@ collective animal movement data.
 \author{
 Simon Garnier, \email{garnier@njit.edu}
 }
-

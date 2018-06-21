@@ -25,10 +25,9 @@ This function computes the centroid of a set of x-y (or
 # TODO
 
 }
-\author{
-Simon Garnier, \email{garnier@njit.edu}
-}
 \seealso{
 \code{\link{dist2centroid}}
 }
-
+\author{
+Simon Garnier, \email{garnier@njit.edu}
+}

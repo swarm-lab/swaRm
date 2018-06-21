@@ -35,7 +35,7 @@
 #' 
 #' @export
 findMissing <- function(traj, begin = NULL, end = NULL, step = NULL) {
-  if (!(isTraj(traj))) {
+  if (!(is.trackTable(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
@@ -110,7 +110,7 @@ findMissing <- function(traj, begin = NULL, end = NULL, step = NULL) {
 #' 
 #' @export
 findTimeDup <- function(traj) {
-  if (!(isTraj(traj))) {
+  if (!(is.trackTable(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
@@ -141,38 +141,38 @@ findTimeDup <- function(traj) {
 #' 
 #' @export
 findLocErr <- function(traj, s = 15) {
-  if (!(isTraj(traj))) {
+  if (!(is.trackTable(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
-  if (isGeo(traj)) {
-    nas1 <- is.na(traj[["lon"]]) | is.na(traj[["time"]])
-    m1 <- loess(lon ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2)
+  if (is.geo(traj)) {
+    nas1 <- is.na(traj$lon) | is.na(traj$time)
+    m1 <- loess(lon ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
     r <- rep(NA, nrow(traj))
     r[!nas1] <- abs(residuals(m1))
     r[r == 0] <- min(r[r > 0])
-    m1 <- loess(lon ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2, weights = 1 / r)
+    m1 <- loess(lon ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
     
-    nas2 <- is.na(traj[["lat"]]) | is.na(traj[["time"]])
-    m2 <- loess(lat ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2)
+    nas2 <- is.na(traj$lat) | is.na(traj$time)
+    m2 <- loess(lat ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
     r <- rep(NA, nrow(traj))
     r[!nas2] <- abs(residuals(m2))
     r[r == 0] <- min(r[r > 0])
-    m2 <- loess(lat ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2, weights = 1 / r)
+    m2 <- loess(lat ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
   } else {
-    nas1 <- is.na(traj[["x"]]) | is.na(traj[["time"]])
-    m1 <- loess(x ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2)
+    nas1 <- is.na(traj$x) | is.na(traj$time)
+    m1 <- loess(x ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
     r <- rep(NA, nrow(traj))
     r[!nas1] <- abs(residuals(m1))
     r[r == 0] <- min(r[r > 0])
-    m1 <- loess(x ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2, weights = 1 / r)
+    m1 <- loess(x ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
     
-    nas2 <- is.na(traj[["y"]]) | is.na(traj[["time"]])
-    m2 <- loess(y ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2)
+    nas2 <- is.na(traj$y) | is.na(traj$time)
+    m2 <- loess(y ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
     r <- rep(NA, nrow(traj))
     r[!nas2] <- abs(residuals(m2))
     r[r == 0] <- min(r[r > 0])
-    m2 <- loess(y ~ as.numeric(time), data = traj$data, span = 0.05, degree = 2, weights = 1 / r)
+    m2 <- loess(y ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
   }
   
   r1 <- sqrt(abs(m1$residuals))
@@ -205,14 +205,14 @@ findLocErr <- function(traj, s = 15) {
 #' 
 #' @export
 findLocNA <- function(traj) {
-  if (!(isTraj(traj))) {
+  if (!(is.trackTable(traj))) {
     stop("traj should be a trajectory data table as produced by the makeTraj function.")
   }
   
-  if (isGeo(traj)) 
-    which(is.na(traj[["lon"]]) | is.na(traj[["lat"]]))
+  if (is.geo(traj)) 
+    which(is.na(traj$lon) | is.na(traj$lat))
   else 
-    which(is.na(traj[["x"]]) | is.na(traj[["y"]]))
+    which(is.na(traj$x) | is.na(traj$y))
 } 
 
 

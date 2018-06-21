@@ -29,4 +29,3 @@ Given a set of cartesian coordinates, this function approximates
 \author{
 Simon Garnier, \email{garnier@njit.edu}
 }
-

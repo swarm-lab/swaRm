@@ -31,10 +31,9 @@ Given a set of cartesian coordinates representing an object's
 # TODO
 
 }
-\author{
-Simon Garnier, \email{garnier@njit.edu}
-}
 \seealso{
 \code{\link{linDist}}, \code{\link{linAcc}}
 }
-
+\author{
+Simon Garnier, \email{garnier@njit.edu}
+}

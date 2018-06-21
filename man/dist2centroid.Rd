@@ -29,4 +29,3 @@ Given a set of x-y (or longitude-latitude) coordinates, this
 \author{
 Simon Garnier, \email{garnier@njit.edu}
 }
-

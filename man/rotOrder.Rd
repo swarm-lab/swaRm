@@ -25,10 +25,9 @@ Given the headings and cartesian coordinates of objects in a
 # TODO
 
 }
-\author{
-Simon Garnier, \email{garnier@njit.edu}
-}
 \seealso{
 \code{\link{polOrder}}
 }
-
+\author{
+Simon Garnier, \email{garnier@njit.edu}
+}

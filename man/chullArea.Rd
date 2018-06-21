@@ -32,4 +32,3 @@ Given a set of cartesian coordinates, this function determines
 \author{
 Simon Garnier, \email{garnier@njit.edu}
 }
-

@@ -62,10 +62,9 @@ Given a set of cartesian coordinates representing an object's trajectory,
 # TODO
 
 }
-\author{
-Simon Garnier, \email{garnier@njit.edu}
-}
 \seealso{
 \code{\link{trackTable}}
 }
-
+\author{
+Simon Garnier, \email{garnier@njit.edu}
+}

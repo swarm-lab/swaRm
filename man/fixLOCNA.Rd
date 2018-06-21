@@ -27,10 +27,9 @@ This function attempts to automatically detect and correct
 # TODO
 
 }
-\author{
-Simon Garnier, \email{garnier@njit.edu}
-}
 \seealso{
 \code{\link{makeTraj}}, \code{\link{findLocNA}}
 }
-
+\author{
+Simon Garnier, \email{garnier@njit.edu}
+}

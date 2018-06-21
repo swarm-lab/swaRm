@@ -39,10 +39,9 @@ This function attempts to automatically detect missing data (for
 # TODO
 
 }
-\author{
-Simon Garnier, \email{garnier@njit.edu}
-}
 \seealso{
 \code{\link{makeTraj}}, \code{\link{fixMissing}}
 }
-
+\author{
+Simon Garnier, \email{garnier@njit.edu}
+}

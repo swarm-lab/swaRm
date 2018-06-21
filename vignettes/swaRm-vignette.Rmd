@@ -93,38 +93,11 @@ distinguish between different trajectories when merging multiple tables together
 (we will see this later in this tutorial). `time` is a standardized timestamp
 constructed from the dates and times we provided the `makeTraj` function. 
 
-Trajectory tables are [R6 objects](https://cran.r-project.org/web/packages/R6/vignettes/Introduction.html)
-inheriting from the [`data.table`](https://cran.r-project.org/package=data.table) 
-class thanks to the [`R6Frame`](https://cran.r-project.org/package=R6Frame) 
-package. As such, they retain all the properties of `data.table` objects and can 
-be manipulated in almost all the same ways `data.table` objects can be. This 
-includes the possibility to use functions from the 
-[`dplyr`](https://cran.r-project.org/package=dplyr) package as we will see later 
-on. `data.table` objects behave like regular `data.frame` objects, but come with 
-additional functionalities and significant gains in processing speed compared to 
-`data.frame` objects. 
-
-**Warning - Difference between data.table and trajectory tables.** 
-
-While trajectory tables can be manipulated pretty much like any `data.table` (or
-`data.frame`) object, there is still a major difference that need to be taken 
-into account until the `R6Frame` package is completed (version 0.1 only at the 
-time of writing). A trajectory table is essentially a R6 wrapper around a 
-`data.table` object that is stored in the `$data` slot of the R6 object. At the 
-moment, this means that you cannot access the columns of the table using the `$`
-sign like you would do with `data.table` or `data.frame` objects. This will 
-hopefully be included in the next version of the `R6Frame` package. For now, you
-access the columns in two different ways:
-
-1. You can use double square brackets (e.g. `traj[["time"]]`).
-2. You can first access the `$data` slot of the trajectory table object, and 
-then use the `$` sign to access the desired column (e.g., `traj$data$time`).
-
-This should not affect you in most situations in which you would be manioulating 
-or modifying the data, but it could become a problem when trying to use 
-formula-based functions (e.g., linear regressions, plot). In this case, pass the 
-`$data` slot to the function instead of the full trajectory table object (e.g. 
-`plot(lat ~ lon, data = traj$data, type = "l")`). 
+Trajectory tables are special [`tibble` objects](https://cran.r-project.org/web/packages/tibble/vignettes/tibble.html).
+As such, they retain all the properties of `tibble` objects and can be 
+manipulated in all the same ways `tibble` objects can be. This includes the 
+possibility to use functions from the [`dplyr`](https://cran.r-project.org/package=dplyr) 
+package as we will see later on. 
 
 [Back to top]("#")
 
@@ -213,7 +186,7 @@ replace the duplicated timestamp). We will simply remove it here using the
 
 ```{r, message=FALSE, warning=FALSE}
 library(dplyr)
-traj01 <- filter(traj01, -11)
+traj01 <- filter(traj01, error != "TIMEDUP")
 traj01[1:20, ]
 ```
 
@@ -230,7 +203,7 @@ have created earlier.
 ```{r, message=FALSE, warning=FALSE}
 library(ggplot2)
 
-ggplot(traj01$data, aes(x = lon, y = lat)) +
+ggplot(traj01, aes(x = lon, y = lat)) +
   geom_path() + 
   xlab("Longitude") + ylab("Latitude") +
   coord_map()
@@ -244,7 +217,7 @@ and filter it out of the data when plotting.
 loc_err <- findLocErr(traj01) 
 loc_err
 
-ggplot(filter(traj01, -loc_err)$data, aes(x = lon, y = lat)) +
+ggplot(traj01[-loc_err, ], aes(x = lon, y = lat)) +
   geom_path() + 
   xlab("Longitude") + ylab("Latitude") +
   coord_map()
@@ -259,7 +232,7 @@ spline interpolation.
 ```{r, message=FALSE, warning=FALSE}
 traj01 <- fixLocErr(traj01) 
 
-ggplot(traj01$data, aes(x = lon, y = lat)) +
+ggplot(traj01, aes(x = lon, y = lat)) +
   geom_path() + 
   xlab("Longitude") + ylab("Latitude") +
   coord_map()
@@ -316,15 +289,15 @@ satellite map of the study area and overlay the trajectory directly over it.
 ```{r, message=FALSE, warning=FALSE}
 library(ggmap)
 
-myLocation <- c(lon = mean(range(traj01[["lon"]])), lat = mean(range(traj01[["lat"]])))
+myLocation <- c(lon = mean(range(traj01$lon)), lat = mean(range(traj01$lat)))
 myMap <- get_map(location = myLocation, source = "google", 
                  maptype = "satellite", zoom = 17, scale = 2)
 
 ggmap(myMap) + 
-  geom_path(data = traj01$data, aes(x = lon, y = lat), color = "#D7601C", size = 1) +
+  geom_path(data = traj01, aes(x = lon, y = lat), color = "#D7601C", size = 1) +
   xlab("Longitude") + ylab("Latitude") +
-  xlim(min(traj01[["lon"]]), max(traj01[["lon"]])) + 
-  ylim(min(traj01[["lat"]]), max(traj01[["lat"]])) + 
+  xlim(min(traj01$lon), max(traj01$lon)) + 
+  ylim(min(traj01$lat), max(traj01$lat)) + 
   guides(color = FALSE)
 ```
 
@@ -345,13 +318,13 @@ trajectory table.
 
 ```{r, message=FALSE, warning=FALSE}
 traj01 <- mutate(traj01, 
-                 linDist = linDist(x = lon, y = lat, geo = isGeo(traj01)),
+                 linDist = linDist(x = lon, y = lat, geo = is.geo(traj01)),
                  cumDist = cumsum(linDist))
 traj01
 ```
 
 Note that `geo` parameter of the `linDist` function is set to `TRUE` by the 
-`isGeo` function in order to tell the `linDist` function that it will be 
+`is.geo` function in order to tell the `linDist` function that it will be 
 handling geographic data. In this case, it uses the `distGeo` function from the
 [`geosphere`](https://cran.r-project.org/package=geosphere) package to return 
 the distances in meters. If `geo` had been set to `FALSE` instead, the returned 
@@ -362,7 +335,7 @@ apply for the functions calculating linear speeds and accelerations below.
 
 ```{r, message=FALSE, warning=FALSE}
 traj01 <- mutate(traj01, 
-                 linSpeed = linSpeed(x = lon, y = lat, t = time, geo = isGeo(traj01)))
+                 linSpeed = linSpeed(x = lon, y = lat, t = time, geo = is.geo(traj01)))
 traj01
 ```
 
@@ -370,7 +343,7 @@ traj01
 
 ```{r, message=FALSE, warning=FALSE}
 traj01 <- mutate(traj01,
-                 linAcc = linAcc(x = lon, y = lat, t = time, geo = isGeo(traj01)))
+                 linAcc = linAcc(x = lon, y = lat, t = time, geo = is.geo(traj01)))
 traj01
 ```
 
@@ -378,12 +351,12 @@ traj01
 
 ```{r, message=FALSE, warning=FALSE}
 traj01 <- mutate(traj01,
-                 heading = heading(x = lon, y = lat, geo = isGeo(traj01)))
+                 heading = heading(x = lon, y = lat, geo = is.geo(traj01)))
 traj01
 ```
 
 As before, note that `geo` parameter of the `heading` function is set to `TRUE` 
-by the `isGeo` function in order to tell the `heading` function that it will be 
+by the `is.geo` function in order to tell the `heading` function that it will be 
 handling geographic data. In this case, it uses the `bearing` function from the 
 `geosphere` package to return the headings in radians. If `geo` had been set to 
 `FALSE` instead, the heading would have been calculated using the `atan2` 
@@ -394,7 +367,7 @@ functions calculating angular speeds and accelerations below.
 
 ```{r, message=FALSE, warning=FALSE}
 traj01 <- mutate(traj01,
-                 angSpeed = angSpeed(x = lon, y = lat, t = time, geo = isGeo(traj01)))
+                 angSpeed = angSpeed(x = lon, y = lat, t = time, geo = is.geo(traj01)))
 traj01
 ```
 
@@ -402,7 +375,7 @@ traj01
 
 ```{r, message=FALSE, warning=FALSE, results='hide'}
 traj01 <- mutate(traj01,
-                 angAcc = angAcc(x = lon, y = lat, t = time, geo = isGeo(traj01)))
+                 angAcc = angAcc(x = lon, y = lat, t = time, geo = is.geo(traj01)))
 traj01
 ```
 
@@ -449,7 +422,7 @@ trajs <- lapply(filePaths, function(path) {
            heading = heading(lon, lat, geo = TRUE),
            angSpeed = angSpeed(lon, lat, time, geo = TRUE),
            angAcc = angAcc(lon, lat, time, geo = TRUE))
-}) %>% rbindtt()
+}) %>% bind_rows()
 
 trajs
 ```
@@ -461,15 +434,15 @@ data processing pipeline. Read more about `dplyr` and `%>%`
 ## Representing the trajectories using ggplot2 and ggmap
 
 ```{r, message=FALSE, warning=FALSE}
-myLocation <- c(lon = mean(range(trajs[["lon"]])), lat = mean(range(trajs[["lat"]])))
+myLocation <- c(lon = mean(range(trajs$lon)), lat = mean(range(trajs$lat)))
 myMap <- get_map(location = myLocation, source = "google", 
                  maptype = "satellite", zoom = 17, scale = 2)
 
 ggmap(myMap) + 
-  geom_path(data = trajs$data, aes(x = lon, y = lat, color = id), size = 0.8) +
+  geom_path(data = trajs, aes(x = lon, y = lat, color = id), size = 0.8) +
   xlab("Longitude") + ylab("Latitude") +
-  xlim(min(trajs[["lon"]]), max(trajs[["lon"]])) + 
-  ylim(min(trajs[["lat"]]), max(trajs[["lat"]])) + 
+  xlim(min(trajs$lon), max(trajs$lon)) + 
+  ylim(min(trajs$lat), max(trajs$lat)) + 
   guides(color = FALSE)
 ```
 
@@ -489,17 +462,17 @@ entire trajectory table.
 
 ```{r, message=FALSE, warning=FALSE}
 trajSummary <- group_by(trajs, time) %>%
-  do(centroid(lon, lat, geo = TRUE)) %>%
+  do(centroid(.$lon, .$lat, geo = TRUE)) %>%
   ungroup()
 
 trajSummary
 
 ggmap(myMap) + 
-  geom_path(data = trajs$data, aes(x = lon, y = lat, group = id), size = 0.8, color = "white") +
-  geom_path(data = trajSummary$data, aes(x = lon, y = lat), size = 1, color = "red") +
+  geom_path(data = trajs, aes(x = lon, y = lat, group = id), size = 0.8, color = "white") +
+  geom_path(data = trajSummary, aes(x = lon, y = lat), size = 1, color = "red") +
   xlab("Longitude") + ylab("Latitude") +
-  xlim(min(trajs[["lon"]]), max(trajs[["lon"]])) + 
-  ylim(min(trajs[["lat"]]), max(trajs[["lat"]]))
+  xlim(min(trajs$lon), max(trajs$lon)) + 
+  ylim(min(trajs$lat), max(trajs$lat))
 ```
 
 ### Calculating the distances to the centroid of the trajectories
@@ -517,7 +490,7 @@ trajSummary <- group_by(trajs, time) %>%
 
 trajSummary
 
-ggplot(trajSummary$data, aes(x = time, y = distToCentroid)) +
+ggplot(trajSummary, aes(x = time, y = distToCentroid)) +
   geom_line() + 
   xlab("Time") + ylab("Distance to the group's centroid (m)") + 
   ylim(0, NA)
@@ -538,7 +511,7 @@ trajSummary <- group_by(trajs, time) %>%
 
 trajSummary
 
-ggplot(trajSummary$data, aes(x = time, y = nearNeighborDist)) +
+ggplot(trajSummary, aes(x = time, y = nearNeighborDist)) +
   geom_line() + 
   xlab("Time") + ylab("Mean distance to nearest neighbor (m)") + 
   ylim(0, NA)
@@ -551,22 +524,22 @@ trajs <- group_by(trajs, time) %>%
   mutate(isChull = isChull(lon, lat))
 
 # Plot the convex hull for a randomly chose timestamp
-randTime <- trajs[["time"]][sample(1:nrow(trajs), 1)]
+randTime <- trajs$time[sample(1:nrow(trajs), 1)]
 subTraj <- filter(trajs, time == randTime)
 chullPol <- filter(subTraj, isChull > 0) %>%
   arrange(isChull)
   
-myLocation <- c(lon = mean(range(subTraj[["lon"]])), lat = mean(range(subTraj[["lat"]])))
+myLocation <- c(lon = mean(range(subTraj$lon)), lat = mean(range(subTraj$lat)))
 myMap <- get_map(location = myLocation, source = "google", 
                  maptype = "satellite", zoom = 19, scale = 2)
 
 ggmap(myMap) + 
-  geom_polygon(data = chullPol$data, aes(lon, lat), fill = "red", alpha = 0.25) +
-  geom_point(data = subTraj$data, aes(lon, lat), size = 3, color = "white") + 
-  geom_point(data = subTraj$data, aes(lon, lat, color = id), size = 2) + 
+  geom_polygon(data = chullPol, aes(lon, lat), fill = "red", alpha = 0.25) +
+  geom_point(data = subTraj, aes(lon, lat), size = 3, color = "white") + 
+  geom_point(data = subTraj, aes(lon, lat, color = id), size = 2) + 
   xlab("Longitude") + ylab("Latitude") +
-  xlim(min(subTraj[["lon"]]), max(subTraj[["lon"]])) + 
-  ylim(min(subTraj[["lat"]]), max(subTraj[["lat"]])) + 
+  xlim(min(subTraj$lon), max(subTraj$lon)) + 
+  ylim(min(subTraj$lat), max(subTraj$lat)) + 
   guides(color = FALSE)
 ```
 
@@ -578,12 +551,12 @@ trajSummary <- group_by(trajs, time) %>%
             chullArea = chullArea(lon, lat, geo = TRUE)) %>%
   merge(trajSummary, by = "time")
 
-ggplot(trajSummary$data, aes(x = time, y = chullPerim)) +
+ggplot(trajSummary, aes(x = time, y = chullPerim)) +
   geom_line() + 
   xlab("Time") + ylab("Perimeter of the group's convex hull (m)") + 
   ylim(0, NA)
 
-ggplot(trajSummary$data, aes(x = time, y = chullArea)) +
+ggplot(trajSummary, aes(x = time, y = chullArea)) +
   geom_line() + 
   xlab("Time") + ylab(bquote("Surface area of the group's convex hull (" * m ^ 2 * ")")) + 
   ylim(0, NA)
@@ -606,7 +579,7 @@ trajSummary <- group_by(trajs, time) %>%
   summarize(sphericity = sphericity(lon, lat)) %>%
   merge(trajSummary, by = "time")
 
-ggplot(trajSummary$data, aes(x = time, y = sphericity)) +
+ggplot(trajSummary, aes(x = time, y = sphericity)) +
   geom_line() + 
   xlab("Time") + ylab("Group's sphericity") + 
   ylim(0, 1)
@@ -620,11 +593,12 @@ trajSummary <- group_by(trajs, time) %>%
   summarize(stretch = stretch(lon, lat)) %>%
   merge(trajSummary, by = "time")
 
-ggplot(trajSummary$data, aes(x = time, y = stretch)) +
+ggplot(trajSummary, aes(x = time, y = stretch)) +
   geom_line() + 
   xlab("Time") + ylab("Group's sphericity") + 
   ylim(-pi / 2, pi / 2)
 ```
+
 [Back to top]("#")
 
 ---

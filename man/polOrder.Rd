@@ -21,10 +21,9 @@ the polarization order of the group.
 # TODO
 
 }
-\author{
-Simon Garnier, \email{garnier@njit.edu}
-}
 \seealso{
 \code{\link{rotOrder}}
 }
-
+\author{
+Simon Garnier, \email{garnier@njit.edu}
+}

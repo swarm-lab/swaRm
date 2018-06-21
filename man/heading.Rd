@@ -29,10 +29,9 @@ Given a set of cartesian coordinates representing an object's
 # TODO
 
 }
-\author{
-Simon Garnier, \email{garnier@njit.edu}
-}
 \seealso{
 \code{\link{angSpeed}}, \code{\link{angAcc}}
 }
-
+\author{
+Simon Garnier, \email{garnier@njit.edu}
+}

@@ -27,10 +27,9 @@ If a timestamps is missing where the duplicated timestamp is, this
 # TODO
 
 }
-\author{
-Simon Garnier, \email{garnier@njit.edu}
-}
 \seealso{
 \code{\link{makeTraj}}, \code{\link{fixTimeDup}}
 }
-
+\author{
+Simon Garnier, \email{garnier@njit.edu}
+}

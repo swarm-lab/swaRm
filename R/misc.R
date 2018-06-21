@@ -20,45 +20,6 @@
 }
 
 
-#' @title Check validity of trajectory table 
-#' 
-#' @description Test whether a variable contains a trajectory table as produced 
-#'  by the \code{\link{makeTraj}} function.
-#' 
-#' @param traj A variable to test. 
-#' 
-#' @author Simon Garnier, \email{garnier@@njit.edu}
-#' 
-#' @examples
-#' # TODO
-#' 
-#' @export
-isTraj <- function(traj) {
-  any(class(traj) == "trackTable") 
-}
-
-
-#' @title Check if trajectory table is using geographic coordinates
-#' 
-#' @description Trajectory tables produced by the \code{\link{makeTraj}} 
-#'  function can use a cartesian (x, y) or a geographic (latitude, longitude) 
-#'  coordinate system. This function helps determine which is being used in a 
-#'  particular table. 
-#' 
-#' @param traj A trajectory data table as produced by the \code{\link{makeTraj}}
-#'  function.
-#' 
-#' @author Simon Garnier, \email{garnier@@njit.edu}
-#' 
-#' @examples
-#' # TODO
-#' 
-#' @export
-isGeo <- function(traj) {
-  traj$getGeo() 
-}
-
-
 #' @title Update error description in trajectory tables
 #' 
 #' @description This is an internal utility function to update the description

@@ -22,10 +22,9 @@ This function attempts to automatically detect NA locations in
 # TODO
 
 }
-\author{
-Simon Garnier, \email{garnier@njit.edu}
-}
 \seealso{
 \code{\link{makeTraj}}, \code{\link{fixLocNA}}
 }
-
+\author{
+Simon Garnier, \email{garnier@njit.edu}
+}

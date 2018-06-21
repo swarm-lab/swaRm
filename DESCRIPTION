@@ -1,8 +1,8 @@
 Package: swaRm
 Type: Package
 Title: A Package For Processing Collective Movement Data
-Version: 0.2.4
-Date: 2016-06-17
+Version: 0.4.0
+Date: 2018-06-21
 Author: Simon Garnier
 Maintainer: Simon Garnier <garnier@njit.edu>
 Description: Function library for processing collective movement data (e.g. fish
@@ -10,11 +10,9 @@ Description: Function library for processing collective movement data (e.g. fish
   vision tracking software. 
 License: GPL-2
 LazyData: TRUE
-Depends:
-    R6Frame
 Imports: 
     stats,
-    data.table,
+    tibble,
     lazyeval,
     splancs,
     dplyr,
@@ -24,4 +22,4 @@ Imports:
     memoise
 Suggests: 
     ggmap
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

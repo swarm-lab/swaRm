@@ -28,10 +28,9 @@ This function attempts to automatically detect and correct
 # TODO
 
 }
-\author{
-Simon Garnier, \email{garnier@njit.edu}
-}
 \seealso{
 \code{\link{makeTraj}}, \code{\link{findTimeDup}}
 }
-
+\author{
+Simon Garnier, \email{garnier@njit.edu}
+}

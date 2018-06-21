@@ -25,10 +25,9 @@ This function attempts to automatically detect inconsistent
 # TODO
 
 }
-\author{
-Simon Garnier, \email{garnier@njit.edu}
-}
 \seealso{
 \code{\link{makeTraj}}, \code{\link{fixLocErr}}
 }
-
+\author{
+Simon Garnier, \email{garnier@njit.edu}
+}

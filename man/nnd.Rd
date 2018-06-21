@@ -27,10 +27,9 @@ Given a set of cartesian coordinates representing the locations
 # TODO
 
 }
-\author{
-Simon Garnier, \email{garnier@njit.edu}
-}
 \seealso{
 \code{\link{nn}}, \code{\link{nnd}}
 }
-
+\author{
+Simon Garnier, \email{garnier@njit.edu}
+}
