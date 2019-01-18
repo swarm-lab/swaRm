@@ -35,7 +35,7 @@ it defaults to the system's time zone. See \code{\link{timezone}} for more \
 details.}
 }
 \value{
-A trajectory table (see \code{\link{trackTable}}).
+A trajectory table.
 }
 \description{
 Given a set of coordinates representing an object's trajectory, 
@@ -47,8 +47,8 @@ Given a set of coordinates representing an object's trajectory,
 
 }
 \seealso{
-\code{\link{trackTable}}, \code{\link[lubridate]{as_datetime}}, 
- \code{\link[lubridate]{now}}, \code{\link{units}}, \code{\link{timezone}}
+\code{\link[lubridate]{as_datetime}}, \code{\link[lubridate]{now}}, 
+ \code{\link{units}}, \code{\link{timezone}}
 }
 \author{
 Simon Garnier, \email{garnier@njit.edu}

@@ -32,7 +32,7 @@ isChull <- function(x, y) {
   idx <- is.na(x) | is.na(y)
   x[idx] <- mean(x, na.rm = TRUE)
   y[idx] <- mean(y, na.rm = TRUE)
-  ch <- chull(x, y)
+  ch <- grDevices::chull(x, y)
   pos <- 1:length(ch)
   is.chull <- rep(FALSE, length(x))
   is.chull[ch] <- pos

@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{.updateError}
 \alias{.updateError}
-\title{Update error description in trajectory tables}
+\title{Update Error Description In Trajectory Tables}
 \usage{
 .updateError(error, update)
 }

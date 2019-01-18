@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{.ellipse}
 \alias{.ellipse}
-\title{Computes confidence ellipse of a bivariate set of points}
+\title{Computes Confidence Ellipse Of A Bivariate Set Of Points}
 \usage{
 .ellipse(x, y, level = 0.95)
 }

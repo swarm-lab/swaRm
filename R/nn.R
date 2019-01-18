@@ -36,7 +36,7 @@ pdist <- function(x, y, geo = FALSE) {
     m2 <- cbind(x[idx$col], y[idx$col])
     matrix(geosphere::distGeo(m1, m2), nrow = l, ncol = l)
   } else {
-    as.matrix(dist(cbind(x, y)))
+    as.matrix(stats::dist(cbind(x, y)))
   }
 }
 

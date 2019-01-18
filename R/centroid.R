@@ -29,14 +29,14 @@ centroid <- function(x, y, geo = FALSE) {
   
   if (geo) {
     if (length(x) > 1) {
-      centrd <- data.table::as.data.table(geosphere::geomean(cbind(x, y)))
+      centrd <- tibble::as_tibble(geosphere::geomean(cbind(x, y)))
       names(centrd) <- c("lon", "lat")
     } else {
-      centrd <- data.table::data.table(lon = x, lat = y)
+      centrd <- tibble::tibble(lon = x, lat = y)
     }
   } else {
-    centrd <- data.table::data.table(x = mean(x, na.rm = TRUE), 
-                                     y = mean(y, na.rm = TRUE))
+    centrd <- tibble::tibble(x = mean(x, na.rm = TRUE), 
+                             y = mean(y, na.rm = TRUE))
   }
   
   centrd

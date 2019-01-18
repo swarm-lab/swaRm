@@ -7,7 +7,7 @@
 is.2D(x)
 }
 \arguments{
-\item{traj}{A trajectory data table as produced by the \code{\link{makeTraj}}
+\item{x}{A trajectory data table as produced by the \code{\link{makeTraj}}
 function.}
 }
 \description{

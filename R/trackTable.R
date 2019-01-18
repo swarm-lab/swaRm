@@ -30,12 +30,12 @@
 #'  it defaults to the system's time zone. See \code{\link{timezone}} for more \
 #'  details. 
 #'  
-#' @return A trajectory table (see \code{\link{trackTable}}).
+#' @return A trajectory table.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{trackTable}}, \code{\link[lubridate]{as_datetime}}, 
-#'  \code{\link[lubridate]{now}}, \code{\link{units}}, \code{\link{timezone}}
+#' @seealso \code{\link[lubridate]{as_datetime}}, \code{\link[lubridate]{now}}, 
+#'  \code{\link{units}}, \code{\link{timezone}}
 #' 
 #' @examples
 #' # TODO
@@ -89,7 +89,7 @@ track <- function(id = NULL, x, y, z = NULL, t, t0 = NULL, units = "secs",
 #' @description Test whether a variable contains a trajectory table as produced 
 #'  by the \code{\link{makeTraj}} function.
 #' 
-#' @param object An object to test. 
+#' @param x An object to test. 
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
@@ -111,7 +111,7 @@ is.trackTable <- function(x) {
 #'  coordinate system. This function helps determine which is being used in a 
 #'  particular table. 
 #' 
-#' @param traj A trajectory data table as produced by the \code{\link{makeTraj}}
+#' @param x A trajectory data table as produced by the \code{\link{makeTraj}}
 #'  function.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
@@ -134,7 +134,7 @@ is.geo <- function(x) {
 #'  function can have 2 or 3 dimensions. This function helps determine which is 
 #'  being used in a particular table. 
 #'
-#' @param traj A trajectory data table as produced by the \code{\link{makeTraj}}
+#' @param x A trajectory data table as produced by the \code{\link{makeTraj}}
 #'  function.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}

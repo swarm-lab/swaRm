@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{.cartesianPerimeter}
 \alias{.cartesianPerimeter}
-\title{Computes the perimeter of a polygon in cartesian space}
+\title{Computes The perimeter Of A Polygon In Cartesian Space}
 \usage{
 .cartesianPerimeter(x, y)
 }

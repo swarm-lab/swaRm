@@ -19,7 +19,8 @@ Imports:
     dplyr,
     geosphere,
     lubridate,
-    zoo
+    zoo,
+    MASS
 Suggests: 
     ggmap,
     knitr,

@@ -31,6 +31,10 @@ each location of the trajectory, in hours-minutes-seconds format. If not set,
 the first timestamp defaults to 0 hours, 0 minutes, 1 second. The following 
 timestamps are either in increment of 1 second or 1 second / fps.}
 
+\item{start_time}{The time at which tracking began. It can be any object that can be 
+converted to a date-time by \code{\link[lubridate]{as_datetime}}. If not 
+specified, it defaults to the date-time returned by \code{\link[lubridate]{now}}.}
+
 \item{tz}{A character string identifying the timezone of the timestamps of 
 the trajectory. Default: "UTC".}
 
@@ -50,7 +54,7 @@ minute-second).}
 geographic coordinates (pairs of longitude/latitude values). Default: FALSE.}
 }
 \value{
-A trajectory table (see \code{\link{trackTable}}).
+A trajectory table.
 }
 \description{
 Given a set of cartesian coordinates representing an object's 
@@ -61,9 +65,6 @@ Given a set of cartesian coordinates representing an object's
 \examples{
 # TODO
 
-}
-\seealso{
-\code{\link{trackTable}}
 }
 \author{
 Simon Garnier, \email{garnier@njit.edu}

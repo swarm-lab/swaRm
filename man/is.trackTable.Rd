@@ -7,7 +7,7 @@
 is.trackTable(x)
 }
 \arguments{
-\item{object}{An object to test.}
+\item{x}{An object to test.}
 }
 \description{
 Test whether a variable contains a trajectory table as produced 

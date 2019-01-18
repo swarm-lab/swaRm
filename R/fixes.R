@@ -64,7 +64,7 @@ fixMissing <- function(x, begin = NULL, end = NULL, step = NULL, spline = FALSE)
         }
       } else {
         x$time[idx] <- missing$time[i]
-        x$error[idx] <- swaRm:::.updateError(x$error[idx], "NA")
+        x$error[idx] <- .updateError(x$error[idx], "NA")
       }
     }
   }

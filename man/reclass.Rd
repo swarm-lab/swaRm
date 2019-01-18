@@ -2,7 +2,7 @@
 % Please edit documentation in R/dplyr.R
 \name{reclass}
 \alias{reclass}
-\title{Copy class and attributes from the original version of an object to a modified version.}
+\title{Maintain Class After Modification}
 \usage{
 reclass(x, result)
 }
@@ -15,5 +15,6 @@ reclass(x, result)
 \code{result}, now with class/attributes restored.
 }
 \description{
-Copy class and attributes from the original version of an object to a modified version.
+Copy class and attributes from the original version of an object 
+ to a modified version.
 }

@@ -2,18 +2,22 @@
 % Please edit documentation in R/misc.R
 \name{.Mode}
 \alias{.Mode}
-\title{Compute the mode(s) of a discrete distribution}
+\title{Compute The Mode(s) Of A Discrete Distribution}
 \usage{
 .Mode(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{A vector or matrix of discrete values.}
+
+\item{na.rm}{A logical value indicating whether NA values should be stripped 
+before the computation proceeds (default: TRUE).}
 }
 \value{
 A vector of values corresponding to the mode(s) of x.
 }
 \description{
-
+This is an internal utility function to compute the mode(s) of 
+ a discrete distribution.
 }
 \examples{
 # TODO

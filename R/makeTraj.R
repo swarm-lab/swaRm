@@ -27,6 +27,10 @@
 #'  the first timestamp defaults to 0 hours, 0 minutes, 1 second. The following 
 #'  timestamps are either in increment of 1 second or 1 second / fps. 
 #'  
+#' @param start_time The time at which tracking began. It can be any object that can be 
+#'  converted to a date-time by \code{\link[lubridate]{as_datetime}}. If not 
+#'  specified, it defaults to the date-time returned by \code{\link[lubridate]{now}}.
+#'  
 #' @param date.format A character string with 3 letters ('y' for year, 'm' for 
 #'  month, and 'd' for day) indicating the format of the date (e.g., 'ymd' for 
 #'  year-month-day, 'dmy' for day-month-year, etc).
@@ -45,11 +49,9 @@
 #' @param geo A logical value indicating whether the locations are defined by 
 #'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE. 
 #' 
-#' @return A trajectory table (see \code{\link{trackTable}}).
+#' @return A trajectory table.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
-#' 
-#' @seealso \code{\link{trackTable}}
 #' 
 #' @examples
 #' # TODO

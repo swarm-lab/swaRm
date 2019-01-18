@@ -3,3 +3,9 @@
 scripts
 LICENSE
 old
+.travis.yml
+appveyor.yml
+_pkgdown.yaml
+README.md
+index.Rmd
+docs
