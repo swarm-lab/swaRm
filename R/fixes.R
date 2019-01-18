@@ -3,7 +3,7 @@
 #' @description This function attempts to automatically detect and correct 
 #'  missing data (for instance due to writing errors) in trajectory tables.  
 #' 
-#' @param traj A trajectory data table as produced by the \code{\link{makeTraj}}
+#' @param x A trajectory data table as produced by the \code{\link{makeTraj}}
 #'  function.
 #'  
 #' @param begin A full timestamp (date+time) in \code{\link{POSIXct}} format
@@ -34,46 +34,42 @@
 #' # TODO
 #' 
 #' @export
-fixMissing <- function(traj, begin = NULL, end = NULL, step = NULL, spline = FALSE) {
-  if (!(is.trackTable(traj))) {
-    stop("traj should be a trajectory data table as produced by the makeTraj function.")
-  }
+fixMissing <- function(x, begin = NULL, end = NULL, step = NULL, spline = FALSE) {
+  if (!(is.trackTable(x))) 
+    stop("x is not a trackTable object.")
   
-  if (!tibble::has_name(traj, "error")) {
-    traj$error <- rep("OK", nrow(traj))
-  }
+  if (!tibble::has_name(x, "error")) 
+    x$error <- rep("OK", nrow(x))
   
-  id <- unique(traj$id)
-  if (length(id) > 1) {
-    stop("traj should have the same id for all observations.")
-  }
+  if (length(unique(x$id)) > 1) 
+    stop("x should have the same id for all observations.")
   
-  missing <- findMissing(traj, begin = begin, end = end, step = step)
+  missing <- findMissing(x, begin = begin, end = end, step = step)
   
   if (length(missing) > 0) {
     for (i in 1:nrow(missing)) {
-      idx <- which((traj$time + 1) == missing$time[i]) + 1
+      idx <- which((x$time + 1) == missing$time[i]) + 1
       
       if (missing$type[i] == "MISSING") {
-        if (is.geo(traj)) { 
-          traj <- tibble::add_row(traj, .after = idx - 1, 
-                                  id = traj$id[idx - 1], time = missing$time[i], 
-                                  lon = NA, lat = NA, 
-                                  error = "MISSING") 
+        if (is.geo(x)) { 
+          x <- tibble::add_row(x, .after = idx - 1, 
+                               id = x$id[idx - 1], time = missing$time[i], 
+                               lon = NA, lat = NA, 
+                               error = "MISSING") 
         } else {
-          traj <- tibble::add_row(traj, .after = idx - 1, 
-                                  id = traj$id[idx - 1], time = missing$time[i], 
-                                  x = NA, y = NA, 
-                                  error = "MISSING") 
+          x <- tibble::add_row(x, .after = idx - 1, 
+                               id = x$id[idx - 1], time = missing$time[i], 
+                               x = NA, y = NA, 
+                               error = "MISSING") 
         }
       } else {
-        traj$time[idx] <- missing$time[i]
-        traj$error[idx] <- swaRm:::.updateError(traj$error[idx], "NA")
+        x$time[idx] <- missing$time[i]
+        x$error[idx] <- swaRm:::.updateError(x$error[idx], "NA")
       }
     }
   }
- 
-  traj
+  
+  x
 }
 
 
@@ -83,7 +79,7 @@ fixMissing <- function(traj, begin = NULL, end = NULL, step = NULL, spline = FAL
 #'  duplicated timestamps in trajectory tables. If it cannot correct a duplicated
 #'  timestamp, it replaces it with NA. 
 #' 
-#' @param traj A trajectory data table as produced by the \code{\link{makeTraj}}
+#' @param x A trajectory data table as produced by the \code{\link{makeTraj}}
 #'  function.
 #' 
 #' @param step A \code{\link{difftime}} object representing the time between two 
@@ -102,30 +98,28 @@ fixMissing <- function(traj, begin = NULL, end = NULL, step = NULL, spline = FAL
 #' # TODO
 #' 
 #' @export
-fixTimeDup <- function(traj, step = NULL) {
-  if (!(is.trackTable(traj))) {
-    stop("traj should be a trajectory data table as produced by the makeTraj function.")
-  }
+fixTimeDup <- function(x, step = NULL) {
+  if (!(is.trackTable(x))) 
+    stop("x is not a trackTable object.")
   
-  if (!tibble::has_name(traj, "error")) {
-    traj$error <- rep("OK", nrow(traj))
-  }
+  if (!tibble::has_name(x, "error")) 
+    x$error <- rep("OK", nrow(x))
   
   if (is.null(step)) {
-    d <- diff(traj$time)
+    d <- diff(x$time)
     u <- units(d)
     step <- as.difftime(.Mode(d)[1], units = u)
   }
   
-  idx_DUP <- findTimeDup(traj)
+  idx_DUP <- findTimeDup(x)
   
-  traj$error[idx_DUP] <- .updateError(traj$error[idx_DUP], rep("TIMEDUP", length(idx_DUP)))
+  x$error[idx_DUP] <- .updateError(x$error[idx_DUP], rep("TIMEDUP", length(idx_DUP)))
   
-  resolved <- !((traj$time[idx_DUP - 1] + step) %in% traj$time)
-  traj$time[idx_DUP[resolved]] <- traj$time[idx_DUP[resolved] - 1] + step
-  traj$time[idx_DUP[!resolved]] <- NA
+  resolved <- !((x$time[idx_DUP - 1] + step) %in% x$time)
+  x$time[idx_DUP[resolved]] <- x$time[idx_DUP[resolved] - 1] + step
+  x$time[idx_DUP[!resolved]] <- NA
 
-  traj
+  x
 }
 
 
@@ -135,7 +129,7 @@ fixTimeDup <- function(traj, step = NULL) {
 #'  inconsistent locations (for instance due to a writing error) in trajectory 
 #'  tables.  
 #' 
-#' @param traj A trajectory data table as produced by the \code{\link{makeTraj}}
+#' @param x A trajectory data table as produced by the \code{\link{makeTraj}}
 #'  function.
 #'  
 #' @param s The discrmination threshold of the outlier detection algorithm. 
@@ -157,50 +151,48 @@ fixTimeDup <- function(traj, step = NULL) {
 #' # TODO
 #' 
 #' @export
-fixLocErr <- function(traj, s = 15, spline = FALSE) {
-  if (!(is.trackTable(traj))) {
-    stop("traj should be a trajectory data table as produced by the makeTraj function.")
-  }
+fixLocErr <- function(x, s = 15, spline = FALSE) {
+  if (!(is.trackTable(x))) 
+    stop("x is not a trackTable object.")
   
-  if (!tibble::has_name(traj, "error")) {
-    traj$error <- rep("OK", nrow(traj))
-  }
+  if (!tibble::has_name(x, "error")) 
+    x$error <- rep("OK", nrow(x))
   
-  idx_SEQ <- findLocErr(traj, s = s)
+  idx_SEQ <- findLocErr(x, s = s)
   
-  traj$error[idx_SEQ] <- .updateError(traj$error[idx_SEQ], rep("lOCERROR", length(idx_SEQ)))
+  x$error[idx_SEQ] <- .updateError(x$error[idx_SEQ], rep("lOCERROR", length(idx_SEQ)))
   
-  if (is.geo(traj)) {
-    traj$lon[idx_SEQ] <- NA
-    traj$lat[idx_SEQ] <- NA
+  if (is.geo(x)) {
+    x$lon[idx_SEQ] <- NA
+    x$lat[idx_SEQ] <- NA
     
     if (spline) {
-      interpLon <- zoo::na.spline(traj$lon, x = traj$time, na.rm = FALSE)
-      interpLat <- zoo::na.spline(traj$lat, x = traj$time, na.rm = FALSE)
+      interpLon <- zoo::na.spline(x$lon, x = x$time, na.rm = FALSE)
+      interpLat <- zoo::na.spline(x$lat, x = x$time, na.rm = FALSE)
     } else {
-      interpLon <- zoo::na.approx(traj$lon, x = traj$time, na.rm = FALSE) 
-      interpLat <- zoo::na.approx(traj$lat, x = traj$time, na.rm = FALSE) 
+      interpLon <- zoo::na.approx(x$lon, x = x$time, na.rm = FALSE) 
+      interpLat <- zoo::na.approx(x$lat, x = x$time, na.rm = FALSE) 
     }
     
-    traj$lon[idx_SEQ] <- interpLon[idx_SEQ]
-    traj$lat[idx_SEQ] <- interpLat[idx_SEQ]
+    x$lon[idx_SEQ] <- interpLon[idx_SEQ]
+    x$lat[idx_SEQ] <- interpLat[idx_SEQ]
   } else {
-    traj$x[idx_SEQ] <- NA
-    traj$y[idx_SEQ] <- NA
+    x$x[idx_SEQ] <- NA
+    x$y[idx_SEQ] <- NA
     
     if (spline) {
-      interpX <- zoo::na.spline(traj$x, x = traj$time, na.rm = FALSE)
-      interpY <- zoo::na.spline(traj$y, x = traj$time, na.rm = FALSE)
+      interpX <- zoo::na.spline(x$x, x = x$time, na.rm = FALSE)
+      interpY <- zoo::na.spline(x$y, x = x$time, na.rm = FALSE)
     } else {
-      interpX <- zoo::na.approx(traj$x, x = traj$time, na.rm = FALSE)
-      interpY <- zoo::na.approx(traj$y, x = traj$time, na.rm = FALSE)
+      interpX <- zoo::na.approx(x$x, x = x$time, na.rm = FALSE)
+      interpY <- zoo::na.approx(x$y, x = x$time, na.rm = FALSE)
     }
     
-    traj$x[idx_SEQ] <- interpX[idx_SEQ]
-    traj$y[idx_SEQ] <- interpY[idx_SEQ]
+    x$x[idx_SEQ] <- interpX[idx_SEQ]
+    x$y[idx_SEQ] <- interpY[idx_SEQ]
   }
   
-  traj
+  x
 } 
 
 
@@ -209,7 +201,7 @@ fixLocErr <- function(traj, s = 15, spline = FALSE) {
 #' @description This function attempts to automatically detect and correct 
 #'  NA locations in trajectory tables.  
 #' 
-#' @param traj A trajectory data table as produced by the \code{\link{makeTraj}}
+#' @param x A trajectory data table as produced by the \code{\link{makeTraj}}
 #'  function.
 #'
 #' @param spline If \code{spline} is \code{TRUE}, NA locations are estimated 
@@ -228,52 +220,48 @@ fixLocErr <- function(traj, s = 15, spline = FALSE) {
 #' # TODO
 #' 
 #' @export
-fixLocNA <- function(traj, spline = FALSE) {
-  if (!(is.trackTable(traj))) {
-    stop("traj should be a trajectory data table as produced by the makeTraj function.")
-  }
+fixLocNA <- function(x, spline = FALSE) {
+  if (!(is.trackTable(x))) 
+    stop("x is not a trackTable object.")
   
-  if (!tibble::has_name(traj, "error")) {
-    traj$error <- rep("OK", nrow(traj))
-  }
+  if (!tibble::has_name(x, "error")) 
+    x$error <- rep("OK", nrow(x))
   
-  idxNA <- findLocNA(traj)
+  idxNA <- findLocNA(x)
   
-  if (is.geo(traj)) {
-    traj$lon[idxNA] <- NA
-    traj$lat[idxNA] <- NA
+  if (is.geo(x)) {
+    x$lon[idxNA] <- NA
+    x$lat[idxNA] <- NA
     
-    traj$error[idxNA] <- .updateError(traj$error[idxNA], rep("LOCNA", length(idxNA)))
+    x$error[idxNA] <- .updateError(x$error[idxNA], rep("LOCNA", length(idxNA)))
     
     if (spline) {
-      interpLon <- zoo::na.spline(traj$lon, x = traj$time, na.rm = FALSE)
-      interpLat <- zoo::na.spline(traj$lat, x = traj$time, na.rm = FALSE)
+      interpLon <- zoo::na.spline(x$lon, x = x$time, na.rm = FALSE)
+      interpLat <- zoo::na.spline(x$lat, x = x$time, na.rm = FALSE)
     } else {
-      interpLon <- zoo::na.approx(traj$lon, x = traj$time, na.rm = FALSE) 
-      interpLat <- zoo::na.approx(traj$lat, x = traj$time, na.rm = FALSE) 
+      interpLon <- zoo::na.approx(x$lon, x = x$time, na.rm = FALSE) 
+      interpLat <- zoo::na.approx(x$lat, x = x$time, na.rm = FALSE) 
     }
     
-    traj$lon[idxNA] <- interpLon[idxNA]
-    traj$lat[idxNA] <- interpLat[idxNA]
+    x$lon[idxNA] <- interpLon[idxNA]
+    x$lat[idxNA] <- interpLat[idxNA]
   } else {
-    traj$x[idxNA] <- NA
-    traj$y[idxNA] <- NA
+    x$x[idxNA] <- NA
+    x$y[idxNA] <- NA
     
-    traj$error[idxNA] <- .updateError(traj$error[idxNA], rep("LOCNA", length(idxNA)))
+    x$error[idxNA] <- .updateError(x$error[idxNA], rep("LOCNA", length(idxNA)))
     
     if (spline) {
-      interpX <- zoo::na.spline(traj$x, x = traj$time, na.rm = FALSE)
-      interpY <- zoo::na.spline(traj$y, x = traj$time, na.rm = FALSE)
+      interpX <- zoo::na.spline(x$x, x = x$time, na.rm = FALSE)
+      interpY <- zoo::na.spline(x$y, x = x$time, na.rm = FALSE)
     } else {
-      interpX <- zoo::na.approx(traj$x, x = traj$time, na.rm = FALSE)
-      interpY <- zoo::na.approx(traj$y, x = traj$time, na.rm = FALSE)
+      interpX <- zoo::na.approx(x$x, x = x$time, na.rm = FALSE)
+      interpY <- zoo::na.approx(x$y, x = x$time, na.rm = FALSE)
     }
     
-    traj$x[idxNA] <- interpX[idxNA]
-    traj$y[idxNA] <- interpY[idxNA]
+    x$x[idxNA] <- interpX[idxNA]
+    x$y[idxNA] <- interpY[idxNA]
   }
   
-  traj
+  x
 } 
-
-

@@ -2,11 +2,11 @@
 % Please edit documentation in R/makeTraj.R
 \name{makeTraj}
 \alias{makeTraj}
-\title{Build a trajectory table}
+\title{Build a trajectory table [DEPRECATED]}
 \usage{
 makeTraj(x, y, z = NULL, id = NULL, date = NULL, time = NULL,
-  date.format = "ymd", time.format = "hms", tz = "UTC", fps = NULL,
-  geo = FALSE)
+  start_time = NULL, tz = NULL, fps = NULL, date.format = "ymd",
+  time.format = "hms", geo = FALSE)
 }
 \arguments{
 \item{x}{A vector of x (or longitude) coordinates corresponding to a single 
@@ -31,6 +31,12 @@ each location of the trajectory, in hours-minutes-seconds format. If not set,
 the first timestamp defaults to 0 hours, 0 minutes, 1 second. The following 
 timestamps are either in increment of 1 second or 1 second / fps.}
 
+\item{tz}{A character string identifying the timezone of the timestamps of 
+the trajectory. Default: "UTC".}
+
+\item{fps}{A single numeric value corresponding to the sampling rate of the 
+trajectory.}
+
 \item{date.format}{A character string with 3 letters ('y' for year, 'm' for 
 month, and 'd' for day) indicating the format of the date (e.g., 'ymd' for 
 year-month-day, 'dmy' for day-month-year, etc).}
@@ -40,12 +46,6 @@ for minute, and 's' for second) indicating the format of the time (e.g.,
 'hms' for hour-minute-second, 'hm' for hour-minute, and 'ms' for 
 minute-second).}
 
-\item{tz}{A character string identifying the timezone of the timestamps of 
-the trajectory. Default: "UTC".}
-
-\item{fps}{A single numeric value corresponding to the sampling rate of the 
-trajectory.}
-
 \item{geo}{A logical value indicating whether the locations are defined by 
 geographic coordinates (pairs of longitude/latitude values). Default: FALSE.}
 }
@@ -53,9 +53,9 @@ geographic coordinates (pairs of longitude/latitude values). Default: FALSE.}
 A trajectory table (see \code{\link{trackTable}}).
 }
 \description{
-Given a set of cartesian coordinates representing an object's trajectory, 
- this function builds a trajectory table that can then be used to work with 
- the functions provided by the \code{\link[swaRm:swaRm-package]{swaRm}}
+Given a set of cartesian coordinates representing an object's 
+ trajectory, this function builds a trajectory table that can then be used to 
+ work with the functions provided by the \code{\link[swaRm:swaRm-package]{swaRm}}
  package.
 }
 \examples{

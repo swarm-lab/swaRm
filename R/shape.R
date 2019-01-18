@@ -20,6 +20,12 @@
 #' 
 #' @export
 sphericity <- function(x, y) {
+  if (length(x) != length(y)) 
+    stop("x and y should have the same length.")
+  
+  if (!is.numeric(x) | !is.numeric(y))
+    stop("x and y should be numeric.")
+  
   tryCatch({
     ell <- .ellipse(x, y)
     ell$b / ell$a}, 
@@ -47,6 +53,12 @@ sphericity <- function(x, y) {
 #'
 #' @export
 stretch <- function(x, y) {
+  if (length(x) != length(y)) 
+    stop("x and y should have the same length.")
+  
+  if (!is.numeric(x) | !is.numeric(y))
+    stop("x and y should be numeric.")
+  
   tryCatch({
     ell <- .ellipse(x, y)
     ell$alpha}, 

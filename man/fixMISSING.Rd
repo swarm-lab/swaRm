@@ -4,10 +4,11 @@
 \alias{fixMissing}
 \title{Interpolate missing data in a trajectory table}
 \usage{
-fixMissing(traj, begin = NULL, end = NULL, step = NULL, spline = FALSE)
+fixMissing(x, begin = NULL, end = NULL, step = NULL,
+  spline = FALSE)
 }
 \arguments{
-\item{traj}{A trajectory data table as produced by the \code{\link{makeTraj}}
+\item{x}{A trajectory data table as produced by the \code{\link{makeTraj}}
 function.}
 
 \item{begin}{A full timestamp (date+time) in \code{\link{POSIXct}} format

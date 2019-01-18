@@ -4,10 +4,10 @@
 \alias{findMissing}
 \title{Find missing data in a trajectory table}
 \usage{
-findMissing(traj, begin = NULL, end = NULL, step = NULL)
+findMissing(x, begin = NULL, end = NULL, step = NULL)
 }
 \arguments{
-\item{traj}{A trajectory data table as produced by the \code{\link{makeTraj}}
+\item{x}{A trajectory data table as produced by the \code{\link{makeTraj}}
 function.}
 
 \item{begin}{A full timestamp (date+time) in \code{\link{POSIXct}} format

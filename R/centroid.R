@@ -21,9 +21,11 @@
 #' 
 #' @export
 centroid <- function(x, y, geo = FALSE) {
-  if (!is.vector(x) || !is.vector(y) || length(x) != length(y)) {
-    stop("x and y must be vector of identical length.")
-  }
+  if (length(x) != length(y)) 
+    stop("x and y should have the same length.")
+  
+  if (!is.numeric(x) | !is.numeric(y))
+    stop("x and y should be numeric.")
   
   if (geo) {
     if (length(x) > 1) {
@@ -62,10 +64,6 @@ centroid <- function(x, y, geo = FALSE) {
 #' 
 #' @export
 dist2centroid <- function(x, y, geo = FALSE) {
-  if (!is.vector(x) || !is.vector(y) || length(x) != length(y)) {
-    stop("x and y must be vector of identical length.")
-  }
-  
   centrd <- as.matrix(centroid(x, y, geo = geo))
   
   if (geo) {

@@ -4,10 +4,10 @@
 \alias{fixTimeDup}
 \title{Correct duplicated timestamps in a trajectory table}
 \usage{
-fixTimeDup(traj, step = NULL)
+fixTimeDup(x, step = NULL)
 }
 \arguments{
-\item{traj}{A trajectory data table as produced by the \code{\link{makeTraj}}
+\item{x}{A trajectory data table as produced by the \code{\link{makeTraj}}
 function.}
 
 \item{step}{A \code{\link{difftime}} object representing the time between two 

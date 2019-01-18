@@ -25,9 +25,11 @@
 #' 
 #' @export
 linDist <- function(x, y, geo = FALSE) {
-  if (!is.vector(x) || !is.vector(y) || length(x) != length(y)) {
-    stop("x and y must be vectors of identical length.")
-  }
+  if (length(x) != length(y)) 
+    stop("x and y should have the same length.")
+  
+  if (!is.numeric(x) | !is.numeric(y))
+    stop("x and y should be numeric.")
   
   if (geo) {
     l <- length(x)
@@ -69,10 +71,14 @@ linDist <- function(x, y, geo = FALSE) {
 #' 
 #' @export
 linSpeed <- function(x, y, t, geo = FALSE) {
-  if (!is.vector(x) || !is.vector(y) || !lubridate::is.POSIXct(t) || 
-      !all.equal(length(x), length(y), length(t))) {
-    stop("x, y and t must be vectors of identical length.")
-  }
+  if (!all(length(x) == c(length(y), length(t))))
+    stop("x, y and id should have the same length.")
+  
+  if (!is.numeric(x) | !is.numeric(y))
+    stop("x and y should be numeric.")
+  
+  if (!lubridate::is.POSIXct(t)) 
+    stop("t should be POSIXct.")
   
   dt <- diff(t)
   dp <- linDist(x, y, geo = geo)
@@ -109,10 +115,14 @@ linSpeed <- function(x, y, t, geo = FALSE) {
 #' 
 #' @export
 linAcc <- function(x, y, t, geo = FALSE) {
-  if (!is.vector(x) || !is.vector(y) || !lubridate::is.POSIXct(t) || 
-      !all.equal(length(x), length(y), length(t))) {
-    stop("x, y and t must be vectors of identical length.")
-  }
+  if (!all(length(x) == c(length(y), length(t))))
+    stop("x, y and id should have the same length.")
+  
+  if (!is.numeric(x) | !is.numeric(y))
+    stop("x and y should be numeric.")
+  
+  if (!lubridate::is.POSIXct(t)) 
+    stop("t should be POSIXct.")
   
   s <- linSpeed(x, y, t, geo = geo)
   c(NA, diff(s))
@@ -148,9 +158,11 @@ linAcc <- function(x, y, t, geo = FALSE) {
 #' 
 #' @export
 nsd <- function(x, y, geo = FALSE) {
-  if (!is.vector(x) || !is.vector(y) || length(x) != length(y)) {
-    stop("x and y must be vectors of identical length.")
-  }
+  if (length(x) != length(y)) 
+    stop("x and y should have the same length.")
+  
+  if (!is.numeric(x) | !is.numeric(y))
+    stop("x and y should be numeric.")
   
   if (geo) {
     m1 <- cbind(x, y)
@@ -160,4 +172,3 @@ nsd <- function(x, y, geo = FALSE) {
     (x - x[1]) ^ 2 + (y - y[1]) ^ 2
   }
 }
-

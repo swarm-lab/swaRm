@@ -3,7 +3,7 @@
 #' @description This function attempts to automatically detect missing data (for 
 #'  instance due to writing errors) in trajectory tables.  
 #' 
-#' @param traj A trajectory data table as produced by the \code{\link{makeTraj}}
+#' @param x A trajectory data table as produced by the \code{\link{makeTraj}}
 #'  function.
 #'  
 #' @param begin A full timestamp (date+time) in \code{\link{POSIXct}} format
@@ -34,32 +34,29 @@
 #' # TODO
 #' 
 #' @export
-findMissing <- function(traj, begin = NULL, end = NULL, step = NULL) {
-  if (!(is.trackTable(traj))) {
-    stop("traj should be a trajectory data table as produced by the makeTraj function.")
-  }
+findMissing <- function(x, begin = NULL, end = NULL, step = NULL) {
+  if (!(is.trackTable(x))) 
+    stop("x is not a trackTable object.")
   
-  id <- unique(traj$id)
-  if (length(id) > 1) {
-    stop("traj should have the same id for all observations.")
-  }
+  if (length(unique(x$id)) > 1) 
+    stop("x should have the same id for all observations.")
   
   if (is.null(step)) {
-    d <- diff(traj[["time"]])
+    d <- diff(x[["time"]])
     u <- units(d)
     step <- as.difftime(.Mode(d)[1], units = u)
   }
   
   if (is.null(begin)) {
-    begin <- min(traj[["time"]], na.rm = TRUE)
+    begin <- min(x[["time"]], na.rm = TRUE)
   }
   
   if (is.null(end)) {
-    end <- max(traj[["time"]], na.rm = TRUE)
+    end <- max(x[["time"]], na.rm = TRUE)
   }
   
   full_seq <- seq(begin, end, step)
-  my_seq <- traj[["time"]]
+  my_seq <- x[["time"]]
   my_seq <- my_seq[!(duplicated(my_seq) & !is.na(my_seq))]
   
   m1 <- match(full_seq, my_seq)
@@ -91,7 +88,7 @@ findMissing <- function(traj, begin = NULL, end = NULL, step = NULL) {
 #' @description This function attempts to automatically detect duplicated 
 #'  timestamps in trajectory tables. 
 #' 
-#' @param traj A trajectory data table as produced by the \code{\link{makeTraj}}
+#' @param x A trajectory data table as produced by the \code{\link{makeTraj}}
 #'  function.
 #' 
 #' @return A vector corresponding to the row numbers of the duplicated timestamps
@@ -109,12 +106,11 @@ findMissing <- function(traj, begin = NULL, end = NULL, step = NULL) {
 #' # TODO
 #' 
 #' @export
-findTimeDup <- function(traj) {
-  if (!(is.trackTable(traj))) {
-    stop("traj should be a trajectory data table as produced by the makeTraj function.")
-  }
+findTimeDup <- function(x) {
+  if (!(is.trackTable(x))) 
+    stop("x is not a trackTable object.")
   
-  which(duplicated(traj[["time"]]) & !is.na(traj[["time"]]))
+  which(duplicated(x[["time"]]) & !is.na(x[["time"]]))
 }
 
 
@@ -123,7 +119,7 @@ findTimeDup <- function(traj) {
 #' @description This function attempts to automatically detect inconsistent 
 #'  locations (for instance due to a writing error) in trajectory tables.  
 #' 
-#' @param traj A trajectory data table as produced by the \code{\link{makeTraj}}
+#' @param x A trajectory data table as produced by the \code{\link{makeTraj}}
 #'  function.
 #'  
 #' @param s The discrimination threshold of the outlier detection algorithm. 
@@ -140,46 +136,45 @@ findTimeDup <- function(traj) {
 #' # TODO
 #' 
 #' @export
-findLocErr <- function(traj, s = 15) {
-  if (!(is.trackTable(traj))) {
-    stop("traj should be a trajectory data table as produced by the makeTraj function.")
-  }
+findLocErr <- function(x, s = 15) {
+  if (!(is.trackTable(x))) 
+    stop("x is not a trackTable object.")
   
-  if (is.geo(traj)) {
-    nas1 <- is.na(traj$lon) | is.na(traj$time)
-    m1 <- loess(lon ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
-    r <- rep(NA, nrow(traj))
+  if (is.geo(x)) {
+    nas1 <- is.na(x$lon) | is.na(x$time)
+    m1 <- loess(lon ~ as.numeric(time), data = x, span = 0.05, degree = 2)
+    r <- rep(NA, nrow(x))
     r[!nas1] <- abs(residuals(m1))
     r[r == 0] <- min(r[r > 0])
-    m1 <- loess(lon ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
+    m1 <- loess(lon ~ as.numeric(time), data = x, span = 0.05, degree = 2, weights = 1 / r)
     
-    nas2 <- is.na(traj$lat) | is.na(traj$time)
-    m2 <- loess(lat ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
-    r <- rep(NA, nrow(traj))
+    nas2 <- is.na(x$lat) | is.na(x$time)
+    m2 <- loess(lat ~ as.numeric(time), data = x, span = 0.05, degree = 2)
+    r <- rep(NA, nrow(x))
     r[!nas2] <- abs(residuals(m2))
     r[r == 0] <- min(r[r > 0])
-    m2 <- loess(lat ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
+    m2 <- loess(lat ~ as.numeric(time), data = x, span = 0.05, degree = 2, weights = 1 / r)
   } else {
-    nas1 <- is.na(traj$x) | is.na(traj$time)
-    m1 <- loess(x ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
-    r <- rep(NA, nrow(traj))
+    nas1 <- is.na(x$x) | is.na(x$time)
+    m1 <- loess(x ~ as.numeric(time), data = x, span = 0.05, degree = 2)
+    r <- rep(NA, nrow(x))
     r[!nas1] <- abs(residuals(m1))
     r[r == 0] <- min(r[r > 0])
-    m1 <- loess(x ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
+    m1 <- loess(x ~ as.numeric(time), data = x, span = 0.05, degree = 2, weights = 1 / r)
     
-    nas2 <- is.na(traj$y) | is.na(traj$time)
-    m2 <- loess(y ~ as.numeric(time), data = traj, span = 0.05, degree = 2)
-    r <- rep(NA, nrow(traj))
+    nas2 <- is.na(x$y) | is.na(x$time)
+    m2 <- loess(y ~ as.numeric(time), data = x, span = 0.05, degree = 2)
+    r <- rep(NA, nrow(x))
     r[!nas2] <- abs(residuals(m2))
     r[r == 0] <- min(r[r > 0])
-    m2 <- loess(y ~ as.numeric(time), data = traj, span = 0.05, degree = 2, weights = 1 / r)
+    m2 <- loess(y ~ as.numeric(time), data = x, span = 0.05, degree = 2, weights = 1 / r)
   }
   
   r1 <- sqrt(abs(m1$residuals))
   r2 <- sqrt(abs(m2$residuals))
-  out1 <- rep(NA, nrow(traj))
+  out1 <- rep(NA, nrow(x))
   out1[!nas1] <- r1 > median(r1) + s * IQR(r1)
-  out2 <- rep(NA, nrow(traj))
+  out2 <- rep(NA, nrow(x))
   out2[!nas2] <- r2 > median(r2) + s * IQR(r2)
   unique(c(which(out1), which(out2)))
 } 
@@ -190,7 +185,7 @@ findLocErr <- function(traj, s = 15) {
 #' @description This function attempts to automatically detect NA locations in 
 #'  trajectory tables.  
 #' 
-#' @param traj A trajectory data table as produced by the \code{\link{makeTraj}}
+#' @param x A trajectory data table as produced by the \code{\link{makeTraj}}
 #'  function.
 #' 
 #' @return A vector corresponding to the row numbers of the NA locations in the 
@@ -204,15 +199,12 @@ findLocErr <- function(traj, s = 15) {
 #' # TODO
 #' 
 #' @export
-findLocNA <- function(traj) {
-  if (!(is.trackTable(traj))) {
-    stop("traj should be a trajectory data table as produced by the makeTraj function.")
-  }
+findLocNA <- function(x) {
+  if (!(is.trackTable(x))) 
+    stop("x is not a trackTable object.")
   
-  if (is.geo(traj)) 
-    which(is.na(traj$lon) | is.na(traj$lat))
+  if (is.geo(x)) 
+    which(is.na(x$lon) | is.na(x$lat))
   else 
-    which(is.na(traj$x) | is.na(traj$y))
+    which(is.na(x$x) | is.na(x$y))
 } 
-
-

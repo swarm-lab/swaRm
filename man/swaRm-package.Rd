@@ -9,6 +9,15 @@
 This package contains functions to facilitate and automate the analysis of 
 collective animal movement data.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://swarm-lab.github.io/swaRm/}
+  \item \url{https://github.com/swarm-lab/swaRm}
+  \item Report bugs at \url{https://github.com/swarm-lab/swaRm/issues}
+}
+
+}
 \author{
 Simon Garnier, \email{garnier@njit.edu}
 }

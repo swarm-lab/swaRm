@@ -17,6 +17,9 @@
 #' 
 #' @export
 polOrder <- function(h) {
+  if (!is.numeric(h))
+    stop("h should be numeric.")
+  
   if (sum(!is.na(h)) > 1) {
     u <- matrix(c(cos(h), sin(h)), ncol = 2)
     s <- apply(u, 2, sum, na.rm = TRUE)
@@ -50,6 +53,12 @@ polOrder <- function(h) {
 #' 
 #' @export
 rotOrder <- function(h, x, y) {
+  if (!all(length(h) == c(length(x), length(y))))
+    stop("x, y and h should have the same length.")
+  
+  if (!is.numeric(x) | !is.numeric(y) | !is.numeric(h))
+    stop("x, y and h should be numeric.")
+  
   if (sum(!is.na(h)) > 1) {
     u <- matrix(c(cos(h), sin(h)), ncol = 2)
     r <- matrix(c(mean(x, na.rm = TRUE) - x, mean(y, na.rm = TRUE) - y), ncol = 2)

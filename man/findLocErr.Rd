@@ -4,10 +4,10 @@
 \alias{findLocErr}
 \title{Find inconsistent locations in a trajectory table}
 \usage{
-findLocErr(traj, s = 15)
+findLocErr(x, s = 15)
 }
 \arguments{
-\item{traj}{A trajectory data table as produced by the \code{\link{makeTraj}}
+\item{x}{A trajectory data table as produced by the \code{\link{makeTraj}}
 function.}
 
 \item{s}{The discrimination threshold of the outlier detection algorithm. 

@@ -20,13 +20,14 @@
 #' 
 #' @export
 isChull <- function(x, y) {
-  if ((length(x) != length(y)) | !is.numeric(x) | !is.numeric(y)) {
-    stop("x and y should be numeric vectors of the same length.")
-  }
+  if (length(x) != length(y)) 
+    stop("x and y should have the same length.")
   
-  if (all(is.na(x)) | all(is.na(y))) {
-    stop("All values in x and/or y are NAs.")
-  }
+  if (!is.numeric(x) | !is.numeric(y))
+    stop("x and y should be numeric.")
+  
+  if (all(is.na(x)) | all(is.na(y)))
+    stop("All x and/or y are NAs.")
   
   idx <- is.na(x) | is.na(y)
   x[idx] <- mean(x, na.rm = TRUE)
@@ -63,7 +64,7 @@ isChull <- function(x, y) {
 #' # TODO
 #' 
 #' @export
-chullArea <- function(x, y, geo=FALSE) {
+chullArea <- function(x, y, geo = FALSE) {
   ch <- isChull(x, y)
   idx <- which(ch > 0)
   ord <- sort(ch[ch > 0], index.return = TRUE)$ix
@@ -104,7 +105,7 @@ chullArea <- function(x, y, geo=FALSE) {
 #' # TODO
 #' 
 #' @export
-chullPerimeter <- function(x, y, geo=FALSE) {
+chullPerimeter <- function(x, y, geo = FALSE) {
   ch <- isChull(x, y)
   idx <- which(ch > 0)
   ord <- sort(ch[ch > 0], index.return = TRUE)$ix
@@ -120,5 +121,3 @@ chullPerimeter <- function(x, y, geo=FALSE) {
     .cartesianPerimeter(xx, yy)
   }
 }
-
-

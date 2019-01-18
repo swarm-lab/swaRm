@@ -4,10 +4,10 @@
 \alias{findLocNA}
 \title{Find NA locations in a trajectory table}
 \usage{
-findLocNA(traj)
+findLocNA(x)
 }
 \arguments{
-\item{traj}{A trajectory data table as produced by the \code{\link{makeTraj}}
+\item{x}{A trajectory data table as produced by the \code{\link{makeTraj}}
 function.}
 }
 \value{

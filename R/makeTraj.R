@@ -1,8 +1,8 @@
-#' @title Build a trajectory table
+#' @title Build a trajectory table [DEPRECATED]
 #' 
-#' @description Given a set of cartesian coordinates representing an object's trajectory, 
-#'  this function builds a trajectory table that can then be used to work with 
-#'  the functions provided by the \code{\link[swaRm:swaRm-package]{swaRm}}
+#' @description Given a set of cartesian coordinates representing an object's 
+#'  trajectory, this function builds a trajectory table that can then be used to 
+#'  work with the functions provided by the \code{\link[swaRm:swaRm-package]{swaRm}}
 #'  package. 
 #' 
 #' @param x A vector of x (or longitude) coordinates corresponding to a single 
@@ -56,8 +56,10 @@
 #' 
 #' @export
 makeTraj <- function(x, y, z = NULL, id = NULL, date = NULL, time = NULL, 
-                     date.format = "ymd", time.format = "hms", tz = "UTC", 
-                     fps = NULL, geo = FALSE) {
+                     start_time = NULL, tz = NULL,  fps = NULL,
+                     date.format = "ymd", time.format = "hms", geo = FALSE) {
+  warning("'makeTraj' is deprecated. Please use 'track' instead.")
+  
   if (!is.vector(x) || !is.vector(y) || !is.vector(x) || length(x) != length(y))
     stop("x, y (and z, if applicable) must be vector of identical length.")
   
@@ -67,19 +69,29 @@ makeTraj <- function(x, y, z = NULL, id = NULL, date = NULL, time = NULL,
   if (length(time) > 0 && length(x) != length(time))
     stop("time should be a vector of the same length as x and y (and z, if applicable).")
   
-  id <- ifelse(is.null(id), 0, id)
+  if (is.null(id))
+    id <- 0
   
-  if (is.null(date) && is.null(time) && is.null(fps)) {
-    time <- ISOdate(1970, 1, 1, tz = tz) + 1:length(x)
-  } else if (is.null(date) && is.null(time)) {
-    time <- ISOdate(1970, 1, 1, tz = tz) + 1:length(x) / fps
-  } else if (is.null(date)) {
-    fn <- get(paste0("ymd_", time.format), asNamespace("lubridate"))
-    time <- do.call(fn, list(paste("1970-01-01", time), tz = tz))
-  } else {
-    fn <- get(paste0(date.format, "_", time.format), asNamespace("lubridate"))
-    time <- do.call(fn, list(paste(date, time), tz = tz))
+  if (is.null(tz))
+    tz <- Sys.timezone()
+  
+  if (is.null(date))
+    date <- lubridate::today(tz)
+  
+  if (is.null(start_time)) {
+    tmp <- lubridate::now(tz)
+    start_time <- lubridate::hms(paste(lubridate::hour(tmp), 
+                                       lubridate::minute(tmp),
+                                       lubridate::second(tmp), sep = ":"))
   }
+  
+  if (is.null(time)) 
+    time <- lubridate::hms(paste(
+      start_time + (0:(length(x) - 1) / (ifelse(is.null(fps), 1, fps)))), 
+      roll = TRUE)
+  
+  time <- do.call(get(paste0(date.format, "_", time.format), asNamespace("lubridate")), 
+                  list(paste(date, time), tz = tz))
   
   if (geo) {
     if (is.null(z))
@@ -96,9 +108,3 @@ makeTraj <- function(x, y, z = NULL, id = NULL, date = NULL, time = NULL,
   class(tab) <- c("trackTable", class(tab))
   tab
 }
-
-
-
-
-
-

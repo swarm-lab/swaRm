@@ -4,10 +4,10 @@
 \alias{fixLocErr}
 \title{Correct inconsistent locations in a trajectory table}
 \usage{
-fixLocErr(traj, s = 15, spline = FALSE)
+fixLocErr(x, s = 15, spline = FALSE)
 }
 \arguments{
-\item{traj}{A trajectory data table as produced by the \code{\link{makeTraj}}
+\item{x}{A trajectory data table as produced by the \code{\link{makeTraj}}
 function.}
 
 \item{s}{The discrmination threshold of the outlier detection algorithm. 

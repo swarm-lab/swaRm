@@ -1,17 +1,6 @@
-# History files
 .Rhistory
 .RData
-
-# Example code in package build process
-*-Ex.R
 .Rproj.user
-swarmR.so
-RcppExports.o.SyncTemp
-Untitled.R
-vignettes/rsconnect
-vignettes/swaRm-vignette_cache
-chull_animation.R
-test1.mp4
-test2.mp4
-bak
-R/trackTable_old.R
+scripts
+.DS_store
+old

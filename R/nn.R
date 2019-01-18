@@ -23,9 +23,11 @@
 #' 
 #' @export
 pdist <- function(x, y, geo = FALSE) {
-  if (!is.vector(x) || !is.vector(y) || length(x) != length(y)) {
-    stop("x and y must be vector of identical length.")
-  }
+  if (length(x) != length(y)) 
+    stop("x and y should have the same length.")
+  
+  if (!is.numeric(x) | !is.numeric(y))
+    stop("x and y should be numeric.")
   
   if (geo) {
     l <- length(x)
@@ -66,9 +68,11 @@ pdist <- function(x, y, geo = FALSE) {
 #' 
 #' @export
 nn <- function(x, y, id, geo = FALSE) {
-  if (!all.equal(length(x), length(y), length(id)) | !is.numeric(x) | !is.numeric(y)) {
-    stop("x, y and id should be vectors of the same length.")
-  }
+  if (!all(length(x) == c(length(y), length(id))))
+    stop("x, y and id should have the same length.")
+  
+  if (!is.numeric(x) | !is.numeric(y))
+    stop("x and y should be numeric.")
   
   d <- pdist(x, y, geo = geo)
   diag(d) <- NA
@@ -112,9 +116,11 @@ nn <- function(x, y, id, geo = FALSE) {
 #' 
 #' @export
 nnd <- function(x, y, geo = FALSE) {
-  if ((length(x) != length(y)) | !is.numeric(x) | !is.numeric(y)) {
-    stop("x and y should be numeric vectors of the same length.")
-  }
+  if (length(x) != length(y)) 
+    stop("x and y should have the same length.")
+  
+  if (!is.numeric(x) | !is.numeric(y))
+    stop("x and y should be numeric.")
   
   d <- pdist(x, y, geo = geo)
   diag(d) <- NA

@@ -1,0 +1,59 @@
+# DO NOT CHANGE
+init:
+  ps: |
+    $ErrorActionPreference = "Stop"
+    Invoke-WebRequest http://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
+    Import-Module '..\appveyor-tool.ps1'
+
+install:
+  ps: Bootstrap
+
+cache:
+  - C:\RLibrary
+
+
+# Adapt as necessary starting from here
+environment:
+  global:
+    WARNINGS_ARE_ERRORS: 0.0
+    USE_RTOOLS: yes
+    R_CHECK_INSTALL_ARGS: --install-args=--build
+
+  matrix:
+  - R_VERSION: stable
+    RTOOLS_VERSION: 34
+    CRAN: http://cran.rstudio.com
+
+build_script:
+  - travis-tool.sh install_deps
+
+test_script:
+  - travis-tool.sh run_tests
+
+on_failure:
+  - 7z a failure.zip *.Rcheck\*
+  - appveyor PushArtifact failure.zip
+
+artifacts:
+  - path: '*.Rcheck\**\*.log'
+    name: Logs
+  - path: '*.Rcheck\**\*.out'
+    name: Logs
+  - path: '*.Rcheck\**\*.fail'
+    name: Logs
+  - path: '*.Rcheck\**\*.Rout'
+    name: Logs
+  - path: '\*_*.tar.gz'
+    name: Bits
+  - path: '\*_*.zip'
+    name: Bits
+
+deploy:
+  provider: GitHub
+  description: Windows Binary
+  auth_token:
+    secure: dQlTu6TqCFGzvFzPRtxM8jYxZM0RIdBTHq/CnPMSDNuy2vToRNFQGrzCUfPcWLjDgrp7KRIJ+lvx+VghzFeIODnEKEdplLR3QCqOFWFa5KyxC4Oaq0pdn0fAjOadeFmLiakvxBCsC7LeOlMZLS5OdJIxpLNO2hqSNoHjKxFMWKU2m9Eh1CsCVa4JzHV9omomrmRrF1BkuJp63+mMfVvyS800AQPIAD/VIY6PjGJRf0a4nf7ux3oUGrE2nt2DzW/O4iGdXMs09Kcut21xK6W291ncBpGi07kVXlCCtpqGudKXHnXRF6yvz/P/KqhmBkMTmS6qBvGhjLEshiLZsVlaiyX8l9tesM3mbJxq2f5C8If5VrBD271afnawgFDh2+A1G1i0K2GK0IXY85viaBQ1Us+LRi7rRLvosjqi5w1xSAHJwMxO7ffKcgiQxWJxv8dqbDHACzzE5QxpgwkVJ62/lu0rEv45X6/6AeSzTkBkKRF9GjK/kYDhgtimXq6DrkXyLYikkLh3Q/ZBSA/emqIJAuzBe5Lj+FPg/qkHrDTx0CPLCkgGGFoJr8Rupvg8K43QwRLQIZ5dzeCUt1m1077c08RSCNnxsy4RPNG9FKpjsJkCIxLF4LQJlwwUw/bRCG4CiwvfxyBTyazpw5/hOteMUmm/Gpd4lc59gM4hyKaGhyg=
+  draft: no
+  prerelease: no
+  on:
+    APPVEYOR_REPO_TAG: true

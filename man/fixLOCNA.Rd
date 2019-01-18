@@ -4,10 +4,10 @@
 \alias{fixLocNA}
 \title{Correct NA locations in a trajectory table}
 \usage{
-fixLocNA(traj, spline = FALSE)
+fixLocNA(x, spline = FALSE)
 }
 \arguments{
-\item{traj}{A trajectory data table as produced by the \code{\link{makeTraj}}
+\item{x}{A trajectory data table as produced by the \code{\link{makeTraj}}
 function.}
 
 \item{spline}{If \code{spline} is \code{TRUE}, NA locations are estimated 
