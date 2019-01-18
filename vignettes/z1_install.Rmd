@@ -43,7 +43,7 @@ devtools::install_github("swarm-lab/swaRm")
 
 ---
 
-## 1.3 - Loading Rvision
+## 1.3 - Loading swaRm
 
 ```{r, message=FALSE, eval=FALSE}
 library(swaRm)

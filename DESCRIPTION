@@ -3,7 +3,8 @@ Type: Package
 Title: A Package For Processing Collective Movement Data
 Version: 0.5.0
 Authors@R: c(
-      person("Simon", "Garnier", email = "garnier@njit.edu", role = c("aut", "cre"))
+    person("Simon", "Garnier", email = "garnier@njit.edu", role = c("aut", "cre"),
+      comment = c(ORCID = "0000-0002-3886-3974"))
   )
 Maintainer: Simon Garnier <garnier@njit.edu>
 Description: Function library for processing collective movement data (e.g. fish
