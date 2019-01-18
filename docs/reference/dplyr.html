@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Update Error Description In Trajectory Tables — .updateError • swaRm</title>
+<title>Dplyr Methods For Track Tables — dplyr • swaRm</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,9 @@
 
 
 
-<meta property="og:title" content="Update Error Description In Trajectory Tables — .updateError" />
+<meta property="og:title" content="Dplyr Methods For Track Tables — dplyr" />
 
-<meta property="og:description" content="This is an internal utility function to update the description
- of errors in trajectory tables detected by the automated error detections 
- and correction functions of the package." />
+<meta property="og:description" content="dplyr methods for track tables objects." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -101,50 +99,75 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Update Error Description In Trajectory Tables</h1>
-    <small class="dont-index">Source: <a href='https://github.com/swarm-lab/swaRm/blob/master/R/misc.R'><code>R/misc.R</code></a></small>
-    <div class="hidden name"><code>dot-updateError.Rd</code></div>
+    <h1>Dplyr Methods For Track Tables</h1>
+    <small class="dont-index">Source: <a href='https://github.com/swarm-lab/swaRm/blob/master/R/dplyr.R'><code>R/dplyr.R</code></a></small>
+    <div class="hidden name"><code>dplyr.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This is an internal utility function to update the description
- of errors in trajectory tables detected by the automated error detections 
- and correction functions of the package.</p>
+    <p><code><a href='https://dplyr.tidyverse.org/reference/dplyr-package.html'>dplyr</a></code> methods for track tables objects.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>.updateError</span>(<span class='no'>error</span>, <span class='no'>update</span>)</pre>
+    <pre class="usage"><span class='fu'>select.trackTable</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='fu'>rename.trackTable</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='fu'>filter.trackTable</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='fu'>arrange.trackTable</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='fu'>mutate.trackTable</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='fu'>transmute.trackTable</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='fu'>summarise.trackTable</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='fu'>summarize.trackTable</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='fu'>group_by.trackTable</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='fu'>ungroup.trackTable</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='fu'>sample_n.trackTable</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='fu'>sample_frac.trackTable</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='fu'>do.trackTable</span>(<span class='no'>.data</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>error</th>
-      <td><p>A character vector of error descriptions.</p></td>
+      <th>.data</th>
+      <td><p>A track table.</p></td>
     </tr>
     <tr>
-      <th>update</th>
-      <td><p>A character string of the same length as <code>error</code> of the 
-error descriptions to be appended to the current error descriptions.</p></td>
+      <th>...</th>
+      <td><p>Additional arguments to be passed to the corresponding 
+<code><a href='https://dplyr.tidyverse.org/reference/dplyr-package.html'>dplyr</a></code> method.</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'># TODO
-</div></pre>
+    <div class='dont-index'><p><code><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></code>, <code><a href='https://dplyr.tidyverse.org/reference/select.html'>rename</a></code>,
+ <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></code>, <code><a href='https://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></code>, <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></code>,
+ <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></code>, <code><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></code>, <code><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></code>,
+ <code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></code>, <code><a href='https://dplyr.tidyverse.org/reference/group_by.html'>ungroup</a></code>, <code><a href='https://dplyr.tidyverse.org/reference/sample.html'>sample_n</a></code>,
+ <code><a href='https://dplyr.tidyverse.org/reference/sample.html'>sample_frac</a></code>, <code><a href='https://dplyr.tidyverse.org/reference/do.html'>do</a></code></p></div>
+    
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-            
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+      
+      <li><a href="#see-also">See also</a></li>
+          </ul>
 
-    <h2>Author</h2>
-    <p>Simon Garnier, <a href='mailto:garnier@njit.edu'>garnier@njit.edu</a></p>
   </div>
 </div>
 
