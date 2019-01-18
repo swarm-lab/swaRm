@@ -111,4 +111,3 @@
   
   list(xC = tmp$center[1], yC = tmp$center[2], alpha = alpha, a = a, b = b)
 }
-

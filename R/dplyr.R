@@ -8,14 +8,11 @@
 #' @param result The modified object, which is / might be missing the class/attributes.
 #'
 #' @return \code{result}, now with class/attributes restored.
-#' 
-#' @export
-reclass <- function(x, result) {
-  UseMethod('reclass')
+.reclass <- function(x, result) {
+  UseMethod('.reclass')
 }
 
-#' @export
-reclass.default <- function(x, result) {
+.reclass.default <- function(x, result) {
   class(result) <- unique(c(class(x)[[1]], class(result)))
   attr(result, class(x)[[1]]) <- attr(x, class(x)[[1]])
   result
@@ -42,64 +39,64 @@ reclass.default <- function(x, result) {
 #' @rdname dplyr 
 #' 
 #' @export
-select.trackTable <- function(.data, ...) reclass(.data, NextMethod())
+select.trackTable <- function(.data, ...) .reclass(.data, NextMethod())
 
 #' @rdname dplyr 
 #' 
 #' @export
-rename.trackTable <- function(.data, ...) reclass(.data, NextMethod())
+rename.trackTable <- function(.data, ...) .reclass(.data, NextMethod())
 
 #' @rdname dplyr 
 #' 
 #' @export
-filter.trackTable <- function(.data, ...) reclass(.data, NextMethod())
+filter.trackTable <- function(.data, ...) .reclass(.data, NextMethod())
 
 #' @rdname dplyr 
 #' 
 #' @export
-arrange.trackTable <- function(.data, ...) reclass(.data, NextMethod())
+arrange.trackTable <- function(.data, ...) .reclass(.data, NextMethod())
 
 #' @rdname dplyr 
 #' 
 #' @export
-mutate.trackTable <- function(.data, ...) reclass(.data, NextMethod())
+mutate.trackTable <- function(.data, ...) .reclass(.data, NextMethod())
 
 #' @rdname dplyr 
 #' 
 #' @export
-transmute.trackTable <- function(.data, ...) reclass(.data, NextMethod())
+transmute.trackTable <- function(.data, ...) .reclass(.data, NextMethod())
 
 #' @rdname dplyr 
 #' 
 #' @export
-summarise.trackTable <- function(.data, ...) reclass(.data, NextMethod())
+summarise.trackTable <- function(.data, ...) .reclass(.data, NextMethod())
 
 #' @rdname dplyr 
 #' 
 #' @export
-summarize.trackTable <- function(.data, ...) reclass(.data, NextMethod())
+summarize.trackTable <- function(.data, ...) .reclass(.data, NextMethod())
 
 #' @rdname dplyr 
 #' 
 #' @export
-group_by.trackTable <- function(.data, ...) reclass(.data, NextMethod())
+group_by.trackTable <- function(.data, ...) .reclass(.data, NextMethod())
 
 #' @rdname dplyr 
 #' 
 #' @export
-ungroup.trackTable <- function(.data, ...) reclass(.data, NextMethod())
+ungroup.trackTable <- function(.data, ...) .reclass(.data, NextMethod())
 
 #' @rdname dplyr 
 #' 
 #' @export
-sample_n.trackTable <- function(.data, ...) reclass(.data, NextMethod())
+sample_n.trackTable <- function(.data, ...) .reclass(.data, NextMethod())
 
 #' @rdname dplyr 
 #' 
 #' @export
-sample_frac.trackTable <- function(.data, ...) reclass(.data, NextMethod())
+sample_frac.trackTable <- function(.data, ...) .reclass(.data, NextMethod())
 
 #' @rdname dplyr 
 #' 
 #' @export
-do.trackTable <- function(.data, ...) reclass(.data, NextMethod())
+do.trackTable <- function(.data, ...) .reclass(.data, NextMethod())

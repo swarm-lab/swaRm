@@ -136,6 +136,3 @@ nnd <- function(x, y, geo = FALSE) {
           }
         })
 }
-
-
-
