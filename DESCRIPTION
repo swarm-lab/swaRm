@@ -8,8 +8,8 @@ Authors@R: c(
   )
 Maintainer: Simon Garnier <garnier@njit.edu>
 Description: Function library for processing collective movement data (e.g. fish
-  schools, ungulate herds, baboon troops) collected from GPS trackers or computer 
-  vision tracking software. 
+    schools, ungulate herds, baboon troops) collected from GPS trackers or computer 
+    vision tracking software. 
 License: GPL-3
 LazyData: TRUE
 Imports: 
@@ -21,11 +21,13 @@ Imports:
     geosphere,
     lubridate,
     zoo,
-    MASS
+    MASS,
+    trackdf
 Suggests: 
     ggmap,
     knitr,
     rmarkdown
+Remotes: github::swarm-lab/trackdf
 VignetteBuilder: knitr
 URL: https://swarm-lab.github.io/swaRm/, https://github.com/swarm-lab/swaRm
 BugReports: https://github.com/swarm-lab/swaRm/issues
