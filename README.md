@@ -1,7 +1,6 @@
 # swaRm - R package for processing individual and collective movement data
 
-[![Travis-CI Build Status](https://travis-ci.org/swarm-lab/swaRm.svg?branch=master)](https://travis-ci.org/swarm-lab/swaRm)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/swarm-lab/swaRm?branch=master&svg=true)](https://ci.appveyor.com/project/swarm-lab/swaRm)
+[![R-CMD-check](https://github.com/swarm-lab/swaRm/workflows/R-CMD-check/badge.svg)](https://github.com/swarm-lab/swaRm/actions)
 
 **Please submit all suggestions and bug reports 
 [here](https://github.com/swarm-lab/swaRm/issues). Thanks!**

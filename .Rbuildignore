@@ -3,10 +3,10 @@
 scripts
 LICENSE
 old
-.travis.yml
-appveyor.yml
 _pkgdown.yaml
+pkgdown
 README.md
 index.Rmd
 docs
 logo.*
+^\.github$

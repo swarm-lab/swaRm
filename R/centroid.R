@@ -74,3 +74,20 @@ dist2centroid <- function(x, y, geo = FALSE) {
     sqrt((x - centrd[1]) ^ 2 + (y - centrd[2]) ^ 2)
   }
 }
+
+
+#' @export
+robustCentroid <- function(x, y){
+  if (length(x) != length(y)) 
+    stop("x and y should have the same length.")
+  
+  if (!is.numeric(x) | !is.numeric(y))
+    stop("x and y should be numeric.")
+  
+  ch <- isChull(x, y)
+  
+  tmp <- rsdepth::centroid(x[ch > 0][order(ch[ch > 0])],
+                           y[ch > 0][order(ch[ch > 0])])
+  
+  tibble::tibble(x = tmp[1], y = tmp[2])
+}

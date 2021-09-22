@@ -4,9 +4,20 @@
 \alias{makeTraj}
 \title{Build a trajectory table [DEPRECATED]}
 \usage{
-makeTraj(x, y, z = NULL, id = NULL, date = NULL, time = NULL,
-  start_time = NULL, tz = NULL, fps = NULL, date.format = "ymd",
-  time.format = "hms", geo = FALSE)
+makeTraj(
+  x,
+  y,
+  z = NULL,
+  id = NULL,
+  date = NULL,
+  time = NULL,
+  start_time = NULL,
+  tz = NULL,
+  fps = NULL,
+  date.format = "ymd",
+  time.format = "hms",
+  geo = FALSE
+)
 }
 \arguments{
 \item{x}{A vector of x (or longitude) coordinates corresponding to a single 

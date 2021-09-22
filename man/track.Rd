@@ -4,8 +4,17 @@
 \alias{track}
 \title{Build Track}
 \usage{
-track(id = NULL, x, y, z = NULL, t, t0 = NULL, units = "secs",
-  geo = FALSE, tz = NULL)
+track(
+  id = NULL,
+  x,
+  y,
+  z = NULL,
+  t,
+  t0 = NULL,
+  units = "secs",
+  geo = FALSE,
+  tz = NULL
+)
 }
 \arguments{
 \item{id}{A unique identifier for the trajectory. It can be a number or a 

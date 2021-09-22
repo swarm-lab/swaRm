@@ -4,8 +4,7 @@
 \alias{fixMissing}
 \title{Interpolate missing data in a trajectory table}
 \usage{
-fixMissing(x, begin = NULL, end = NULL, step = NULL,
-  spline = FALSE)
+fixMissing(x, begin = NULL, end = NULL, step = NULL, spline = FALSE)
 }
 \arguments{
 \item{x}{A trajectory data table as produced by the \code{\link{makeTraj}}

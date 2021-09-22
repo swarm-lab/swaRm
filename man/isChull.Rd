@@ -19,7 +19,7 @@ A numerical vector of the same length as \code{x} and \code{y}.
  point along the convex hull polygon.
 }
 \description{
-Given a set of cartesian coordinates, this function determines 
+Given a set of Cartesian coordinates, this function determines 
  which points belongs to the convex hull (or envelope) of the set.
 }
 \examples{

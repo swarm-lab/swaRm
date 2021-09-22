@@ -1,6 +1,6 @@
 #' @title Is a point part of the convex hull of a set of points?
 #'
-#' @description Given a set of cartesian coordinates, this function determines 
+#' @description Given a set of Cartesian coordinates, this function determines 
 #'  which points belongs to the convex hull (or envelope) of the set. 
 #' 
 #' @param x A vector of x (or longitude) coordinates. 
