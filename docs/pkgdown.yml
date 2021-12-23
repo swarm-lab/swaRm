@@ -3,7 +3,7 @@ pkgdown: 2.0.1
 pkgdown_sha: ~
 articles:
   z1_install: z1_install.html
-last_built: 2021-12-23T09:17Z
+last_built: 2021-12-23T09:24Z
 urls:
   reference: https://swarm-lab.github.io/swaRm/reference
   article: https://swarm-lab.github.io/swaRm/articles
