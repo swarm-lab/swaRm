@@ -15,7 +15,7 @@
 #' @param geo A logical value indicating whether the locations are defined by 
 #'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE.
 #' 
-#' @return A two-element vector corresponding to the location of the centroid.
+#' @return A two-element list corresponding to the location of the centroid.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
@@ -37,25 +37,25 @@ centroid <- function(x, y, robust = FALSE, geo = FALSE) {
     diag(pd) <- NA
     w <- 1 / colMeans(pd, na.rm = TRUE)
   }
-
+  
   if (geo) {
     if (length(x) > 1) {
       if (robust) {
-        centrd <- tibble::as_tibble(geosphere::geomean(cbind(x, y), w))
+        centrd <- as.list(geosphere::geomean(cbind(x, y), w))
       } else {
-        centrd <- tibble::as_tibble(geosphere::geomean(cbind(x, y)))
+        centrd <- as.list(geosphere::geomean(cbind(x, y)))
       }
       names(centrd) <- c("lon", "lat")
     } else {
-      centrd <- tibble::tibble(lon = x, lat = y)
+      centrd <- list(lon = x, lat = y)
     }
   } else {
     if (robust) {
-      centrd <- tibble::tibble(x = stats::weighted.mean(x, w, na.rm = TRUE), 
-                               y = stats::weighted.mean(y, w, na.rm = TRUE))
+      centrd <- list(x = stats::weighted.mean(x, w, na.rm = TRUE), 
+                     y = stats::weighted.mean(y, w, na.rm = TRUE))
     } else {
-      centrd <- tibble::tibble(x = mean(x, na.rm = TRUE), 
-                               y = mean(y, na.rm = TRUE))
+      centrd <- list(x = mean(x, na.rm = TRUE), 
+                     y = mean(y, na.rm = TRUE))
     }
   }
   
@@ -89,7 +89,7 @@ centroid <- function(x, y, robust = FALSE, geo = FALSE) {
 #' 
 #' @export
 dist2centroid <- function(x, y, robust = FALSE, geo = FALSE) {
-  centrd <- as.matrix(centroid(x, y, robust = robust, geo = geo))
+  centrd <- simplify2array(centroid(x, y, robust = robust, geo = geo))
   
   if (geo) {
     m1 <- matrix(centrd, nrow = length(x), ncol = 2, byrow = TRUE)

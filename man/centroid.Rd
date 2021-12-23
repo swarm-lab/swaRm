@@ -20,7 +20,7 @@ all other coordinates in the set (TRUE).}
 geographic coordinates (pairs of longitude/latitude values). Default: FALSE.}
 }
 \value{
-A two-element vector corresponding to the location of the centroid.
+A two-element list corresponding to the location of the centroid.
 }
 \description{
 This function computes the centroid of a set of x-y (or 
