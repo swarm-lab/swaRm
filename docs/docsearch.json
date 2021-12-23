@@ -2,21 +2,21 @@
   "index_name": "swarm-lab",
   "start_urls": [
     {
-      "url": "https://swarm-lab.github.io/swaRm//index.html",
+      "url": "https://swarm-lab.github.io/swaRm/index.html",
       "selectors_key": "homepage",
       "tags": [
         "homepage"
       ]
     },
     {
-      "url": "https://swarm-lab.github.io/swaRm//reference",
+      "url": "https://swarm-lab.github.io/swaRm/reference",
       "selectors_key": "reference",
       "tags": [
         "reference"
       ]
     },
     {
-      "url": "https://swarm-lab.github.io/swaRm//articles",
+      "url": "https://swarm-lab.github.io/swaRm/articles",
       "selectors_key": "articles",
       "tags": [
         "articles"
@@ -30,7 +30,7 @@
     "/articles/index.html"
   ],
   "sitemap_urls": [
-    "https://swarm-lab.github.io/swaRm//sitemap.xml"
+    "https://swarm-lab.github.io/swaRm/sitemap.xml"
   ],
   "selectors": {
     "homepage": {

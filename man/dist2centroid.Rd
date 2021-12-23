@@ -4,12 +4,17 @@
 \alias{dist2centroid}
 \title{Distance to the centroid of a set of coordinates}
 \usage{
-dist2centroid(x, y, geo = FALSE)
+dist2centroid(x, y, robust = FALSE, geo = FALSE)
 }
 \arguments{
 \item{x}{A vector of x (or longitude) coordinates.}
 
 \item{y}{A vector of y (or latitude) coordinates.}
+
+\item{robust}{A logical value indicating whether to compute the centroid as a
+simple average of the coordinates (FALSE, the default), or as the average of 
+the coordinates weighted by the inversd of their mean pairwise distance to 
+all other coordinates in the set (TRUE).}
 
 \item{geo}{A logical value indicating whether the locations are defined by 
 geographic coordinates (pairs of longitude/latitude values). Default: FALSE.}
