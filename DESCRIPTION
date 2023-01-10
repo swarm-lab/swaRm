@@ -22,7 +22,6 @@ Suggests:
     covr,
     knitr,
     rmarkdown
-Remotes: github::swarm-lab/swaRm
 VignetteBuilder: knitr
 URL: https://swarm-lab.github.io/swaRm/,
     https://github.com/swarm-lab/swaRm
