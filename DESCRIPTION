@@ -1,6 +1,6 @@
 Package: swaRm
 Type: Package
-Title: A Package For Processing Collective Movement Data
+Title: Processing Collective Movement Data
 Version: 0.6.0
 Authors@R: c(
     person("Simon", "Garnier", email = "garnier@njit.edu", role = c("aut", "cre"),
