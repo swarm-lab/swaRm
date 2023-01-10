@@ -2,7 +2,7 @@
 % Please edit documentation in R/centroid.R
 \name{centroid}
 \alias{centroid}
-\title{Centroid of a set of coordinates}
+\title{Centroid}
 \usage{
 centroid(x, y, robust = FALSE, geo = FALSE)
 }
@@ -23,11 +23,13 @@ geographic coordinates (pairs of longitude/latitude values). Default: FALSE.}
 A two-element list corresponding to the location of the centroid.
 }
 \description{
-This function computes the centroid of a set of x-y (or 
- longitude-latitude) coordinates.
+This function computes the centroid (or center of mass) of a set 
+ of x-y (or longitude-latitude) coordinates.
 }
 \examples{
-# TODO
+x <- rnorm(25)
+y <- rnorm(25, sd = 3)
+centroid(x, y)
 
 }
 \seealso{

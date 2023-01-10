@@ -1,25 +1,29 @@
-#' @title Is a point part of the convex hull of a set of points?
+#' @title Points on Convex Hull
 #'
-#' @description Given a set of Cartesian coordinates, this function determines 
-#'  which points belongs to the convex hull (or envelope) of the set. 
+#' @description Given a set of locations, this function determines which 
+#'  locations belongs to the convex hull (or envelope) of the set. 
 #' 
 #' @param x A vector of x (or longitude) coordinates. 
 #' 
 #' @param y A vector of y (or latitude) coordinates.
 #' 
 #' @return A numerical vector of the same length as \code{x} and \code{y}. 
-#'  \code{0} indicates that the corresponding point is not part of the convex 
-#'  hull of the set. Values \code{>0} indicates that the corresponding point is 
-#'  part of the convex hull, and each value corresponds to the order of the 
-#'  point along the convex hull polygon.
+#'  \code{0} indicates that the corresponding location is not part of the convex 
+#'  hull of the set. Values \code{>0} indicates that the corresponding location 
+#'  is part of the convex hull, and each value corresponds to the order of the 
+#'  locations along the convex hull polygon.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
+#' @seealso \code{\link{chull_area}}, \code{\link{chull_perimeter}}
+#' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' is_chull(x, y)
 #' 
 #' @export
-isChull <- function(x, y) {
+is_chull <- function(x, y) {
   if (length(x) != length(y)) 
     stop("x and y should have the same length.")
   
@@ -39,11 +43,18 @@ isChull <- function(x, y) {
   is.chull
 }
 
+#' @rdname is_chull
+#' @export
+isChull <- function(x, y) {
+  .Deprecated("is_chull")
+  is_chull(x, y)
+}
 
-#' @title Surface area of the convex hull of a set of points
+
+#' @title Surface Area of the Convex Hull
 #'
-#' @description Given a set of cartesian coordinates, this function determines 
-#'  the surface area of the convex hull (or envelope) of the set. 
+#' @description Given a set of locations, this function determines the surface 
+#'  area of the convex hull (or envelope) of the set. 
 #' 
 #' @param x A vector of x (or longitude) coordinates. 
 #' 
@@ -60,12 +71,16 @@ isChull <- function(x, y) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
+#' @seealso \code{\link{is_chull}}, \code{\link{chull_perimeter}}
+#' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' chull_area(x, y)
 #' 
 #' @export
-chullArea <- function(x, y, geo = FALSE) {
-  ch <- isChull(x, y)
+chull_area <- function(x, y, geo = FALSE) {
+  ch <- is_chull(x, y)
   idx <- which(ch > 0)
   ord <- sort(ch[ch > 0], index.return = TRUE)$ix
   
@@ -81,11 +96,18 @@ chullArea <- function(x, y, geo = FALSE) {
   }
 }
 
+#' @rdname chull_area
+#' @export
+chullArea <- function(x, y, geo = FALSE) {
+  .Deprecated("chull_area")
+  chull_area(x, y, geo)
+}
 
-#' @title Perimeter of the convex hull of a set of points
+
+#' @title Perimeter of the Convex Hull
 #'
-#' @description Given a set of cartesian coordinates, this function determines 
-#'  the perimeter of the convex hull (or envelope) of the set. 
+#' @description Given a set of locations, this function determines the perimeter 
+#'  of the convex hull (or envelope) of the set. 
 #' 
 #' @param x A vector of x (or longitude) coordinates. 
 #' 
@@ -101,12 +123,16 @@ chullArea <- function(x, y, geo = FALSE) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
+#' @seealso \code{\link{is_chull}}, \code{\link{chull_area}}
+#' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' chull_perimeter(x, y)
 #' 
 #' @export
-chullPerimeter <- function(x, y, geo = FALSE) {
-  ch <- isChull(x, y)
+chull_perimeter <- function(x, y, geo = FALSE) {
+  ch <- is_chull(x, y)
   idx <- which(ch > 0)
   ord <- sort(ch[ch > 0], index.return = TRUE)$ix
   
@@ -118,6 +144,13 @@ chullPerimeter <- function(x, y, geo = FALSE) {
   if (geo) {
     geosphere::perimeter(cbind(xx, yy))
   } else {
-    .cartesianPerimeter(xx, yy)
+    .cartesian_perimeter(xx, yy)
   }
+}
+
+#' @rdname chull_perimeter
+#' @export
+chullPerimeter <- function(x, y, geo = FALSE) {
+  .Deprecated("chull_perimeter")
+  chull_perimeter(x, y, geo)
 }

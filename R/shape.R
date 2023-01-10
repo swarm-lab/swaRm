@@ -1,8 +1,8 @@
-#' @title Approximated sphericity of a set of points
+#' @title Sphericity
 #'
-#' @description Given a set of cartesian coordinates, this function approximates 
-#'  the sphericity of the set by calculating the bivariate 95% confidence 
-#'  ellipse of the set. 
+#' @description Given a set of locations, this function approximates the 
+#'  sphericity of the set by calculating the bivariate 95% confidence ellipse of 
+#'  the set. 
 #' 
 #' @param x A vector of x coordinates. 
 #' 
@@ -15,8 +15,12 @@
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
+#' @seealso \code{\link{stretch}}
+#' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' sphericity(x, y)
 #' 
 #' @export
 sphericity <- function(x, y) {
@@ -33,11 +37,11 @@ sphericity <- function(x, y) {
 }
 
 
-#' @title Approximated stretching direction of a set of points
+#' @title Stretching Direction
 #'
-#' @description Given a set of cartesian coordinates, this function approximates 
-#'  the stretching direction of the set by calculating the angle of the main 
-#'  axis of the bivariate 95% confidence ellipse of the set. 
+#' @description Given a set of locations, this function approximates the 
+#'  stretching direction of the set by calculating the angle of the main axis of 
+#'  the bivariate 95% confidence ellipse of the set. 
 #' 
 #' @param x A vector of x coordinates. 
 #' 
@@ -48,8 +52,12 @@ sphericity <- function(x, y) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
+#' @seealso \code{\link{sphericity}}
+#' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' stretch(x, y)
 #'
 #' @export
 stretch <- function(x, y) {

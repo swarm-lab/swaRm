@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{.ellipse}
 \alias{.ellipse}
-\title{Computes Confidence Ellipse Of A Bivariate Set Of Points}
+\title{Bivariate Confidence Ellipse}
 \usage{
 .ellipse(x, y, level = 0.95)
 }
@@ -17,8 +17,8 @@
 This function computes the confidence ellipse of a set of 
  bivariate coordinates.
 }
-\examples{
-# TODO
+\seealso{
+\code{\link{sphericity}}, \code{\link{stretch}}
 }
 \author{
 Simon Garnier, \email{garnier@njit.edu}

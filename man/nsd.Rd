@@ -2,16 +2,16 @@
 % Please edit documentation in R/dist.R
 \name{nsd}
 \alias{nsd}
-\title{Net squared displacement}
+\title{Net Squared Displacement}
 \usage{
 nsd(x, y, geo = FALSE)
 }
 \arguments{
 \item{x}{A vector of x (or longitude) coordinates corresponding to a single 
-animal trajectory.}
+trajectory.}
 
 \item{y}{A vector of y (or latitude) coordinates corresponding to a single 
-animal trajectory.}
+trajectory.}
 
 \item{geo}{A logical value indicating whether the locations are defined by 
 geographic coordinates (pairs of longitude/latitude values). Default: FALSE.}
@@ -22,17 +22,18 @@ A vector of the same length as x and y corresponding to the net
  trajectory.
 }
 \description{
-Given a set of cartesian coordinates representing an object's 
- trajectory, this function computes the net squared displacement of this 
- object, that is the squared distances between each location and the first
- location of the trajectory
+Given a set of locations defining a trajectory, this function 
+ computes the net squared displacement of the trajectory, that is the squared 
+ distances between each location and the first location of the trajectory
 }
 \examples{
-# TODO
+x <- rnorm(25)
+y <- rnorm(25, sd = 3)
+nsd(x, y)
 
 }
 \seealso{
-\code{\link{linDist}}
+\code{\link{linear_dist}}
 }
 \author{
 Simon Garnier, \email{garnier@njit.edu}

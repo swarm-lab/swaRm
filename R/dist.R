@@ -1,14 +1,14 @@
-#' @title Linear distances along a trajectory
+#' @title Linear Distances
 #' 
-#' @description Given a set of cartesian coordinates representing an object's 
-#'  trajectory, this function computes the linear distances between each pair of 
-#'  successive locations along the trajectory.
+#' @description Given a set of locations defining a trajectory, this function 
+#'  computes the linear distances between each pair of successive locations 
+#'  along the trajectory.
 #'  
 #' @param x A vector of x (or longitude) coordinates corresponding to a single 
-#'  animal trajectory. 
+#'  trajectory. 
 #' 
 #' @param y A vector of y (or latitude) coordinates corresponding to a single 
-#'  animal trajectory.
+#'  trajectory.
 #'  
 #' @param geo A logical value indicating whether the locations are defined by 
 #'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE.
@@ -18,13 +18,16 @@
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{linSpeed}}, \code{\link{linAcc}}, \code{\link{nsd}}
+#' @seealso \code{\link{linear_speed}}, \code{\link{linear_acc}}, 
+#'  \code{\link{nsd}}
 #' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' linear_dist(x, y)
 #' 
 #' @export
-linDist <- function(x, y, geo = FALSE) {
+linear_dist <- function(x, y, geo = FALSE) {
   if (length(x) != length(y)) 
     stop("x and y should have the same length.")
   
@@ -41,20 +44,27 @@ linDist <- function(x, y, geo = FALSE) {
   }
 }
 
+#' @rdname linear_dist
+#' @export
+linDist <- function(x, y, geo = FALSE) {
+  .Deprecated("linear_dist")
+  linear_dist(x, y, geo)
+}
 
-#' @title Linear speeds along a trajectory
+
+#' @title Linear Speeds
 #' 
-#' @description Given a set of cartesian coordinates representing an object's 
-#'  trajectory, this function computes the linear speeds between each pair of 
-#'  successive locations along the trajectory.
+#' @description Given a set of locations defining a trajectory, this function 
+#'  computes the linear speeds between each pair of successive locations along 
+#'  the trajectory.
 #'  
 #' @param x A vector of x (or longitude) coordinates corresponding to a single 
-#'  animal trajectory. 
+#'  trajectory. 
 #' 
 #' @param y A vector of y (or latitude) coordinates corresponding to a single 
-#'  animal trajectory.
+#'  trajectory.
 #'  
-#' @param t A vector of timestamps corresponding to a single animal trajectory.
+#' @param t A vector of timestamps corresponding to a single trajectory.
 #'  
 #' @param geo A logical value indicating whether the locations are defined by 
 #'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE.
@@ -64,13 +74,16 @@ linDist <- function(x, y, geo = FALSE) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{linDist}}, \code{\link{linAcc}}
+#' @seealso \code{\link{linear_dist}}, \code{\link{linear_acc}}
 #' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' t <- as.POSIXct(1:25, origin = Sys.time())
+#' linear_speed(x, y, t)
 #' 
 #' @export
-linSpeed <- function(x, y, t, geo = FALSE) {
+linear_speed <- function(x, y, t, geo = FALSE) {
   if (!all(length(x) == c(length(y), length(t))))
     stop("x, y and id should have the same length.")
   
@@ -81,24 +94,31 @@ linSpeed <- function(x, y, t, geo = FALSE) {
     stop("t should be POSIXct.")
   
   dt <- diff(t)
-  dp <- linDist(x, y, geo = geo)
+  dp <- linear_dist(x, y, geo = geo)
   c(NA, dp[2:length(dp)] / as.numeric(dt, units = "secs"))
 }
 
+#' @rdname linear_speed
+#' @export
+linSpeed <- function(x, y, t, geo = FALSE) {
+  .Deprecated("linear_speed")
+  linear_speed(x, y, t, geo)
+}
 
-#' @title Linear accelerations along a trajectory
+
+#' @title Linear Accelerations
 #' 
-#' @description Given a set of cartesian coordinates representing an object's 
-#'  trajectory, this function computes the linear accelerations between each pair 
-#'  of successive locations along the trajectory.
+#' @description Given a set of locations defining a trajectory, this function 
+#'  computes the linear accelerations between each pair of successive locations 
+#'  along the trajectory.
 #'  
 #' @param x A vector of x (or longitude) coordinates corresponding to a single 
-#'  animal trajectory. 
+#'  trajectory. 
 #' 
 #' @param y A vector of y (or latitude) coordinates corresponding to a single 
-#'  animal trajectory.
+#'  trajectory.
 #'  
-#' @param t A vector of timestamps corresponding to a single animal trajectory.
+#' @param t A vector of timestamps corresponding to a single trajectory.
 #'  
 #' @param geo A logical value indicating whether the locations are defined by 
 #'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE.
@@ -108,13 +128,16 @@ linSpeed <- function(x, y, t, geo = FALSE) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{linSpeed}}, \code{\link{linDist}}
+#' @seealso \code{\link{linear_speed}}, \code{\link{linear_dist}}
 #' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' t <- as.POSIXct(1:25, origin = Sys.time())
+#' linear_acc(x, y, t)
 #' 
 #' @export
-linAcc <- function(x, y, t, geo = FALSE) {
+linear_acc <- function(x, y, t, geo = FALSE) {
   if (!all(length(x) == c(length(y), length(t))))
     stop("x, y and id should have the same length.")
   
@@ -124,23 +147,29 @@ linAcc <- function(x, y, t, geo = FALSE) {
   if (!lubridate::is.POSIXct(t)) 
     stop("t should be POSIXct.")
   
-  s <- linSpeed(x, y, t, geo = geo)
+  s <- linear_speed(x, y, t, geo = geo)
   c(NA, diff(s))
 }
 
+#' @rdname linear_acc
+#' @export
+linAcc <- function(x, y, t, geo = FALSE) {
+  .Deprecated("linear_acc")
+  linear_acc(x, y, t, geo)
+}
 
-#' @title Net squared displacement
+
+#' @title Net Squared Displacement
 #' 
-#' @description Given a set of cartesian coordinates representing an object's 
-#'  trajectory, this function computes the net squared displacement of this 
-#'  object, that is the squared distances between each location and the first
-#'  location of the trajectory
+#' @description Given a set of locations defining a trajectory, this function 
+#'  computes the net squared displacement of the trajectory, that is the squared 
+#'  distances between each location and the first location of the trajectory
 #'  
 #' @param x A vector of x (or longitude) coordinates corresponding to a single 
-#'  animal trajectory. 
+#'  trajectory. 
 #' 
 #' @param y A vector of y (or latitude) coordinates corresponding to a single 
-#'  animal trajectory.
+#'  trajectory.
 #'  
 #' @param geo A logical value indicating whether the locations are defined by 
 #'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE.
@@ -151,10 +180,12 @@ linAcc <- function(x, y, t, geo = FALSE) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{linDist}}
+#' @seealso \code{\link{linear_dist}}
 #' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' nsd(x, y)
 #' 
 #' @export
 nsd <- function(x, y, geo = FALSE) {

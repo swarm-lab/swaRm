@@ -2,7 +2,7 @@
 % Please edit documentation in R/nn.R
 \name{pdist}
 \alias{pdist}
-\title{Pairwise distance matrix}
+\title{Pairwise Distance Matrix}
 \usage{
 pdist(x, y, geo = FALSE)
 }
@@ -15,16 +15,17 @@ pdist(x, y, geo = FALSE)
 geographic coordinates (pairs of longitude/latitude values). Default: FALSE.}
 }
 \value{
-A length(x) * length(y) square matrix representing pairwise distances
- between all the objects.
+A square matrix representing pairwise distances between each possible 
+ pair of locations.
 }
 \description{
-Given a set of cartesian coordinates representing the locations 
- of different objects, this function computes the distances between each 
- possible pair of objects.
+Given a set of locations, this function computes the distances 
+ between each possible pair of locations.
 }
 \examples{
-# TODO
+x <- rnorm(25)
+y <- rnorm(25, sd = 3)
+pdist(x, y)
 
 }
 \seealso{
