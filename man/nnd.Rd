@@ -2,7 +2,7 @@
 % Please edit documentation in R/nn.R
 \name{nnd}
 \alias{nnd}
-\title{Nearest neihgbor distance}
+\title{Nearest Neihgbor Distance}
 \usage{
 nnd(x, y, geo = FALSE)
 }
@@ -19,16 +19,18 @@ A vector of the same length as x and y representing the distance to
  the nearest neighboring object for each object.
 }
 \description{
-Given a set of cartesian coordinates representing the locations 
- of different objects, this function computes the distance to the nearest 
- neighboring object for each object.
+Given the locations of different objects, this function 
+ determines the distance of the nearest neighboring object to each object.
 }
 \examples{
-# TODO
+x <- rnorm(25)
+y <- rnorm(25, sd = 3)
+id <- 1:25
+nnd(x, y)
 
 }
 \seealso{
-\code{\link{nn}}, \code{\link{nnd}}
+\code{\link{nn}}
 }
 \author{
 Simon Garnier, \email{garnier@njit.edu}

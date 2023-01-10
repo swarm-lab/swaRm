@@ -1,9 +1,11 @@
 # swaRm - R package for processing individual and collective movement data
 
-[![R-CMD-check](https://github.com/swarm-lab/swaRm/workflows/R-CMD-check/badge.svg)](https://github.com/swarm-lab/swaRm/actions)
-
-**Please submit all suggestions and bug reports 
-[here](https://github.com/swarm-lab/swaRm/issues). Thanks!**
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/swarm-lab/swaRm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/swarm-lab/swaRm/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/swarm-lab/swaRm/branch/master/graph/badge.svg)](https://app.codecov.io/gh/swarm-lab/swaRm?branch=master)
+[![CRAN status](https://www.r-pkg.org/badges/version/swaRm)](https://CRAN.R-project.org/package=swaRm)
+[![CRANLOGS downloads](https://cranlogs.r-pkg.org/badges/swaRm)](https://cran.r-project.org/package=swaRm)
+<!-- badges: end -->
 
 ---
 

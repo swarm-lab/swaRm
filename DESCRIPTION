@@ -1,36 +1,31 @@
 Package: swaRm
 Type: Package
 Title: A Package For Processing Collective Movement Data
-Version: 0.5.0
+Version: 0.6.0
 Authors@R: c(
     person("Simon", "Garnier", email = "garnier@njit.edu", role = c("aut", "cre"),
       comment = c(ORCID = "0000-0002-3886-3974"))
   )
 Maintainer: Simon Garnier <garnier@njit.edu>
 Description: Function library for processing collective movement data (e.g. fish
-    schools, ungulate herds, baboon troops) collected from GPS trackers or computer 
-    vision tracking software. 
+    schools, ungulate herds, baboon troops) collected from GPS trackers or 
+    computer vision tracking software. 
 License: GPL-3
 LazyData: TRUE
 Imports: 
     stats,
-    tibble,
-    lazyeval,
     splancs,
-    dplyr,
     geosphere,
     lubridate,
-    zoo,
-    MASS,
-    rsdepth,
-    trackdf
+    MASS
 Suggests: 
-    ggmap,
+    covr,
     knitr,
     rmarkdown
-Remotes: github::swarm-lab/trackdf
+Remotes: github::swarm-lab/swaRm
 VignetteBuilder: knitr
-URL: https://swarm-lab.github.io/swaRm/, https://github.com/swarm-lab/swaRm
+URL: https://swarm-lab.github.io/swaRm/,
+    https://github.com/swarm-lab/swaRm
 BugReports: https://github.com/swarm-lab/swaRm/issues
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Encoding: UTF-8

@@ -2,7 +2,7 @@
 % Please edit documentation in R/nn.R
 \name{nn}
 \alias{nn}
-\title{Nearest neihgbor}
+\title{Nearest Neighbor}
 \usage{
 nn(x, y, id, geo = FALSE)
 }
@@ -21,16 +21,18 @@ A vector of the same length as x and y representing the identity of
  the nearest neighboring object to each object.
 }
 \description{
-Given a set of cartesian coordinates representing the locations 
- of different objects, this function determines the nearest neighboring object 
- of each object.
+Given the locations of different objects, this function 
+ determines the identity of the nearest neighboring object to each object.
 }
 \examples{
-# TODO
+x <- rnorm(25)
+y <- rnorm(25, sd = 3)
+id <- 1:25
+nn(x, y, id)
 
 }
 \seealso{
-\code{\link{nn}}, \code{\link{nnd}}
+\code{\link{nnd}}
 }
 \author{
 Simon Garnier, \email{garnier@njit.edu}

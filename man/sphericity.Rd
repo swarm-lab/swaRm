@@ -2,7 +2,7 @@
 % Please edit documentation in R/shape.R
 \name{sphericity}
 \alias{sphericity}
-\title{Approximated sphericity of a set of points}
+\title{Sphericity}
 \usage{
 sphericity(x, y)
 }
@@ -18,13 +18,18 @@ A single numeric value corresponding to the ratio between the minor
  to 0 indicates that the set is strongly elongated.
 }
 \description{
-Given a set of cartesian coordinates, this function approximates 
- the sphericity of the set by calculating the bivariate 95% confidence 
- ellipse of the set.
+Given a set of locations, this function approximates the 
+ sphericity of the set by calculating the bivariate 95% confidence ellipse of 
+ the set.
 }
 \examples{
-# TODO
+x <- rnorm(25)
+y <- rnorm(25, sd = 3)
+sphericity(x, y)
 
+}
+\seealso{
+\code{\link{stretch}}
 }
 \author{
 Simon Garnier, \email{garnier@njit.edu}

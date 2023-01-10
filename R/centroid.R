@@ -1,7 +1,7 @@
-#' @title Centroid of a set of coordinates
+#' @title Centroid
 #' 
-#' @description This function computes the centroid of a set of x-y (or 
-#'  longitude-latitude) coordinates. 
+#' @description This function computes the centroid (or center of mass) of a set 
+#'  of x-y (or longitude-latitude) coordinates. 
 #' 
 #' @param x A vector of x (or longitude) coordinates.
 #' 
@@ -22,7 +22,9 @@
 #' @seealso \code{\link{dist2centroid}}
 #' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' centroid(x, y)
 #' 
 #' @export
 centroid <- function(x, y, robust = FALSE, geo = FALSE) {
@@ -62,10 +64,11 @@ centroid <- function(x, y, robust = FALSE, geo = FALSE) {
   centrd
 }
 
-#' @title Distance to the centroid of a set of coordinates
+#' @title Distances to the Centroid
 #' 
 #' @description Given a set of x-y (or longitude-latitude) coordinates, this 
-#'  function computes their distance to the centroid of the set.
+#'  function computes their respective distance to the centroid (or center of 
+#'  mass) of the set.
 #' 
 #' @param x A vector of x (or longitude) coordinates.
 #' 
@@ -83,9 +86,13 @@ centroid <- function(x, y, robust = FALSE, geo = FALSE) {
 #'  individual distance of each point to the centroid of the set.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
+#' 
+#' @seealso \code{\link{centroid}}
 #'  
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' dist2centroid(x, y)
 #' 
 #' @export
 dist2centroid <- function(x, y, robust = FALSE, geo = FALSE) {

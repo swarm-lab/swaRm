@@ -1,27 +1,29 @@
-#' @title Estimate headings from a succession of coordinates
+#' @title Headings
 #'
-#' @description Given a set of cartesian coordinates representing an object's 
-#'  trajectory, this function returns approximated headings computed as the 
-#'  direction of vectors between successive points. 
+#' @description Given a set of locations defining a trajectory, this function 
+#'  approximates their instantaneous headings computed as the direction of the 
+#'  vectors between successive locations along the trajectory. 
 #' 
 #' @param x A vector of x (or longitude) coordinates corresponding to a single 
-#'  animal trajectory. 
+#'  trajectory. 
 #' 
 #' @param y A vector of y (or latitude) coordinates corresponding to a single 
-#'  animal trajectory.
+#'  trajectory.
 #'  
 #' @param geo A logical value indicating whether the locations are defined by 
 #'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE. 
 #' 
-#' @return A vector of the same length as x and y corresponding to approximated 
-#'  headings along a [x, y] trajectory.
+#' @return A vector of the same length as x and y corresponding to the 
+#'  approximated headings along the trajectory.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{angSpeed}}, \code{\link{angAcc}}
+#' @seealso \code{\link{ang_speed}}, \code{\link{ang_acc}}
 #' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' heading(x, y)
 #' 
 #' @export
 heading <- function(x, y, geo = FALSE) {
@@ -44,36 +46,39 @@ heading <- function(x, y, geo = FALSE) {
 }
 
 
-#' @title Estimate instantaneous angular speed from a succession of coordinates
+#' @title Angular Speeds
 #'
-#' @description Given a set of cartesian coordinates representing an object's 
-#'  trajectory, this function returns approximated instantaneous angular speed
-#'  computed as the difference between successive headings divided by the time 
-#'  between these successive headings.
+#' @description Given a set of locations defining a trajectory, this function 
+#'  approximates their instantaneous instantaneous angular speeds computed as 
+#'  the difference between successive headings divided by the time between these 
+#'  successive headings.
 #' 
 #' @param x A vector of x (or longitude) coordinates corresponding to a single 
-#'  animal trajectory. 
+#'  trajectory. 
 #' 
 #' @param y A vector of y (or latitude) coordinates corresponding to a single 
-#'  animal trajectory.
+#'  trajectory.
 #'  
-#' @param t A vector of timestamps corresponding to a single animal trajectory.
+#' @param t A vector of timestamps corresponding to a single trajectory.
 #'  
 #' @param geo A logical value indicating whether the locations are defined by 
 #'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE. 
 #' 
-#' @return A vector of the same length as x, y and t corresponding to approximated 
-#'  instantaneous angular speed along a [x, y] trajectory.
+#' @return A vector of the same length as x, y and t corresponding to the 
+#'  approximated instantaneous angular speeds along the trajectory.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{heading}}, \code{\link{angAcc}}
+#' @seealso \code{\link{heading}}, \code{\link{ang_acc}}
 #' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' t <- as.POSIXct(1:25, origin = Sys.time())
+#' ang_speed(x, y, t)
 #' 
 #' @export
-angSpeed <- function(x, y, t, geo = FALSE) {
+ang_speed <- function(x, y, t, geo = FALSE) {
   if (!all(length(x) == c(length(y), length(t))))
     stop("x, y and id should have the same length.")
   
@@ -91,36 +96,46 @@ angSpeed <- function(x, y, t, geo = FALSE) {
   c(NA, dh / as.numeric(dt, units = "secs"))
 }
 
+#' @rdname ang_speed
+#' @export
+angSpeed <- function(x, y, t, geo = FALSE) {
+  .Deprecated("ang_speed")
+  ang_speed(x, y, t, geo)
+}
 
-#' @title Estimate instantaneous angular acceleration from a succession of coordinates
+
+#' @title Angular Acceleration
 #'
-#' @description Given a set of cartesian coordinates representing an object's 
-#'  trajectory, this function returns approximated instantaneous angular acceleration
-#'  computed as the difference between successive angular speeds.
+#' @description Given a set of locations defining a trajectory, this function 
+#'  approximates their instantaneous angular accelerations computed as the 
+#'  difference between successive angular speeds.
 #' 
 #' @param x A vector of x (or longitude) coordinates corresponding to a single 
-#'  animal trajectory. 
+#'  trajectory. 
 #' 
 #' @param y A vector of y (or latitude) coordinates corresponding to a single 
-#'  animal trajectory.
+#'  trajectory.
 #'  
-#' @param t A vector of timestamps corresponding to a single animal trajectory.
+#' @param t A vector of timestamps corresponding to a single trajectory.
 #'  
 #' @param geo A logical value indicating whether the locations are defined by 
 #'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE. 
 #' 
-#' @return A vector of the same length as x, y and t corresponding to approximated 
-#'  instantaneous angular acceleration along a [x, y] trajectory.
+#' @return A vector of the same length as x, y and t corresponding to the
+#'  approximated instantaneous angular accelerations along the trajectory.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{heading}}, \code{\link{angAcc}}
+#' @seealso \code{\link{heading}}, \code{\link{ang_speed}}
 #' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' t <- as.POSIXct(1:25, origin = Sys.time())
+#' ang_acc(x, y, t)
 #' 
 #' @export
-angAcc <- function(x, y, t, geo = FALSE) {
+ang_acc <- function(x, y, t, geo = FALSE) {
   if (!all(length(x) == c(length(y), length(t))))
     stop("x, y and id should have the same length.")
   
@@ -130,6 +145,13 @@ angAcc <- function(x, y, t, geo = FALSE) {
   if (!lubridate::is.POSIXct(t)) 
     stop("t should be POSIXct.")
   
-  s <- angSpeed(x, y, t, geo = geo)
+  s <- ang_speed(x, y, t, geo = geo)
   c(NA, diff(s))
+}
+
+#' @rdname ang_acc
+#' @export
+angAcc <- function(x, y, t, geo = FALSE) {
+  .Deprecated("ang_acc")
+  ang_acc(x, y, t, geo)
 }

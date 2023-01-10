@@ -10,3 +10,8 @@ index.Rmd
 docs
 logo.*
 ^\.github$
+deprecated
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^codecov\.yml$

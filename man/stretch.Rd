@@ -2,7 +2,7 @@
 % Please edit documentation in R/shape.R
 \name{stretch}
 \alias{stretch}
-\title{Approximated stretching direction of a set of points}
+\title{Stretching Direction}
 \usage{
 stretch(x, y)
 }
@@ -16,13 +16,18 @@ A single numeric value corresponding to the angle (in radians) of the
  main axis of the bivariate 95% confidence ellipse of the set.
 }
 \description{
-Given a set of cartesian coordinates, this function approximates 
- the stretching direction of the set by calculating the angle of the main 
- axis of the bivariate 95% confidence ellipse of the set.
+Given a set of locations, this function approximates the 
+ stretching direction of the set by calculating the angle of the main axis of 
+ the bivariate 95% confidence ellipse of the set.
 }
 \examples{
-# TODO
+x <- rnorm(25)
+y <- rnorm(25, sd = 3)
+stretch(x, y)
 
+}
+\seealso{
+\code{\link{sphericity}}
 }
 \author{
 Simon Garnier, \email{garnier@njit.edu}

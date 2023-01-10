@@ -2,7 +2,7 @@
 % Please edit documentation in R/centroid.R
 \name{dist2centroid}
 \alias{dist2centroid}
-\title{Distance to the centroid of a set of coordinates}
+\title{Distances to the Centroid}
 \usage{
 dist2centroid(x, y, robust = FALSE, geo = FALSE)
 }
@@ -25,11 +25,17 @@ A vector of the same length as x and y corresponding to the
 }
 \description{
 Given a set of x-y (or longitude-latitude) coordinates, this 
- function computes their distance to the centroid of the set.
+ function computes their respective distance to the centroid (or center of 
+ mass) of the set.
 }
 \examples{
-# TODO
+x <- rnorm(25)
+y <- rnorm(25, sd = 3)
+dist2centroid(x, y)
 
+}
+\seealso{
+\code{\link{centroid}}
 }
 \author{
 Simon Garnier, \email{garnier@njit.edu}

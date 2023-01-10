@@ -1,8 +1,7 @@
-#' @title Pairwise distance matrix
+#' @title Pairwise Distance Matrix
 #' 
-#' @description Given a set of cartesian coordinates representing the locations 
-#'  of different objects, this function computes the distances between each 
-#'  possible pair of objects. 
+#' @description Given a set of locations, this function computes the distances 
+#'  between each possible pair of locations.
 #'  
 #' @param x A vector of x (or longitude) coordinates. 
 #' 
@@ -11,15 +10,17 @@
 #' @param geo A logical value indicating whether the locations are defined by 
 #'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE. 
 #'  
-#' @return A length(x) * length(y) square matrix representing pairwise distances
-#'  between all the objects.
+#' @return A square matrix representing pairwise distances between each possible 
+#'  pair of locations.
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
 #' @seealso \code{\link{nn}}, \code{\link{nnd}}
 #' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' pdist(x, y)
 #' 
 #' @export
 pdist <- function(x, y, geo = FALSE) {
@@ -41,11 +42,10 @@ pdist <- function(x, y, geo = FALSE) {
 }
 
 
-#' @title Nearest neihgbor
+#' @title Nearest Neighbor
 #'
-#' @description Given a set of cartesian coordinates representing the locations 
-#'  of different objects, this function determines the nearest neighboring object 
-#'  of each object.
+#' @description Given the locations of different objects, this function 
+#'  determines the identity of the nearest neighboring object to each object. 
 #' 
 #' @param x A vector of x (or longitude) coordinates. 
 #' 
@@ -61,10 +61,13 @@ pdist <- function(x, y, geo = FALSE) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{nn}}, \code{\link{nnd}}
+#' @seealso \code{\link{nnd}}
 #' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' id <- 1:25
+#' nn(x, y, id)
 #' 
 #' @export
 nn <- function(x, y, id, geo = FALSE) {
@@ -91,11 +94,10 @@ nn <- function(x, y, id, geo = FALSE) {
 }
 
 
-#' @title Nearest neihgbor distance
+#' @title Nearest Neihgbor Distance
 #'
-#' @description Given a set of cartesian coordinates representing the locations 
-#'  of different objects, this function computes the distance to the nearest 
-#'  neighboring object for each object.
+#' @description Given the locations of different objects, this function 
+#'  determines the distance of the nearest neighboring object to each object. 
 #' 
 #' @param x A vector of x (or longitude) coordinates. 
 #' 
@@ -109,10 +111,13 @@ nn <- function(x, y, id, geo = FALSE) {
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{nn}}, \code{\link{nnd}}
+#' @seealso \code{\link{nn}}
 #' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' id <- 1:25
+#' nnd(x, y)
 #' 
 #' @export
 nnd <- function(x, y, geo = FALSE) {

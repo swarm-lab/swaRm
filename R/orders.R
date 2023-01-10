@@ -1,22 +1,23 @@
-#' @title Polarization order parameter
+#' @title Polarization Order Parameter
 #'
-#' @description Given the headings of objects in a group, this function returns 
-#' the polarization order of the group. 
+#' @description Given a set of headings, this function returns the polarization 
+#'  order of the set.  
 #' 
 #' @param h A vector of headings (in radians).
 #' 
 #' @return A single value between 0 and 1 corresponding to the polarization 
-#' order parameter of the group. 
+#'  order parameter of the group. 
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{rotOrder}}
+#' @seealso \code{\link{rot_order}}
 #' 
 #' @examples
-#' # TODO
+#' h <- runif(25, 0, 2 * pi)
+#' pol_order(h)
 #' 
 #' @export
-polOrder <- function(h) {
+pol_order <- function(h) {
   if (!is.numeric(h))
     stop("h should be numeric.")
   
@@ -29,11 +30,18 @@ polOrder <- function(h) {
   }
 }
 
+#' @rdname pol_order
+#' @export
+polOrder <- function(h) {
+  .Deprecated("pol_order")
+  pol_order(h)
+}
 
-#' @title Rotational order parameter
+
+#' @title Rotational Order Parameter
 #'
-#' @description Given the headings and cartesian coordinates of objects in a 
-#'  group, this function returns the rotational order of the group. 
+#' @description Given a set of headings and locations, this function returns the 
+#'  rotational order of the set 
 #' 
 #' @param x A vector of x (or longitude) coordinates. 
 #' 
@@ -42,17 +50,20 @@ polOrder <- function(h) {
 #' @param h A vector of headings (in radians).
 #' 
 #' @return A single value between 0 and 1 corresponding to the rotational 
-#' order parameter of the group. 
+#'  order parameter of the group. 
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @seealso \code{\link{polOrder}}
+#' @seealso \code{\link{pol_order}}
 #' 
 #' @examples
-#' # TODO
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' h <- runif(25, 0, 2 * pi)
+#' rot_order(x, y, h)
 #' 
 #' @export
-rotOrder <- function(h, x, y) {
+rot_order <- function(x, y, h) {
   if (!all(length(h) == c(length(x), length(y))))
     stop("x, y and h should have the same length.")
   
@@ -70,3 +81,9 @@ rotOrder <- function(h, x, y) {
   }
 }
 
+#' @rdname rot_order
+#' @export
+rotOrder <- function(h, x, y) {
+  .Deprecated("rot_order")
+  rot_order(x, y, h)
+}

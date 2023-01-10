@@ -1,56 +1,7 @@
-#' @title Compute The Mode(s) Of A Discrete Distribution
+#' @title Perimeter Of A Polygon In Cartesian Space
 #' 
-#' @description This is an internal utility function to compute the mode(s) of 
-#'  a discrete distribution.
-#' 
-#' @param x A vector or matrix of discrete values. 
-#' 
-#' @param na.rm A logical value indicating whether NA values should be stripped 
-#'  before the computation proceeds (default: TRUE).
-#' 
-#' @return A vector of values corresponding to the mode(s) of x.  
-#' 
-#' @author Simon Garnier, \email{garnier@@njit.edu}
-#' 
-#' @examples
-#' # TODO
-.Mode <- function(x, na.rm = TRUE) {
-  if (na.rm) {
-    x <- x[!is.na(x)]
-  }
-  ux <- unique(x)
-  tab <- tabulate(match(x, ux))
-  ux[tab == max(tab)]
-}
-
-
-#' @title Update Error Description In Trajectory Tables
-#' 
-#' @description This is an internal utility function to update the description
-#'  of errors in trajectory tables detected by the automated error detections 
-#'  and correction functions of the package. 
-#' 
-#' @param error A character vector of error descriptions.
-#' 
-#' @param update A character string of the same length as \code{error} of the 
-#'  error descriptions to be appended to the current error descriptions. 
-#' 
-#' @author Simon Garnier, \email{garnier@@njit.edu}
-#' 
-#' @examples
-#' # TODO
-.updateError <- function(error, update) {
-  idxOK <- error == "OK"
-  error[idxOK] <- update[idxOK]
-  error[!idxOK] <- paste(error[!idxOK], update[!idxOK], sep = "+")
-  error
-}
-
-
-#' @title Computes The perimeter Of A Polygon In Cartesian Space
-#' 
-#' @description Given a set of cartesian coordinates representing a polygon, 
-#'  this function computes the perimeter of the polygon
+#' @description Given a set of Cartesian coordinates representing a polygon, 
+#'  this function computes the perimeter of the polygon.
 #' 
 #' @param x A vector of x coordinates. 
 #' 
@@ -58,16 +9,22 @@
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @examples
-#' # TODO
-.cartesianPerimeter <- function(x, y) {
+#' @seealso \code{\link{chull_perimeter}}
+.cartesian_perimeter <- function(x, y) {
   l <- length(x)
   d <- sqrt((x[1:(l - 1)] - x[2:l]) ^ 2 + (y[1:(l - 1)] - y[2:l]) ^ 2)
   sum(d)
 }
 
+#' @rdname rot_order
+#' @export
+.cartesianPerimeter <- function(x, y) {
+  .Deprecated(".cartesian_perimeter")
+  .cartesian_perimeter(x, y)
+}
 
-#' @title Computes Confidence Ellipse Of A Bivariate Set Of Points
+
+#' @title Bivariate Confidence Ellipse
 #' 
 #' @description This function computes the confidence ellipse of a set of 
 #'  bivariate coordinates. 
@@ -80,8 +37,7 @@
 #' 
 #' @author Simon Garnier, \email{garnier@@njit.edu}
 #' 
-#' @examples
-#' # TODO
+#' @seealso \code{\link{sphericity}}, \code{\link{stretch}}
 .ellipse <- function(x, y, level = 0.95) {
   idx <- is.na(x) | is.na(y)
   x <- x[!idx]

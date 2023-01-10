@@ -10,9 +10,6 @@
     <loc>https://swarm-lab.github.io/swaRm/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://swarm-lab.github.io/swaRm/articles/swaRm.html</loc>
-  </url>
-  <url>
     <loc>https://swarm-lab.github.io/swaRm/articles/z1_install.html</loc>
   </url>
   <url>
@@ -22,64 +19,28 @@
     <loc>https://swarm-lab.github.io/swaRm/index.html</loc>
   </url>
   <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/angAcc.html</loc>
+    <loc>https://swarm-lab.github.io/swaRm/reference/ang_acc.html</loc>
   </url>
   <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/angSpeed.html</loc>
+    <loc>https://swarm-lab.github.io/swaRm/reference/ang_speed.html</loc>
   </url>
   <url>
     <loc>https://swarm-lab.github.io/swaRm/reference/centroid.html</loc>
   </url>
   <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/chullArea.html</loc>
+    <loc>https://swarm-lab.github.io/swaRm/reference/chull_area.html</loc>
   </url>
   <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/chullPerimeter.html</loc>
+    <loc>https://swarm-lab.github.io/swaRm/reference/chull_perimeter.html</loc>
   </url>
   <url>
     <loc>https://swarm-lab.github.io/swaRm/reference/dist2centroid.html</loc>
   </url>
   <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/dot-Mode.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/dot-cartesianPerimeter.html</loc>
+    <loc>https://swarm-lab.github.io/swaRm/reference/dot-cartesian_perimeter.html</loc>
   </url>
   <url>
     <loc>https://swarm-lab.github.io/swaRm/reference/dot-ellipse.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/dot-reclass.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/dot-updateError.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/dplyr.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/findLocErr.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/findLocNA.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/findMissing.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/findTimeDup.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/fixLocErr.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/fixLocNA.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/fixMissing.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/fixTimeDup.html</loc>
   </url>
   <url>
     <loc>https://swarm-lab.github.io/swaRm/reference/heading.html</loc>
@@ -88,28 +49,16 @@
     <loc>https://swarm-lab.github.io/swaRm/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/is.2D.html</loc>
+    <loc>https://swarm-lab.github.io/swaRm/reference/is_chull.html</loc>
   </url>
   <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/is.geo.html</loc>
+    <loc>https://swarm-lab.github.io/swaRm/reference/linear_acc.html</loc>
   </url>
   <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/is.trackTable.html</loc>
+    <loc>https://swarm-lab.github.io/swaRm/reference/linear_dist.html</loc>
   </url>
   <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/isChull.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/linAcc.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/linDist.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/linSpeed.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/makeTraj.html</loc>
+    <loc>https://swarm-lab.github.io/swaRm/reference/linear_speed.html</loc>
   </url>
   <url>
     <loc>https://swarm-lab.github.io/swaRm/reference/nn.html</loc>
@@ -124,13 +73,10 @@
     <loc>https://swarm-lab.github.io/swaRm/reference/pdist.html</loc>
   </url>
   <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/polOrder.html</loc>
+    <loc>https://swarm-lab.github.io/swaRm/reference/pol_order.html</loc>
   </url>
   <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/reclass.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/rotOrder.html</loc>
+    <loc>https://swarm-lab.github.io/swaRm/reference/rot_order.html</loc>
   </url>
   <url>
     <loc>https://swarm-lab.github.io/swaRm/reference/sphericity.html</loc>
@@ -140,8 +86,5 @@
   </url>
   <url>
     <loc>https://swarm-lab.github.io/swaRm/reference/swaRm-package.html</loc>
-  </url>
-  <url>
-    <loc>https://swarm-lab.github.io/swaRm/reference/track.html</loc>
   </url>
 </urlset>
