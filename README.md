@@ -7,8 +7,6 @@
 [![CRANLOGS downloads](https://cranlogs.r-pkg.org/badges/swaRm)](https://cran.r-project.org/package=swaRm)
 <!-- badges: end -->
 
----
-
 ## Description
 
 [`swaRm`](https://github.com/swarm-lab/swaRm) is a R package meant to standardize 
@@ -19,4 +17,3 @@ groups (e.g. fish schools, bird flocks).
 are not yet in a stable state and are likely to change as the package gets 
 developed. 
 
----
