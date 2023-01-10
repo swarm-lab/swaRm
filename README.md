@@ -1,4 +1,4 @@
-# swaRm - R package for processing individual and collective movement data
+# swaRm - R package for processing individual and collective movement data <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/swarm-lab/swaRm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/swarm-lab/swaRm/actions/workflows/R-CMD-check.yaml)
