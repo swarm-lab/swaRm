@@ -21,10 +21,12 @@ Imports:
 Suggests: 
     covr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
 URL: https://swarm-lab.github.io/swaRm/,
     https://github.com/swarm-lab/swaRm
 BugReports: https://github.com/swarm-lab/swaRm/issues
 RoxygenNote: 7.2.3
 Encoding: UTF-8
+Config/testthat/edition: 3
