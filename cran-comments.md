@@ -23,4 +23,15 @@ There are currently no downstream dependencies for this package.
 
 ## CRAN team comments
 
-N/A
+* The Title field should be in title case. Current version is:
+    'A Package For Processing Collective Movement Data'
+    In title case without redundancy that is:
+    'Processing Collective Movement Data'
+   
+Fixed.
+
+* Is there some reference about the method you can add in the Description
+    field in the form Authors (year) <doi:10.....> or <arXiv:.....>?
+
+Not really. Most of these are standard methods in the field, the rest are my own
+creation. 
