@@ -13,15 +13,15 @@ nn(x, y, id, geo = FALSE)
 
 \item{id}{A vector corresponding to the unique identities of each track.}
 
-\item{geo}{A logical value indicating whether the locations are defined by 
+\item{geo}{A logical value indicating whether the locations are defined by
 geographic coordinates (pairs of longitude/latitude values). Default: FALSE.}
 }
 \value{
-A vector of the same length as x and y representing the identity of 
+A vector of the same length as x and y representing the identity of
  the nearest neighboring object to each object.
 }
 \description{
-Given the locations of different objects, this function 
+Given the locations of different objects, this function
  determines the identity of the nearest neighboring object to each object.
 }
 \examples{

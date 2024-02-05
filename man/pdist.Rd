@@ -11,15 +11,15 @@ pdist(x, y, geo = FALSE)
 
 \item{y}{A vector of y (or latitude) coordinates.}
 
-\item{geo}{A logical value indicating whether the locations are defined by 
+\item{geo}{A logical value indicating whether the locations are defined by
 geographic coordinates (pairs of longitude/latitude values). Default: FALSE.}
 }
 \value{
-A square matrix representing pairwise distances between each possible 
+A square matrix representing pairwise distances between each possible
  pair of locations.
 }
 \description{
-Given a set of locations, this function computes the distances 
+Given a set of locations, this function computes the distances
  between each possible pair of locations.
 }
 \examples{
