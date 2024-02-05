@@ -1,0 +1,68 @@
+#' @title Plot convex hull of a set of coordinates
+#' 
+#' @description This function plots a polygon corresponding to the convex hull of a set of x-y (or 
+#'  longitude-latitude) coordinates. 
+#' 
+#' @param x A vector of x (or longitude) coordinates.
+#' 
+#' @param y A vector of y (or latitude) coordinates.
+#'  
+#' @return A plot of the points corresponding to the convex hull of the set of coordinates. Line segments connect each point into a closed polygon.
+#' 
+#' @author Lisa O’Bryan, \email{obryan@@njit.edu}
+#' 
+#' @examples
+#' 
+#’ a <- c(15.76468, 15.76459, 15.76468, 15.76454, 15.76446)
+#’ b <- c(-22.37957, -22.37971, -22.37960, -22.37981, -22.37965)
+#’
+#’ polyArea(a,b, geo=TRUE)
+#’ 
+#' @export
+plotPoly <- function(x,y)
+{
+  if (!is.vector(x) || !is.vector(y) || length(x) != length(y)) {
+    stop("x and y must be vector of identical length.")
+  }
+  hpts <- c(chull(x,y), chull(x,y)[1])
+  plot(x[hpts],y[hpts], type ="b")
+}
+
+#' @title Area of the convex hull of a set of coordinates
+#' 
+#' @description This function computes the area of the convex hull of a set of x-y (or 
+#'  longitude-latitude) coordinates. 
+#' 
+#' @param x A vector of x (or longitude) coordinates.
+#' 
+#' @param y A vector of y (or latitude) coordinates.
+#' 
+#' @param geo A logical value indicating whether the locations are defined by 
+#'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE.
+#' 
+#' @return A one-element vector corresponding to the area of a polygon created by the convex hull of a set of coordinates. If geo=TRUE, the area is given in meters. 
+#' 
+#' @author Lisa O’Bryan, \email{obryan@@njit.edu}
+#' 
+#' @examples
+#' 
+#’ a <- c(15.76468, 15.76459, 15.76468, 15.76454, 15.76446)
+#’ b <- c(-22.37957, -22.37971, -22.37960, -22.37981, -22.37965)
+#’
+#’ polyArea(a,b, geo=TRUE)
+#’ 
+#' @export
+polyArea <- function(x,y, geo = FALSE)
+{
+  if (!is.vector(x) || !is.vector(y) || length(x) != length(y)) {
+    stop("x and y must be vector of identical length.")
+  }
+  hpts <- c(chull(x,y), chull(x,y)[1])
+  if (geo) {
+  polypts<-data.matrix(data.table(x[hpts],y[hpts]))
+  areaPolygon(polypts)
+  }
+  else {
+  polyarea(x[hpts],y[hpts])
+  }
+}
