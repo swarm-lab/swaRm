@@ -197,8 +197,8 @@ nnba <- function(x, y, hs, geo = FALSE) {
     m2 <- cbind(x[idx], y[idx])
     br <- geosphere::bearing(m1, m2) * pi / 180
   } else {
-    dx <- y[idx] - y
-    dy <- x[idx] - x
+    dy <- y[idx] - y
+    dx <- x[idx] - x
     br <- atan2(y = dy, x = dx)
   }
   db <- hs - br
