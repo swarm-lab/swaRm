@@ -1,35 +1,35 @@
 #' @title Pairwise Distance Matrix
-#' 
-#' @description Given a set of locations, this function computes the distances 
+#'
+#' @description Given a set of locations, this function computes the distances
 #'  between each possible pair of locations.
-#'  
-#' @param x A vector of x (or longitude) coordinates. 
-#' 
+#'
+#' @param x A vector of x (or longitude) coordinates.
+#'
 #' @param y A vector of y (or latitude) coordinates.
-#' 
-#' @param geo A logical value indicating whether the locations are defined by 
-#'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE. 
-#'  
-#' @return A square matrix representing pairwise distances between each possible 
+#'
+#' @param geo A logical value indicating whether the locations are defined by
+#'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE.
+#'
+#' @return A square matrix representing pairwise distances between each possible
 #'  pair of locations.
-#' 
+#'
 #' @author Simon Garnier, \email{garnier@@njit.edu}
-#' 
+#'
 #' @seealso \code{\link{nn}}, \code{\link{nnd}}
-#' 
+#'
 #' @examples
 #' x <- rnorm(25)
 #' y <- rnorm(25, sd = 3)
 #' pdist(x, y)
-#' 
+#'
 #' @export
 pdist <- function(x, y, geo = FALSE) {
-  if (length(x) != length(y)) 
+  if (length(x) != length(y))
     stop("x and y should have the same length.")
-  
+
   if (!is.numeric(x) | !is.numeric(y))
     stop("x and y should be numeric.")
-  
+
   if (geo) {
     l <- length(x)
     idx <- expand.grid(row = 1:l, col = 1:l)
@@ -44,45 +44,45 @@ pdist <- function(x, y, geo = FALSE) {
 
 #' @title Nearest Neighbor
 #'
-#' @description Given the locations of different objects, this function 
-#'  determines the identity of the nearest neighboring object to each object. 
-#' 
-#' @param x A vector of x (or longitude) coordinates. 
-#' 
+#' @description Given the locations of different objects, this function
+#'  determines the identity of the nearest neighboring object to each object.
+#'
+#' @param x A vector of x (or longitude) coordinates.
+#'
 #' @param y A vector of y (or latitude) coordinates.
-#' 
+#'
 #' @param id A vector corresponding to the unique identities of each track.
-#' 
-#' @param geo A logical value indicating whether the locations are defined by 
-#'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE. 
-#'  
-#' @return A vector of the same length as x and y representing the identity of 
-#'  the nearest neighboring object to each object. 
-#' 
+#'
+#' @param geo A logical value indicating whether the locations are defined by
+#'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE.
+#'
+#' @return A vector of the same length as x and y representing the identity of
+#'  the nearest neighboring object to each object.
+#'
 #' @author Simon Garnier, \email{garnier@@njit.edu}
-#' 
+#'
 #' @seealso \code{\link{nnd}}
-#' 
+#'
 #' @examples
 #' x <- rnorm(25)
 #' y <- rnorm(25, sd = 3)
 #' id <- 1:25
 #' nn(x, y, id)
-#' 
+#'
 #' @export
 nn <- function(x, y, id, geo = FALSE) {
   if (!all(length(x) == c(length(y), length(id))))
     stop("x, y and id should have the same length.")
-  
+
   if (!is.numeric(x) | !is.numeric(y))
     stop("x and y should be numeric.")
-  
+
   d <- pdist(x, y, geo = geo)
   diag(d) <- NA
   d[is.na(x) | is.na(y), ] <- NA
   d[, is.na(x) | is.na(y)] <- NA
-  
-  idx <- apply(d, 2, 
+
+  idx <- apply(d, 2,
                function(x) {
                  if (sum(is.na(x)) != length(x)) {
                    which(x == min(x, na.rm = TRUE))[1]
@@ -96,43 +96,43 @@ nn <- function(x, y, id, geo = FALSE) {
 
 #' @title Nearest Neihgbor Distance
 #'
-#' @description Given the locations of different objects, this function 
-#'  determines the distance of the nearest neighboring object to each object. 
-#' 
-#' @param x A vector of x (or longitude) coordinates. 
-#' 
+#' @description Given the locations of different objects, this function
+#'  determines the distance of the nearest neighboring object to each object.
+#'
+#' @param x A vector of x (or longitude) coordinates.
+#'
 #' @param y A vector of y (or latitude) coordinates.
-#' 
-#' @param geo A logical value indicating whether the locations are defined by 
-#'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE. 
-#'  
-#' @return A vector of the same length as x and y representing the distance to 
-#'  the nearest neighboring object for each object. 
-#' 
+#'
+#' @param geo A logical value indicating whether the locations are defined by
+#'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE.
+#'
+#' @return A vector of the same length as x and y representing the distance to
+#'  the nearest neighboring object for each object.
+#'
 #' @author Simon Garnier, \email{garnier@@njit.edu}
-#' 
+#'
 #' @seealso \code{\link{nn}}
-#' 
+#'
 #' @examples
 #' x <- rnorm(25)
 #' y <- rnorm(25, sd = 3)
 #' id <- 1:25
 #' nnd(x, y)
-#' 
+#'
 #' @export
 nnd <- function(x, y, geo = FALSE) {
-  if (length(x) != length(y)) 
+  if (length(x) != length(y))
     stop("x and y should have the same length.")
-  
+
   if (!is.numeric(x) | !is.numeric(y))
     stop("x and y should be numeric.")
-  
+
   d <- pdist(x, y, geo = geo)
   diag(d) <- NA
   d[is.na(x) | is.na(y), ] <- NA
   d[, is.na(x) | is.na(y)] <- NA
-  
-  apply(d, 2, 
+
+  apply(d, 2,
         function(x) {
           if (sum(is.na(x)) != length(x)) {
             min(x, na.rm = TRUE)
@@ -140,4 +140,71 @@ nnd <- function(x, y, geo = FALSE) {
             as.numeric(NA)
           }
         })
+}
+
+
+#' @title Nearest Neighbor Bearing Angle
+#'
+#' @description Given the locations and headings of different objects,
+#'  this function determines the angle between the heading of each object
+#'  and the position to the nearest neighboring object (bearing angle).
+#'
+#' @param x A vector of x (or longitude) coordinates.
+#'
+#' @param y A vector of y (or latitude) coordinates.
+#'
+#' @param hs A vector of headings (angle in rads).
+#'
+#' @param geo A logical value indicating whether the locations are defined by
+#'  geographic coordinates (pairs of longitude/latitude values). Default: FALSE.
+#'
+#' @return A vector of the same length as x, y and hs representing the bearing
+#' angle to the nearest neighboring object for each object.
+#'
+#' @author Simon Garnier, \email{garnier@@njit.edu},
+#'  Marina Papadopoulou, \email{m.papadopoulou.rug@@gmail.com}
+#'
+#' @seealso \code{\link{pdist}}
+#'
+#' @examples
+#' x <- rnorm(25)
+#' y <- rnorm(25, sd = 3)
+#' hs <- rnorm(25, sd = 1)
+#' nnba(x, y, hs)
+#'
+#' @export
+nnba <- function(x, y, hs, geo = FALSE) {
+  if (!all(length(x) == c(length(y), length(hs))))
+    stop("x, y and hs should have the same length.")
+
+  if (!is.numeric(x) || !is.numeric(y) || !is.numeric(hs))
+    stop("x, y and hs should be numeric.")
+
+  d <- swaRm::pdist(x, y, geo = geo)
+  diag(d) <- NA
+  d[is.na(x) | is.na(y), ] <- NA
+  d[, is.na(x) | is.na(y)] <- NA
+  idx <- apply(d, 2, function(x) {
+    if (sum(is.na(x)) != length(x)) {
+      which(x == min(x, na.rm = TRUE))[1]
+    } else {
+      as.numeric(NA)
+    }
+  })
+
+  if (geo) {
+    m1 <- cbind(x, y)
+    m2 <- cbind(x[idx], y[idx])
+    br <- geosphere::bearing(m1, m2) * pi / 180
+  } else {
+    dy <- y[idx] - y
+    dx <- x[idx] - x
+    br <- atan2(y = dy, x = dx)
+  }
+  db <- hs - br
+
+  db[db <= (-pi) & !is.na(db)] <- 2 * pi + db[db <= (-pi) & !is.na(db)]
+  db[db > pi & !is.na(db)] <- db[db > pi & !is.na(db)] - 2 * pi
+
+  db
 }

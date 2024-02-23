@@ -11,15 +11,15 @@ nnd(x, y, geo = FALSE)
 
 \item{y}{A vector of y (or latitude) coordinates.}
 
-\item{geo}{A logical value indicating whether the locations are defined by 
+\item{geo}{A logical value indicating whether the locations are defined by
 geographic coordinates (pairs of longitude/latitude values). Default: FALSE.}
 }
 \value{
-A vector of the same length as x and y representing the distance to 
+A vector of the same length as x and y representing the distance to
  the nearest neighboring object for each object.
 }
 \description{
-Given the locations of different objects, this function 
+Given the locations of different objects, this function
  determines the distance of the nearest neighboring object to each object.
 }
 \examples{

@@ -5,7 +5,9 @@ Version: 0.6.0
 Date: 2023-01-10
 Authors@R: c(
     person("Simon", "Garnier", email = "garnier@njit.edu", role = c("aut", "cre"),
-      comment = c(ORCID = "0000-0002-3886-3974"))
+      comment = c(ORCID = "0000-0002-3886-3974")),
+    person("Marina", "Papadopoulou", email = "m.papadopoulou.rug@gmail.com", role = c("ctb"),
+      comment = c(ORCID = "0000-0002-6478-8365"))
   )
 Maintainer: Simon Garnier <garnier@njit.edu>
 Description: Function library for processing collective movement data (e.g. fish
